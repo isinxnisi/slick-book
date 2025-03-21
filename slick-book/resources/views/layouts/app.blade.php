@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name', 'Slick Book'))</title>
+    <title>{{config('app.name', 'Slick Book')}}｜@yield('title')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/hierarchy.css') }}">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -23,7 +24,7 @@
 
         <!-- メインコンテンツ -->
         <div class="flex-1">
-            @include('layouts.navigation')
+            @include('layouts.navigation', ['pageTitle' => View::getSections()['title'] ?? ''])
 
             <!-- Page Heading -->
             @isset($header)
