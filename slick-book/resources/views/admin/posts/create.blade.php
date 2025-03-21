@@ -15,14 +15,14 @@
                     @csrf
 
                     <label>タイトル:</label>
-                    <x-text-input name="title" type="text" class="mt-1 block w-full" :value="old('title', $post->title ?? '')" required autofocus autocomplete="title" />
-                    <x-input-error class="mt-2" :messages="$errors->get('title')" />
+                    <x-admin.text-input name="title" type="text" class="mt-1 block w-full" :value="old('title', $post->title ?? '')" required autofocus autocomplete="title" />
+                    <x-admin.input-error class="mt-2" :messages="$errors->get('title')" />
 
                     <label>本文 (Markdown):</label>
-                    <x-textarea name="body" class="mt-1 block w-full" required autofocus autocomplete="body">
+                    <x-admin.textarea name="body" class="mt-1 block w-full" required autofocus autocomplete="body">
                         {{ old('body', $post->body ?? '') }}
-                    </x-textarea>
-                    <x-input-error class="mt-2" :messages="$errors->get('body')" />
+                    </x-admin.textarea>
+                    <x-admin.input-error class="mt-2" :messages="$errors->get('body')" />
 
                     <label>公開状態:</label>
                     <select name="status"
@@ -31,7 +31,7 @@
                         <option value="draft" {{ old('status', $post->status ?? 'draft') === 'draft' ? 'selected' : '' }}>下書き</option>
                         <option value="published" {{ old('status', $post->status ?? 'draft') === 'published' ? 'selected' : '' }}>公開</option>
                     </select>
-                    <x-input-error class="mt-2" :messages="$errors->get('status')" />
+                    <x-admin.input-error class="mt-2" :messages="$errors->get('status')" />
 
                     <div class="row">
                         <div class="flex col-6 justify-start mt-4">
@@ -40,9 +40,9 @@
                             </button>
                         </div>
                         <div class="flex col-6 justify-end mt-4">
-                            <x-primary-button>
+                            <x-admin.primary-button>
                                 {{ __('投稿する') }}
-                            </x-primary-button>
+                            </x-admin.primary-button>
                         </div>
                     </div>
                 </form>

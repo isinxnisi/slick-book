@@ -16,7 +16,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::where('is_deleted', false)->paginate(10);
-        return view('posts.index', compact('posts'));
+        return view('admin.posts.index', compact('posts'));
     }
 
     /**
@@ -27,7 +27,7 @@ class PostController extends Controller
         if ($post->is_deleted) {
             abort(404);
         }
-        return view('posts.show', compact('post'));
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -35,7 +35,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        return view('admin.posts.create');
     }
 
     /**
@@ -74,7 +74,7 @@ class PostController extends Controller
         if ($post->is_deleted) {
             abort(404);
         }
-        return view('posts.edit', compact('post'));
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**

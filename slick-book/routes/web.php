@@ -10,15 +10,16 @@ use App\Http\Controllers\Site2\HomeController as Site2Home;
 $domains = config('multisite');
 
 // 管理サイト
-Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
+Route::domain($domains['admin'])->group(function () {
     Route::get('/', function () {
         return view('welcome');
     });
-
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
+});
 
+Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
