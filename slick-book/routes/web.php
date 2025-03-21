@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Site1\HomeController as Site1Home;
 use App\Http\Controllers\Site2\HomeController as Site2Home;
 
@@ -25,6 +26,8 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::resource('posts', PostController::class);
+        Route::resource('hierarchies', HierarchyController::class);
+        Route::post('/hierarchies/reorder', [HierarchyController::class, 'reorder'])->name('hierarchies.reorder');
     });
 });
 
