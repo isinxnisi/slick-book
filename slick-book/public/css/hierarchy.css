@@ -38,6 +38,7 @@
     border: 1px dashed #aaa;
     margin-bottom: 4px;
 }
+
 .hierarchy-tree ul li.ui-sortable-helper::before {
     content: "";
 }

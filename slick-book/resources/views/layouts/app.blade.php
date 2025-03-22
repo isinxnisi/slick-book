@@ -11,6 +11,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/hierarchy.css') }}">
 
     <!-- Scripts -->
@@ -29,7 +30,7 @@
             <!-- Page Heading -->
             @isset($header)
             <header class="dark:bg-gray-800 shadow">
-                <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto">
                     {{ $header }}
                 </div>
             </header>
@@ -41,6 +42,11 @@
             </main>
         </div>
     </div>
+
+    <!-- jQuery & jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </body>
 
 </html>
