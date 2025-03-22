@@ -29,12 +29,16 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:categories',
+            'slug' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'site_id' => 'required|exists:sites,id',
             'parent_id' => 'nullable|exists:categories,id',
+            'site_id' => 'required|exists:sites,id',
+            'image_path' => 'nullable|string|max:1024',
+            'icon' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:20',
+            'is_visible' => 'nullable|boolean',
         ]);
-    
+        
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['title'], null, 'ja');
         }
@@ -47,7 +51,7 @@ class CategoryController extends Controller
         $validated['order'] = is_null($maxOrder) ? 1 : $maxOrder + 1;
     
         $category = Category::create($validated);
-        return response()->json(['message' => '追加しました', 'category' => $category]);
+        return response()->json($category, 201);
     }
 
     public function update(Request $request, Category $category)
@@ -56,10 +60,15 @@ class CategoryController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:categories,slug,' . $category->id,
             'description' => 'nullable|string',
+            'image_path' => 'nullable|string|max:1024',
+            'icon' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:20',
+            'is_visible' => 'nullable|boolean',
         ]);
 
         $category->update($validated);
-        return response()->json(['message' => '更新しました']);
+
+        return response()->json($category);
     }
 
     public function destroy(Category $category)

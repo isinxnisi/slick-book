@@ -13,7 +13,15 @@ class Category extends Model
         'site_id',
         'parent_id',
         'order',
+        'image_path',
+        'icon',
+        'color',
+        'is_visible',
         'deleted_at',
+    ];
+
+    protected $casts = [
+        'is_visible' => 'boolean',
     ];
 
     public function children()

@@ -20,6 +20,17 @@
                         <label class="form-label">{{ $label }}</label>
                         @if ($field === 'description')
                             <textarea id="{{ $id }}-{{ $field }}" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700"></textarea>
+                        @elseif ($field === 'color')
+                            <input type="color" id="{{ $id }}-{{ $field }}" class="form-control form-control-color w-100" title="色を選択">
+                        @elseif ($field === 'image_path')
+                            <input type="url" id="{{ $id }}-{{ $field }}" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                        @elseif ($field === 'icon')
+                            <input type="text" id="{{ $id }}-{{ $field }}" placeholder="例: folder" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                        @elseif ($field === 'is_visible')
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="{{ $id }}-{{ $field }}">
+                                <label class="form-check-label" for="{{ $id }}-{{ $field }}">{{ $label }}</label>
+                            </div>
                         @else
                             <input type="text" id="{{ $id }}-{{ $field }}" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
                         @endif

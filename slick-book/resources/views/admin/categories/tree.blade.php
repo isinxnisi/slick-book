@@ -34,7 +34,11 @@
         :fields="[
             'title' => 'タイトル',
             'slug' => 'スラッグ',
-            'description' => '説明'
+            'description' => '説明',
+            'image_path' => '画像URL',
+            'icon' => 'アイコン名（例：folder）',
+            'color' => 'カラーコード（例：#ff0000）',
+            'is_visible' => '公開フラグ',
         ]"
         saveButtonId="save-category-btn" />
 </x-app-layout>
@@ -112,27 +116,64 @@
             return items;
         }
 
-        $(document).on('click', '.edit-btn', function() {
-            const id = $(this).data('id');
-            const title = $(this).data('title');
-            const slug = $(this).data('slug');
-            const description = $(this).data('description');
+        // $(document).on('click', '.edit-btn', function() {
+        //     const id = $(this).data('id');
+        //     const title = $(this).data('title');
+        //     const slug = $(this).data('slug');
+        //     const description = $(this).data('description');
 
-            // 各 input/textarea に値をセット（modal id: editCategoryModal）
-            $('#editCategoryModal-id').val(id);
-            $('#editCategoryModal-title').val(title);
-            $('#editCategoryModal-slug').val(slug);
-            $('#editCategoryModal-description').val(description);
+        //     // 各 input/textarea に値をセット（modal id: editCategoryModal）
+        //     $('#editCategoryModal-id').val(id);
+        //     $('#editCategoryModal-title').val(title);
+        //     $('#editCategoryModal-slug').val(slug);
+        //     $('#editCategoryModal-description').val(description);
+
+        //     const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
+        //     modal.show();
+        // });
+        $(document).on('click', '.edit-btn', function() {
+            const fields = ['id', 'title', 'slug', 'description', 'image_path', 'icon', 'color'];
+            fields.forEach(field => {
+                $(`#editCategoryModal-${field}`).val($(this).data(field));
+            });
+
+            $('#editCategoryModal-is_visible').prop('checked', $(this).data('is_visible') == true);
 
             const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
             modal.show();
         });
+        // $('#save-category-btn').on('click', function() {
+        //     const id = $('#editCategoryModal-id').val();
+        //     const title = $('#editCategoryModal-title').val();
+        //     const slug = $('#editCategoryModal-slug').val();
+        //     const description = $('#editCategoryModal-description').val();
 
+        //     $.ajax({
+        //         url: `/categories/${id}`,
+        //         method: 'PATCH',
+        //         headers: {
+        //             'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        //             'Accept': 'application/json'
+        //         },
+        //         data: {
+        //             title,
+        //             slug,
+        //             description
+        //         },
+        //         success: () => location.reload()
+        //     });
+        // });
         $('#save-category-btn').on('click', function() {
             const id = $('#editCategoryModal-id').val();
-            const title = $('#editCategoryModal-title').val();
-            const slug = $('#editCategoryModal-slug').val();
-            const description = $('#editCategoryModal-description').val();
+            const fields = ['title', 'slug', 'description', 'image_path', 'icon', 'color'];
+            const data = {};
+
+            fields.forEach(field => {
+                data[field] = $(`#editCategoryModal-${field}`).val();
+            });
+
+            // 保存時
+            data['is_visible'] = $('#editCategoryModal-is_visible').is(':checked') ? 1 : 0;
 
             $.ajax({
                 url: `/categories/${id}`,
@@ -141,11 +182,7 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json'
                 },
-                data: {
-                    title,
-                    slug,
-                    description
-                },
+                data,
                 success: () => location.reload()
             });
         });

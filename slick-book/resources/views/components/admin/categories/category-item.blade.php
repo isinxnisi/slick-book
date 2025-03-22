@@ -2,12 +2,26 @@
     <div class="flex items-center justify-between">
         <!-- 左寄せグループ：タイトル＋編集＋追加 -->
         <div class="space-x-1">
+            @if ($category->icon)
+                <span class="inline-block w-4 h-3 me-0 px-0"><i class="ms-0" data-lucide="{{ $category->icon }}"></i></span>
+            @endif
             <span class="title">{{ $category->title }}</span>
+            @if ($category->color)
+                <span class="inline-block w-3 h-3 rounded-full" style="background-color: {{ $category->color }}"></span>
+            @endif
+            @if ($category->image_path)
+                <img src="{{ $category->image_path }}" alt="" class="w-6 h-6 rounded object-cover" />
+            @endif
+
             <button class="edit-btn text-sm text-yellow-400 hover:text-yellow-500"
                 data-id="{{ $category->id }}"
                 data-title="{{ $category->title }}"
                 data-slug="{{ $category->slug }}"
-                data-description="{{ $category->description }}">
+                data-description="{{ $category->description }}"
+                data-image_path="{{ $category->image_path }}"
+                data-icon="{{ $category->icon }}"
+                data-color="{{ $category->color }}"
+                data-is_visible="{{ $category->is_visible }}">
                 <i data-lucide="edit"></i>
             </button>
             <button class="add-btn text-sm text-green-400 hover:text-green-500" data-id="{{ $category->id }}">
