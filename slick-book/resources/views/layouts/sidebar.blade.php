@@ -1,4 +1,4 @@
-<aside class="w-64 h-screen dark:bg-gray-800 shadow-lg" x-data="{ open: { dashboard: true, hierarchies: true, posts: true, settings: true } }">
+<aside class="w-64 h-screen dark:bg-gray-800 shadow-lg" x-data="{ open: { dashboard: true, sites: true, categories: true, hierarchies: true, posts: true, settings: true } }">
     <div>
         <h2 class="flex h-16 font-semibold text-gray-800 dark:text-white p-4 ps-2 border-b border-gray-100 dark:border-gray-700">
             <!-- Logo -->
@@ -10,7 +10,7 @@
             SLICK BOOK
         </h2>
 
-        <!-- 記事メニュー -->
+        <!-- ダッシュボード -->
         <div>
             <button @click="open.dashboard = !open.dashboard" class="w-full text-left ps-0 py-2 text-gray-400 hover:text-gray-200 flex justify-between items-center">
                 <a href="{{ route('dashboard') }}"
@@ -19,6 +19,31 @@
                     ダッシュボード
                 </a>
             </button>
+        </div>
+
+        <!-- サイト管理メニュー -->
+        <div class="mt-1">
+            <button @click="open.sites = !open.sites" class="w-full text-left ps-2 py-2 text-gray-400 hover:text-gray-200 flex justify-between items-center">
+                サイト管理
+                <svg x-bind:class="{ 'rotate-180': open.sites }" class="h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+
+            <ul x-show="open.sites" class="mt-2 space-y-1">
+                <li class="">
+                    <a href="{{ route('sites.index') }}"
+                       class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
+                              {{ request()->routeIs('sites.index') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
+                        サイト設定
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{{ route('categories.tree') }}"
+                       class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
+                              {{ request()->routeIs('categories.tree') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
+                        カテゴリ設定
+                    </a>
+                </li>
+            </ul>
         </div>
 
         <!-- 階層管理メニュー -->

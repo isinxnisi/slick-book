@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\HierarchyController;
+use App\Http\Controllers\Admin\SiteController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Site1\HomeController as Site1Home;
 use App\Http\Controllers\Site2\HomeController as Site2Home;
 
@@ -26,8 +28,21 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::resource('posts', PostController::class);
+
         Route::resource('hierarchies', HierarchyController::class);
         Route::post('/hierarchies/reorder', [HierarchyController::class, 'reorder'])->name('hierarchies.reorder');
+
+        // サイト管理
+        Route::resource('sites', SiteController::class);
+
+        // カテゴリ階層UIの表示
+        Route::get('categories/tree', [CategoryController::class, 'tree'])->name('categories.tree');
+        // カテゴリCRUD（モーダル前提）
+        Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::patch('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+        // 並び順の更新
+        Route::post('categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder');
     });
 });
 

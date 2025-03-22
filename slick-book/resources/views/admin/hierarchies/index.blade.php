@@ -31,12 +31,6 @@
             placeholder: "ui-state-highlight",
             cursor: "move",
             update: function(event, ui) {
-                // let data = $(this).sortable("toArray");
-                // console.log("並び順:", data); // 並び順データを表示
-
-                // // 最上位の <ul class="sortable"> を対象に
-                // data = buildHierarchy($("#hierarchy-list"));
-                // console.log("階層データ:", data);
 
                 const hierarchyData = buildHierarchy($('#hierarchy-list'));
 

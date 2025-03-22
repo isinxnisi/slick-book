@@ -1,9 +1,11 @@
-import 'bootstrap';
-
 import Alpine from 'alpinejs';
-import { createIcons, icons } from 'lucide';
 
 window.Alpine = Alpine;
 Alpine.start();
+
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
+
+import { createIcons, icons } from 'lucide';
 
 createIcons({ icons });
