@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/hierarchy.css') }}">
 
     <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 

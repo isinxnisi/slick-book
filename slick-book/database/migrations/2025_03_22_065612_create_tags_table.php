@@ -6,18 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('tag_groups', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('site_id')->nullable()->constrained('sites')->onDelete('cascade');
-            $table->foreignId('parent_id')->nullable()->constrained('tag_groups')->onDelete('cascade');
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->string('color')->nullable();         // UI色
+            $table->string('icon')->nullable();          // アイコン名
+            $table->string('image_path')->nullable();    // 画像URL
             $table->timestamps();
             $table->softDeletes();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('tag_groups');
+        Schema::dropIfExists('tags');
     }
 };
