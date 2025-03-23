@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTagGroupRequest;
+use App\Http\Requests\UpdateTagGroupRequest;
 use App\Models\TagGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -27,43 +29,32 @@ class TagGroupController extends Controller
         return view('admin.tag-groups.index', compact('groups'));
     }
 
-    public function store(Request $request)
+    public function store(StoreTagGroupRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:tag_groups',
-            'purpose' => 'required|string|max:50',
-            'color' => 'nullable|string|max:20',
-            'icon' => 'nullable|string|max:50',
-            'description' => 'nullable|string|max:1000',
-            'parent_id' => 'nullable|exists:tag_groups,id',
-        ]);
-
+        $validated = $request->validated();
+    
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['name'], '-', 'ja');
         }
-
+    
         $maxOrder = TagGroup::where('parent_id', $validated['parent_id'] ?? null)->max('order');
         $validated['order'] = is_null($maxOrder) ? 1 : $maxOrder + 1;
-
+    
         TagGroup::create($validated);
-
+    
         return response()->json(['message' => '作成しました'], 201);
     }
-
-    public function update(Request $request, TagGroup $tagGroup)
+    
+    public function update(UpdateTagGroupRequest $request, TagGroup $tagGroup)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:tag_groups,slug,' . $tagGroup->id,
-            'purpose' => 'required|string|max:50',
-            'color' => 'nullable|string|max:20',
-            'icon' => 'nullable|string|max:50',
-            'description' => 'nullable|string|max:1000',
-        ]);
-
+        $validated = $request->validated();
+    
+        if (empty($validated['slug'])) {
+            $validated['slug'] = Str::slug($validated['name'], '-', 'ja');
+        }
+    
         $tagGroup->update($validated);
-
+    
         return response()->json(['message' => '更新しました']);
     }
 

@@ -1,19 +1,20 @@
-@section('title', 'タググループ管理')
+@section('title', 'サイトタグ管理')
 <x-app-layout>
-    <x-slot name="header"></x-slot>
+    <x-slot name="header">
+        <!-- サイト切替タブ -->
+        <x-admin.ui.site-tabs :sites="$sites" :active-id="$siteId" />
+    </x-slot>
 
-    <div class="grid grid-cols-1 md:grid-cols-[3fr_1.2fr] gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-[3fr_2.0fr] gap-4">
         <!-- タググループ階層ツリー -->
         <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <!-- 階層ツリー -->
             <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="hierarchy-tree p-4 text-gray-900 dark:text-gray-100">
                     <ul class="tree sortable" id="tag-group-list">
                         @foreach($groups as $group)
-                        <x-admin.tag-groups.group-item-with-tags :group="$group" />
+                        <x-admin.site-tag-groups.group-item-with-tags :group="$group" />
                         @endforeach
                     </ul>
-                    <!-- 新規追加ボタン -->
                     <div class="mt-4 mb-4">
                         <button id="add-group-btn" class="bg-indigo-700 text-white px-4 py-2 rounded hover:bg-indigo-800">
                             ＋ タググループを追加
@@ -24,13 +25,23 @@
         </div>
 
         <div class="ui-right-panel dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <!-- タグ詳細編集パネル -->
             <div class="panel-content p-4 text-gray-900 dark:text-gray-100" id="tag-edit-panel" style="display: none;">
-                <h2 class="text-lg font-bold mb-2">タグ<span class="mode-text"></span></h2>
+                <!-- マスタ：タググループ階層ツリー -->
+                <div class="hierarchy-tree p-0 text-gray-900 dark:text-gray-100">
+                    <x-admin.tags.tag-selection
+                        :groups="$mastaGroups"
+                        :selected-tag-ids="$selectedTagIds"
+                        :purpose="$purpose"
+                        :site-id="$siteId"
+                        />
+                    <ul class="tree" id="tag-group-list">
+                        @foreach($mastaGroups as $group)
+                        @endforeach
+                    </ul>
+                </div>
                 <form id="tag-edit-form">
                     <input type="hidden" id="editPanel-tag-id">
                     <input type="hidden" id="editPanel-tag-group-id">
-
                     <div class="mb-2">
                         <label for="editPanel-tag-name">タグ名</label>
                         <input type="text" id="editPanel-tag-name" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
@@ -49,12 +60,13 @@
                     </div>
                 </form>
             </div>
-            <!-- タググループ編集パネル（右側） -->
+
             <div class="panel-content p-4 text-gray-900 dark:text-gray-100" id="group-edit-panel" style="display: none;">
                 <h2 class="text-lg font-bold mb-2">タググループ<span class="mode-text"></span></h2>
                 <form id="group-edit-form">
                     <input type="hidden" id="editPanel-group-id">
                     <input type="hidden" id="editPanel-group-parent_id">
+                    <input type="hidden" id="editPanel-site-id" value="{{ $siteId }}">
 
                     <div class="mb-2">
                         <label for="editPanel-group-name">表示名</label>
@@ -111,9 +123,9 @@
                 cursor: 'move',
                 update: function(event, ui) {
                     const $list = $(this);
-                    const groupId = $list.data('group-id');
+                    const groupId = $list.attr('data-group-id');
                     const tagIds = $list.children('li').map(function() {
-                        return $(this).data('id');
+                        return $(this).attr('data-id');
                     }).get();
 
                     $.post('/tags/reorder', {
@@ -160,14 +172,15 @@
 
         // タググループ子階層作成
         $(document).on('click', '.add-btn', function() {
-            const parentId = $(this).data('id');
-            $('#editPanel-group-id').val('');
-            $('#editPanel-group-name').val($(this).data('name'));
-            $('#editPanel-group-slug').val($(this).data('slug'));
-            $('#editPanel-group-purpose').val($(this).data('purpose'));
-            $('#editPanel-group-color').val($(this).data('color'));
-            $('#editPanel-group-icon').val($(this).data('icon'));
-            $('#editPanel-group-description').val($(this).data('description'));
+            const parentId = $(this).attr('data-id');
+            const groupId = $(this).attr('data-id');
+            // $('#editPanel-group-id').val(groupId);
+            $('#editPanel-group-name').val($(this).attr('data-name'));
+            $('#editPanel-group-slug').val($(this).attr('data-slug'));
+            $('#editPanel-group-purpose').val($(this).attr('data-purpose'));
+            $('#editPanel-group-color').val($(this).attr('data-color'));
+            $('#editPanel-group-icon').val($(this).attr('data-icon'));
+            $('#editPanel-group-description').val($(this).attr('data-description'));
             $('#editPanel-group-parent_id').val(parentId);
             $('.ui-right-panel').find('.panel-content').hide();
             $('#group-edit-panel').find('.mode-text').text('追加');
@@ -176,28 +189,29 @@
 
         // タググループ編集ボタン
         $(document).on('click', '.edit-group-btn', function() {
-            const groupId = $(this).data('id');
+            const groupId = $(this).attr('data-id');
             $('#editPanel-group-id').val(groupId);
-            $('#editPanel-group-name').val($(this).data('name'));
-            $('#editPanel-group-slug').val($(this).data('slug'));
-            $('#editPanel-group-purpose').val($(this).data('purpose'));
-            $('#editPanel-group-color').val($(this).data('color'));
-            $('#editPanel-group-icon').val($(this).data('icon'));
-            $('#editPanel-group-description').val($(this).data('description'));
+            $('#editPanel-group-name').val($(this).attr('data-name'));
+            $('#editPanel-group-slug').val($(this).attr('data-slug'));
+            $('#editPanel-group-purpose').val($(this).attr('data-purpose'));
+            $('#editPanel-group-color').val($(this).attr('data-color'));
+            $('#editPanel-group-icon').val($(this).attr('data-icon'));
+            $('#editPanel-group-description').val($(this).attr('data-description'));
             $('.ui-right-panel').find('.panel-content').hide();
             $('#group-edit-panel').find('.mode-text').text('編集');
             $('#group-edit-panel').slideDown(100);
         });
 
+        // グローバル変数で保持
+        let currentSelectedGroupId = null;
+        window.currentTagGroupId = null;
         // タグ追加ボタン
         $(document).on('click', '.add-tag-btn', function() {
-            const groupId = $(this).data('group-id');
+            const groupId = $(this).attr('data-group-id');
+            currentSelectedGroupId = groupId;
+            window.currentTagGroupId = groupId;
 
-            $('#editPanel-tag-id').val('');
-            $('#editPanel-tag-name').val('');
-            $('#editPanel-tag-slug').val('');
-            $('#editPanel-tag-description').val('');
-            $('#editPanel-tag-group-id').val(groupId);
+            applySelectedTagsToRightPanel(groupId);
 
             $('.ui-right-panel').find('.panel-content').hide();
             $('#tag-edit-panel').find('.mode-text').text('追加');
@@ -206,11 +220,11 @@
 
         // タグ編集ボタン
         $(document).on('click', '.edit-tag-btn', function() {
-            const tagId = $(this).data('id');
-            const tagName = $(this).data('name');
-            const tagSlug = $(this).data('slug');
-            const tagDescription = $(this).data('description');
-            const groupId = $(this).closest('.sortable-tags').data('group-id');
+            const tagId = $(this).attr('data-id');
+            const tagName = $(this).attr('data-name');
+            const tagSlug = $(this).attr('data-slug');
+            const tagDescription = $(this).attr('data-description');
+            const groupId = $(this).closest('.sortable-tags').attr('data-group-id');
 
             $('#editPanel-tag-id').val(tagId);
             $('#editPanel-tag-name').val(tagName);
@@ -255,6 +269,7 @@
             e.preventDefault();
             const id = $('#editPanel-group-id').val();
             const data = {
+                site_id: $('#editPanel-site-id').val(),
                 name: $('#editPanel-group-name').val(),
                 slug: $('#editPanel-group-slug').val(),
                 purpose: $('#editPanel-group-purpose').val(),
@@ -266,11 +281,11 @@
             };
 
             if (!id) {
-                $.post('/tag-groups', data, () => location.reload());
+                $.post('/site-tag-groups', data, () => location.reload());
 
             } else {
                 $.ajax({
-                    url: `/tag-groups/${id}`,
+                    url: `/site-tag-groups/${id}`,
                     method: 'PATCH',
                     data: data,
                     success: () => location.reload()
@@ -290,17 +305,26 @@
 
         // タグ削除
         $(document).on('click', '.delete-tag-btn', function () {
-            if (!confirm('このタグを削除してもよろしいですか？')) return;
+            // if (!confirm('このタグをこのグループから削除してよろしいですか？')) return;
 
-            const tagId = $(this).data('id');
+            const tagId = $(this).attr('data-id');
+            const groupId = $(this).closest('.sortable-tags').attr('data-group-id'); // ULに group-id がある前提
+
             $.ajax({
-                url: `/tags/${tagId}`,
-                method: 'DELETE',
+                url: '/tag-tag-groups/unlink',
+                method: 'POST',
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    tag_id: tagId,
+                    tag_group_id: groupId
                 },
-                success: () => location.reload(),
-                error: (xhr) => alert('削除に失敗しました')
+                success: () => {
+                    // 左UIからタグを削除
+                    $(this).closest('li').remove();
+                    // 右UIからタグを削除
+                    applySelectedTagsToRightPanel(currentSelectedGroupId);
+                },
+                error: () => alert('削除に失敗しました')
             });
         });
 
@@ -308,9 +332,9 @@
         $(document).on('click', '.delete-group-btn', function () {
             if (!confirm('このタググループを削除してもよろしいですか？')) return;
 
-            const groupId = $(this).data('id');
+            const groupId = $(this).attr('data-id');
             $.ajax({
-                url: `/tag-groups/${groupId}`,
+                url: `/site-tag-groups/${groupId}`,
                 method: 'DELETE',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -319,6 +343,36 @@
                 error: (xhr) => alert('削除に失敗しました')
             });
         });
+
+        function applySelectedTagsToRightPanel(groupId) {
+            const selectedTagIds = getCurrentTagIdsFromLeftUI(groupId);
+
+            $('.tag-toggle-btn').each(function () {
+                const $btn = $(this);
+                const tagId = parseInt($btn.attr('data-tag-id'));
+                const color = $btn.css('border-color');
+
+                $btn.attr('data-tag-group-id', groupId);
+
+                if (selectedTagIds.includes(tagId)) {
+                    $btn.addClass('active').css({ backgroundColor: color, color: '#fff' });
+                } else {
+                    $btn.removeClass('active').css({ backgroundColor: 'transparent', color: color });
+                }
+            });
+        }
+
+        function getCurrentTagIdsFromLeftUI(groupId) {
+            const $groupUl = $(`#tags-of-group-${groupId}`);
+            const tagIds = [];
+            $groupUl.find('li').each(function () {
+                const tagId = parseInt($(this).attr('data-id'));
+                if (!isNaN(tagId)) {
+                    tagIds.push(tagId);
+                }
+            });
+            return tagIds;
+        }
     </script>
     @endpush
 </x-app-layout>

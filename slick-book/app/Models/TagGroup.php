@@ -33,4 +33,15 @@ class TagGroup extends Model
     {
         return $this->belongsToMany(Tag::class, 'tag_tag_group');
     }
+
+    public function getBreadcrumbAttribute()
+    {
+        $names = [];
+        $group = $this;
+        while ($group) {
+            array_unshift($names, $group->name);
+            $group = $group->parent;
+        }
+        return implode(' > ', $names);
+    }
 }

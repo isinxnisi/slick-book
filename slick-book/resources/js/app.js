@@ -9,3 +9,5 @@ window.bootstrap = bootstrap;
 import { createIcons, icons } from 'lucide';
 
 lucide.createIcons({ icons });
+
+import './hierarchy';

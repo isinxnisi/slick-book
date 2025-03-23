@@ -1,4 +1,4 @@
-<aside class="w-64 h-screen dark:bg-gray-800 shadow-lg" x-data="{ open: { dashboard: true, sites: true, tags: true, categories: true, hierarchies: true, posts: true, settings: true } }">
+<aside class="w-64 h-screen sticky top-0 overflow-y-auto dark:bg-gray-800 shadow-lg" x-data="{ open: { dashboard: true, sites: true, tags: true, categories: true, hierarchies: true, posts: true, settings: true } }">
     <div>
         <h2 class="flex h-16 font-semibold text-gray-800 dark:text-white p-4 ps-2 border-b border-gray-100 dark:border-gray-700">
             <!-- Logo -->
@@ -58,14 +58,14 @@
                     <a href="{{ route('tag-groups.index') }}"
                        class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
                               {{ request()->routeIs('tag-groups.index') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
-                        タググループ設定
+                        タグ管理
                     </a>
                 </li>
                 <li class="">
-                    <a href="{{ route('categories.tree') }}"
+                    <a href="{{ route('site-tag-groups.index') }}"
                        class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
-                              {{ request()->routeIs('categories.tree') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
-                        カテゴリ設定
+                              {{ request()->routeIs('site-tag-groups.index') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
+                        サイトタグ管理
                     </a>
                 </li>
             </ul>
