@@ -26,8 +26,12 @@
 
         <div class="ui-right-panel dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="panel-content p-4 text-gray-900 dark:text-gray-100" id="tag-edit-panel" style="display: none;">
+
+                <!-- タグ用途切り替えタブ -->
+                <x-admin.tags.purpose-tabs :active-purpose="$purpose" />
+
                 <!-- マスタ：タググループ階層ツリー -->
-                <div class="hierarchy-tree p-0 text-gray-900 dark:text-gray-100">
+                <div id="tag-selection-body" class="hierarchy-tree mt-3 p-0 text-gray-900 dark:text-gray-100">
                     <x-admin.tags.tag-selection
                         :groups="$mastaGroups"
                         :selected-tag-ids="$selectedTagIds"
@@ -103,6 +107,8 @@
 
     @push('scripts')
     <script>
+        window.purposeStyles = @json(config('tags.purpose_styles'));
+
         $(function() {
             $('.sortable').sortable({
                 connectWith: '.sortable',
@@ -350,14 +356,23 @@
             $('.tag-toggle-btn').each(function () {
                 const $btn = $(this);
                 const tagId = parseInt($btn.attr('data-tag-id'));
-                const color = $btn.css('border-color');
+                const purpose = $btn.attr('data-purpose') || 'public';
+                const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
 
                 $btn.attr('data-tag-group-id', groupId);
 
                 if (selectedTagIds.includes(tagId)) {
-                    $btn.addClass('active').css({ backgroundColor: color, color: '#fff' });
+                    $btn.addClass('active').css({
+                        backgroundColor: style.bg,
+                        color: style.text,
+                        borderColor: style.bg
+                    });
                 } else {
-                    $btn.removeClass('active').css({ backgroundColor: 'transparent', color: color });
+                    $btn.removeClass('active').css({
+                        backgroundColor: 'transparent',
+                        color: '#fff',
+                        borderColor: '#fff'
+                    });
                 }
             });
         }
@@ -373,6 +388,35 @@
             });
             return tagIds;
         }
+
+        $(document).on('click', '.purpose-tab', function () {
+            const selectedPurpose = $(this).attr('data-purpose');
+            const style = window.purposeStyles?.[selectedPurpose] || { bg: '#888', text: '#fff' };
+
+            // URLパラメータから site を維持
+            const params = new URLSearchParams(window.location.search);
+            const siteId = params.get('site');
+
+            // Ajaxで右UIを更新（目的に応じたマスタタグ一覧を取得）
+            $.get('/site-tag-groups/master-tags', {
+                site: siteId,
+                purpose: selectedPurpose
+            }, function (html) {
+                $('#tag-edit-panel .hierarchy-tree').html(html);
+                // タブの表示状態を更新
+                // タブ見た目更新
+                $('.purpose-tab').removeClass('text-white border-indigo-500')
+                    .addClass('text-gray-400 hover:text-white hover:border-b-2 hover:border-gray-500')
+                    .css('border-color', 'transparent');
+
+                $(`.purpose-tab[data-purpose="${selectedPurpose}"]`)
+                    .addClass('text-white border-b-2')
+                    .removeClass('text-gray-400')
+                    .css('border-color', style.bg ?? "#4f46e5");
+
+                applySelectedTagsToRightPanel(currentSelectedGroupId);
+            });
+        });
     </script>
     @endpush
 </x-app-layout>

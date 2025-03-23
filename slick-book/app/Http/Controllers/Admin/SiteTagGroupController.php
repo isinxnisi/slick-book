@@ -140,6 +140,48 @@ class SiteTagGroupController extends Controller
         return response()->json(['message' => '並び順を更新しました']);
     }
 
+    public function getMasterTags(Request $request)
+    {
+        $siteId = $request->input('site', Site::first()?->id);
+
+        $purpose = $request->get('purpose', 'public');
+    
+        $mastaGroups = TagGroup::whereNull('parent_id')
+            ->whereNotIn('id', function ($query) {
+                $query->select('tag_group_id')->from('site_tag_group');
+            })
+            ->with([
+                'parent',
+                'tags' => fn ($q) => $q->orderBy('name'),
+                'children.parent',
+                'children.tags',
+                'children.children.parent',
+                'children.children.tags',
+            ])
+            ->orderBy('order')
+            ->get();
+    
+        $mastaGroups = $this->flattenGroups($mastaGroups);
+
+        $selectedTagIds = TagGroup::with(['tags:id']) // タグIDのみ取得
+            ->whereIn('id', function ($query) use ($siteId) {
+                $query->select('tag_group_id')
+                    ->from('site_tag_group')
+                    ->where('site_id', $siteId);
+            })
+            ->get()
+            ->mapWithKeys(function ($group) {
+                return [$group->id => $group->tags->pluck('id')->toArray()];
+            });
+
+        return view('components.admin.tags.tag-selection', [
+            'groups' => $mastaGroups, // マスタタググループ
+            'selectedTagIds' => $selectedTagIds, // サイトでON状態のタグID
+            'purpose' => $purpose, // 用途
+            'siteId' => $siteId, // サイトID
+        ])->render();
+    }
+
     protected function updateGroupOrder(array $node, $parentId)
     {
         static $order = 1;

@@ -6,12 +6,12 @@
 ])
 
 @php
-$purposeColors = config('tags.purpose_colors');
+$purposeStyles = config('tags.purpose_styles');
+$bgColor = $purposeStyles[$purpose]['bg'] ?? '#888';
+$textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
 @endphp
 
 <div class="mb-4">
-    <h2 class="text-lg font-bold mb-2">タグ選択（{{ config('tags.purposes')[$purpose] ?? $purpose }}）</h2>
-
     <div class="tag-selection-ui space-y-4">
         @foreach ($groups as $group)
             @if ($group->purpose !== $purpose) @continue @endif
@@ -26,18 +26,19 @@ $purposeColors = config('tags.purpose_colors');
             @foreach ($group->tags as $tag)
                 @php
                     $isActive = in_array($tag->id, $selectedIdsForGroup);
-                    $color = $purposeColors[$group->purpose] ?? '#888';
+                    $bgColor = $purposeColors[$group->purpose] ?? '#888';
+                    $textColor = $purposeTextColors[$group->purpose] ?? '#333';
                 @endphp
                 <div class="tag-item">
                     <button
-                        class="tag-toggle-btn ps-2 pe-2 rounded-full text-sm border"
+                        class="tag-toggle-btn ps-2 pe-2 rounded-full text-sm border-1"
                         data-tag-id="{{ $tag->id }}"
                         data-site-id="{{ $siteId }}"
                         data-tag-group-id=""
                         style="
-                            background-color: {{ $isActive ? $color : 'transparent' }};
-                            color: {{ $isActive ? '#fff' : $color }};
-                            border-color: {{ $color }};
+                            background-color: {{ $isActive ? $bgColor : 'transparent' }};
+                            color: {{ $isActive ? $textColor : '#fff' }};
+                            border-color: {{ $isActive ? $bgColor : '#fff' }};
                         "
                     >
                         {{ $tag->name }}
@@ -53,7 +54,7 @@ $purposeColors = config('tags.purpose_colors');
 <script>
     $(document).on('click', '.tag-toggle-btn', function () {
         const $btn = $(this);
-        const tagId = $btn.data('tag-id');
+        const tagId = $btn.attr('data-tag-id');
         const tagGroupId = $btn.attr('data-tag-group-id');
         const isActive = $btn.hasClass('active');
         const tagName = $btn.text().trim(); // 表示名
@@ -69,22 +70,21 @@ $purposeColors = config('tags.purpose_colors');
             },
             success: function () {
                 $btn.toggleClass('active');
-                const bgColor = $btn.css('border-color');
+                const purpose = $btn.attr('data-purpose') || 'public';
+                const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
+
                 if ($btn.hasClass('active')) {
-                    $btn.css({ backgroundColor: bgColor, color: '#fff' });
+                    $btn.css({ backgroundColor: style.bg, color: style.text, borderColor: style.bg });
                     if (currentSelectedGroupId) {
-                        window.addTagToLeftUI(currentSelectedGroupId, tagId, tagName, color);
+                        window.addTagToLeftUI(currentSelectedGroupId, tagId, tagName, style.bg);
                         lucide.createIcons();
                     }
                 } else {
-                    $btn.css({ backgroundColor: 'transparent', color: bgColor });
+                    $btn.css({ backgroundColor: 'transparent', color: '#fff', borderColor: '#fff' });
                     if (currentSelectedGroupId) {
                         window.removeTagFromLeftUI(currentSelectedGroupId, tagId);
                     }
                 }
-            },
-            error: function () {
-                alert('更新に失敗しました');
             }
         });
     });

@@ -30,7 +30,7 @@
         </div>
         <div class="flex items-center justify-between w-auto">
             <!-- タグ選択ボタン -->
-            <button class="add-tag-btn text-sm text-green-400 hover:text-green-500 mt-2 ml-4" data-group-id="{{ $group->id }}">
+            <button class="add-tag-btn text-sm text-green-400 hover:text-green-500 mt-2 ml-4" data-purpose="{{ $group->purpose }}" data-group-id="{{ $group->id }}">
                 <i class="inline-block text-green-400 me-2" data-lucide="square-plus"></i><span>タグ選択</span>
             </button>
         </div>
