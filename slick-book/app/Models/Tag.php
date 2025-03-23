@@ -29,8 +29,10 @@ class Tag extends Model
      */
     public function tagGroups()
     {
-        return $this->belongsToMany(TagGroup::class, 'tag_tag_group')
-            ->withTimestamps();
+        return $this->belongsToMany(TagGroup::class)
+                    ->withPivot('order')
+                    ->withTimestamps()
+                    ->orderBy('pivot_order'); // 並び順
     }
 
     /**

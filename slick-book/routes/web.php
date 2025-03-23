@@ -56,6 +56,7 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::post('tags', [TagController::class, 'store'])->name('tags.store');
         Route::patch('tags/{tag}', [TagController::class, 'update'])->name('tags.update');
         Route::delete('tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
+        Route::post('tags/reorder', [TagController::class, 'reorder'])->name('tags.reorder');
     });
 });
 

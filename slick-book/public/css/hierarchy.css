@@ -1,12 +1,12 @@
 .hierarchy-tree ul {
     list-style-type: none;
-    padding-left: 20px;
+    padding-left: 10px;
     position: relative;
 }
 
 .hierarchy-tree ul li {
     position: relative;
-    padding-left: 15px;
+    padding-left: 10px;
 }
 
 .hierarchy-tree ul li::before {
@@ -59,4 +59,43 @@
     color: #4b5563;
     width: 15px;
     height: 15px;
+}
+
+.hierarchy-tree ul.sortable-tags {
+    padding-top: 8px;
+    min-height: 5px;
+    padding-bottom: 8px;
+    /* background: #000; */
+}
+
+.hierarchy-tree ul.sortable-tags li {
+    font-size: 11px;
+    height: 22px;
+}
+
+.hierarchy-tree ul.sortable-tags li::before {
+    content: "";
+}
+
+.hierarchy-tree ul.sortable-tags li svg.lucide {
+    color: #CCC;
+    margin-left: 0.2em;
+}
+
+.hierarchy-tree ul.sortable-tags li:hover {
+    cursor: pointer;
+}
+
+.hierarchy-tree ul li.sortable-tags .edit-btn,
+.hierarchy-tree ul li.sortable-tags .add-btn,
+.hierarchy-tree ul li.sortable-tags .delete-btn {
+    margin-left: 0em;
+    font-size: 0.8em;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hierarchy-tree ul li.sortable-tags.ui-state-highlight {
+    background-color: #facc154d;
 }

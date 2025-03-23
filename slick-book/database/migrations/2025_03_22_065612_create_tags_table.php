@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->string('color')->nullable();         // UI色
             $table->string('icon')->nullable();          // アイコン名
             $table->string('image_path')->nullable();    // 画像URL
+            $table->integer('order')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

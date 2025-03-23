@@ -26,6 +26,8 @@
                         <option value="seo">seo</option>
                         <option value="analysis">analysis</option>
                     </select>
+                    @elseif ($field === 'parent_id')
+                    <input type="hidden" id="{{ $id }}-{{ $field }}" name="parent_id" value="{{ $field }}">
                     @else
                     <input type="text" id="{{ $id }}-{{ $field }}" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
                     @endif
@@ -33,7 +35,7 @@
                 @endforeach
             </div>
             <div class="modal-footer dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセルa</button>
                 <button type="button" class="btn btn-primary" id="{{ $saveButtonId }}">保存</button>
             </div>
         </div>
