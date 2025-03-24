@@ -104,4 +104,5 @@
 .hierarchy-tree .tag-selection-ui .tag-item button {
     font-size: 11px;
     height: 22px;
+    float: left;
 }

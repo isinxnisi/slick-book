@@ -64,6 +64,11 @@ class TagGroupController extends Controller
         return response()->json(['message' => '削除しました']);
     }
 
+    public function tags(TagGroup $group)
+    {
+        return response()->json($group->tags()->orderBy('name')->get());
+    }
+
     public function reorder(Request $request)
     {
         foreach ($request->input('hierarchy', []) as $node) {

@@ -31,7 +31,10 @@ class TagGroup extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'tag_tag_group');
+        return $this->belongsToMany(Tag::class)
+                    ->withTimestamps()
+                    ->withPivot('order')
+                    ->orderBy('tag_tag_group.order');
     }
 
     public function getBreadcrumbAttribute()

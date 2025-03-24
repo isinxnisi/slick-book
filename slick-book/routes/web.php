@@ -69,6 +69,7 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::post('/tag-tag-groups/toggle', [TagTagGroupController::class, 'toggle']);
         Route::post('/tag-tag-groups/unlink', [TagTagGroupController::class, 'unlink']);
         Route::get('/site-tag-groups/master-tags', [SiteTagGroupController::class, 'getMasterTags'])->name('site-tag-groups.master-tags');
+        Route::get('/tag-groups/{group}/tags', [TagGroupController::class, 'tags']);
 
     });
 });
