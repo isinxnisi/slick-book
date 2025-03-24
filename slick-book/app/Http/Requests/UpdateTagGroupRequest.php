@@ -9,7 +9,7 @@ class UpdateTagGroupRequest extends FormRequest
 {
     public function rules(): array
     {
-        $tagGroupId = $this->route('tag_group')?->id ?? $this->route('id');
+        $tagGroupId = $this->route('tagGroup')?->id ?? $this->route('id');
 
         return [
             'name' => ['required', 'string', 'max:255'],

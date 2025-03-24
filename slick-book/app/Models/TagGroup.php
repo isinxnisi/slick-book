@@ -32,9 +32,9 @@ class TagGroup extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class)
-                    ->withTimestamps()
-                    ->withPivot('order')
-                    ->orderBy('tag_tag_group.order');
+            ->withTimestamps()
+            ->withPivot('order')
+            ->orderBy('tag_tag_group.order');
     }
 
     public function getBreadcrumbAttribute()
@@ -46,5 +46,10 @@ class TagGroup extends Model
             $group = $group->parent;
         }
         return implode(' > ', $names);
+    }
+
+    public function sites()
+    {
+        return $this->belongsToMany(Site::class, 'site_tag_group');
     }
 }

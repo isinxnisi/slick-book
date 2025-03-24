@@ -1,6 +1,12 @@
-@section('title', 'タググループ管理')
+@section('title', 'タグ管理マスタ')
+@php
+    $icons = config('icons.list');
+    $defaultIcon = config('icons.default', 'folder');
+@endphp
 <x-app-layout>
-    <x-slot name="header"></x-slot>
+    <x-slot name="header">
+        <x-admin.tags.purpose-tabs-link :active-purpose="$purpose" />
+    </x-slot>
 
     <div class="grid grid-cols-1 md:grid-cols-[3fr_1.2fr] gap-4">
         <!-- タググループ階層ツリー -->
@@ -55,6 +61,7 @@
                 <form id="group-edit-form">
                     <input type="hidden" id="editPanel-group-id">
                     <input type="hidden" id="editPanel-group-parent_id">
+                    <input type="hidden" id="editPanel-purpose-hidden" name="purpose" value="{{ $purpose }}">
 
                     <div class="mb-2">
                         <label for="editPanel-group-name">表示名</label>
@@ -65,16 +72,21 @@
                         <input type="text" id="editPanel-group-slug" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
                     </div>
                     <div class="mb-2">
-                        <label for="editPanel-group-purpose">用途</label>
-                        <input type="text" id="editPanel-group-purpose" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
-                    </div>
-                    <div class="mb-2">
                         <label for="editPanel-group-color">色コード</label>
                         <input type="color" id="editPanel-group-color" class="form-control form-control-color w-100" title="色を選択">
                     </div>
                     <div class="mb-2">
                         <label for="editPanel-group-icon">アイコン</label>
-                        <input type="text" id="editPanel-group-icon" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700" placeholder="例: folder">
+                        <select id="editPanel-group-icon"
+                                class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                            @foreach($icons as $key => $label)
+                                <option value="{{ $key }}"
+                                    class="dark:text-white dark:bg-gray-800"
+                                    @if(old('icon', $group->icon ?? '') == $key) selected @endif>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-2">
                         <label for="editPanel-group-description">説明</label>
@@ -145,12 +157,13 @@
 
         // タググループ作成
         $('#add-group-btn').on('click', function() {
+            $('#editPanel-purpose-hidden').val('{{ $purpose }}');
+
             $('#editPanel-group-id').val('');
             $('#editPanel-group-name').val('');
             $('#editPanel-group-slug').val('');
-            $('#editPanel-group-purpose').val('');
             $('#editPanel-group-color').val('');
-            $('#editPanel-group-icon').val('');
+            $('#editPanel-group-icon').val('{{ $defaultIcon }}');
             $('#editPanel-group-description').val('');
             $('#editPanel-group-parent_id').val('');
             $('.ui-right-panel').find('.panel-content').hide();
@@ -161,12 +174,13 @@
         // タググループ子階層作成
         $(document).on('click', '.add-btn', function() {
             const parentId = $(this).data('id');
+            $('#editPanel-purpose-hidden').val('{{ $purpose }}');
+            
             $('#editPanel-group-id').val('');
             $('#editPanel-group-name').val($(this).data('name'));
             $('#editPanel-group-slug').val($(this).data('slug'));
-            $('#editPanel-group-purpose').val($(this).data('purpose'));
             $('#editPanel-group-color').val($(this).data('color'));
-            $('#editPanel-group-icon').val($(this).data('icon'));
+            $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).data('description'));
             $('#editPanel-group-parent_id').val(parentId);
             $('.ui-right-panel').find('.panel-content').hide();
@@ -177,12 +191,13 @@
         // タググループ編集ボタン
         $(document).on('click', '.edit-group-btn', function() {
             const groupId = $(this).data('id');
+            $('#editPanel-purpose-hidden').val($(this).data('purpose'));
+
             $('#editPanel-group-id').val(groupId);
             $('#editPanel-group-name').val($(this).data('name'));
             $('#editPanel-group-slug').val($(this).data('slug'));
-            $('#editPanel-group-purpose').val($(this).data('purpose'));
             $('#editPanel-group-color').val($(this).data('color'));
-            $('#editPanel-group-icon').val($(this).data('icon'));
+            $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).data('description'));
             $('.ui-right-panel').find('.panel-content').hide();
             $('#group-edit-panel').find('.mode-text').text('編集');
@@ -257,7 +272,7 @@
             const data = {
                 name: $('#editPanel-group-name').val(),
                 slug: $('#editPanel-group-slug').val(),
-                purpose: $('#editPanel-group-purpose').val(),
+                purpose: $('#editPanel-purpose-hidden').val(),
                 color: $('#editPanel-group-color').val(),
                 icon: $('#editPanel-group-icon').val(),
                 description: $('#editPanel-group-description').val(),

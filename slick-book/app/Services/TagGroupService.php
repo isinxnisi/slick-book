@@ -10,12 +10,14 @@ class TagGroupService
      * タグに purpose を注入する
      * （タグが紐づく最初のマスタグループから purpose を取得）
      */
-    public function injectPurposeIntoTags(Collection $groups): void
+    public function injectPurposeIntoTags($groups)
     {
         foreach ($groups as $group) {
             foreach ($group->tags as $tag) {
-                // タグが紐づく最初のマスタグループから purpose を取得
-                $firstMasterGroup = $tag->tagGroups->first();
+                $firstMasterGroup = $tag->tagGroups
+                    ->filter(fn ($g) => $g->sites->isEmpty()) // サイトに紐づいていないマスタグループのみ
+                    ->first();
+
                 $tag->purpose = $firstMasterGroup?->purpose ?? 'public';
             }
 
@@ -24,6 +26,7 @@ class TagGroupService
             }
         }
     }
+
 
     /**
      * ネストされたグループをフラットなリストに変換

@@ -1,4 +1,8 @@
 @section('title', 'サイトタグ管理')
+@php
+    $icons = config('icons.list');
+    $defaultIcon = config('icons.default', 'folder');
+@endphp
 <x-app-layout>
     <x-slot name="header">
         <!-- サイト切替タブ -->
@@ -69,7 +73,16 @@
                     </div>
                     <div class="mb-2">
                         <label for="editPanel-group-icon">アイコン</label>
-                        <input type="text" id="editPanel-group-icon" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700" placeholder="例: folder">
+                        <select id="editPanel-group-icon"
+                                class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                            @foreach($icons as $key => $label)
+                                <option value="{{ $key }}"
+                                    class="dark:text-white dark:bg-gray-800"
+                                    @if(old('icon', $group->icon ?? '') == $key) selected @endif>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-2">
                         <label for="editPanel-group-description">説明</label>
@@ -152,7 +165,9 @@
             $('#editPanel-group-slug').val('');
             $('#editPanel-group-purpose').val('');
             $('#editPanel-group-color').val('');
-            $('#editPanel-group-icon').val('');
+
+            $('#editPanel-group-icon').val('{{ $defaultIcon }}');
+
             $('#editPanel-group-description').val('');
             $('#editPanel-group-parent_id').val('');
             $('.ui-right-panel').find('.panel-content').hide();
@@ -169,7 +184,7 @@
             $('#editPanel-group-slug').val($(this).attr('data-slug'));
             $('#editPanel-group-purpose').val($(this).attr('data-purpose'));
             $('#editPanel-group-color').val($(this).attr('data-color'));
-            $('#editPanel-group-icon').val($(this).attr('data-icon'));
+            $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).attr('data-description'));
             $('#editPanel-group-parent_id').val(parentId);
             $('.ui-right-panel').find('.panel-content').hide();
@@ -185,7 +200,7 @@
             $('#editPanel-group-slug').val($(this).attr('data-slug'));
             $('#editPanel-group-purpose').val($(this).attr('data-purpose'));
             $('#editPanel-group-color').val($(this).attr('data-color'));
-            $('#editPanel-group-icon').val($(this).attr('data-icon'));
+            $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).attr('data-description'));
             $('.ui-right-panel').find('.panel-content').hide();
             $('#group-edit-panel').find('.mode-text').text('編集');

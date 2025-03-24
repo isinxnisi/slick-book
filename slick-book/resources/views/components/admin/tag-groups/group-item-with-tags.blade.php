@@ -39,7 +39,18 @@
     <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded" data-group-id="{{ $group->id }}">
         @if ($group->tags->isNotEmpty())
         @foreach ($group->tags as $tag)
-        <li class="flex items-center space-x-1 bg-indigo-700 text-white ps-2 pe-2 py-1 rounded-full text-sm" data-id="{{ $tag->id }}">
+        @php
+            $purpose = $tag->purpose ?? 'public';
+            $styleSet = config('tags.purpose_styles')[$purpose] ?? [
+                'bg' => '#4f46e5',
+                'text' => '#fff',
+                'border' => '#4f46e5',
+            ];
+        @endphp
+
+        <li class="flex items-center space-x-1 tag-item active ps-2 pe-2 py-1 rounded-full text-sm ui-sortable-handle"
+            data-id="{{ $tag->id }}"
+            style="background-color: {{ $styleSet['bg'] }}; color: {{ $styleSet['text'] }}; border: 1px solid {{ $styleSet['border'] }};">
             <span>{{ $tag->name }}</span>
             <button class="edit-tag-btn hover:text-yellow-400"
                 data-id="{{ $tag->id }}"
