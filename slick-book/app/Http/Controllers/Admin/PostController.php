@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Site;
 use App\Services\MarkdownService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -33,9 +34,11 @@ class PostController extends Controller
     /**
      * 新規記事作成フォーム表示
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('admin.posts.create');
+        $siteId = $request->input('site', Site::first()?->id);
+        $sites = Site::all();
+        return view('admin.posts.create', compact('sites', 'siteId'));
     }
 
     /**

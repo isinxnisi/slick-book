@@ -2,6 +2,8 @@
 
 <x-app-layout>
     <x-slot name="header">
+        <!-- サイト切替タブ -->
+        <x-admin.ui.site-tabs :sites="$sites" :active-id="$siteId" />
     </x-slot>
 
     <div class="max-w-4xl">
