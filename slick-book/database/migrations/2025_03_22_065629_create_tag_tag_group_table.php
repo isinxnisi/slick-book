@@ -6,16 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('tag_synonyms', function (Blueprint $table) {
+        Schema::create('tag_tag_group', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tag_id')->constrained('tags')->onDelete('cascade');
-            $table->string('synonym')->index();
+            $table->foreignId('tag_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tag_group_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('tag_synonyms');
+        Schema::dropIfExists('tag_tag_group');
     }
 };

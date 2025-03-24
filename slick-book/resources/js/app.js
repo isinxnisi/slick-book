@@ -8,4 +8,6 @@ window.bootstrap = bootstrap;
 
 import { createIcons, icons } from 'lucide';
 
-createIcons({ icons });
+lucide.createIcons({ icons });
+
+import './hierarchy';

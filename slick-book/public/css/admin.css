@@ -1,4 +1,8 @@
-
 svg.lucide.lucide-edit {
     width: 18px;
+}
+
+.form-control:focus {
+    color: inherit !important;
+    background-color: inherit !important;
 }

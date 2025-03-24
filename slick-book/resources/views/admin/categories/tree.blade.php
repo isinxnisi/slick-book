@@ -1,4 +1,4 @@
-@section('title', 'カテゴリ階層設定')
+@section('title', 'カテゴリ設定')
 <x-app-layout>
     <x-slot name="header">
         <!-- サイト切替タブ -->
@@ -68,11 +68,6 @@
                 }, () => location.reload());
             }
         });
-        // // 編集ボタン
-        // $(document).on('click', '.edit-btn', function () {
-        //     const id = $(this).data('id');
-        //     // TODO: モーダルを開く
-        // });
 
         // 削除ボタン
         $(document).on('click', '.delete-btn', function() {
@@ -115,22 +110,6 @@
             });
             return items;
         }
-
-        // $(document).on('click', '.edit-btn', function() {
-        //     const id = $(this).data('id');
-        //     const title = $(this).data('title');
-        //     const slug = $(this).data('slug');
-        //     const description = $(this).data('description');
-
-        //     // 各 input/textarea に値をセット（modal id: editCategoryModal）
-        //     $('#editCategoryModal-id').val(id);
-        //     $('#editCategoryModal-title').val(title);
-        //     $('#editCategoryModal-slug').val(slug);
-        //     $('#editCategoryModal-description').val(description);
-
-        //     const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
-        //     modal.show();
-        // });
         $(document).on('click', '.edit-btn', function() {
             const fields = ['id', 'title', 'slug', 'description', 'image_path', 'icon', 'color'];
             fields.forEach(field => {
@@ -142,27 +121,6 @@
             const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
             modal.show();
         });
-        // $('#save-category-btn').on('click', function() {
-        //     const id = $('#editCategoryModal-id').val();
-        //     const title = $('#editCategoryModal-title').val();
-        //     const slug = $('#editCategoryModal-slug').val();
-        //     const description = $('#editCategoryModal-description').val();
-
-        //     $.ajax({
-        //         url: `/categories/${id}`,
-        //         method: 'PATCH',
-        //         headers: {
-        //             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //             'Accept': 'application/json'
-        //         },
-        //         data: {
-        //             title,
-        //             slug,
-        //             description
-        //         },
-        //         success: () => location.reload()
-        //     });
-        // });
         $('#save-category-btn').on('click', function() {
             const id = $('#editCategoryModal-id').val();
             const fields = ['title', 'slug', 'description', 'image_path', 'icon', 'color'];

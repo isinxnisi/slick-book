@@ -6,6 +6,10 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\TagGroupController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\SiteTagGroupController;
+use App\Http\Controllers\Admin\TagTagGroupController;
 use App\Http\Controllers\Site1\HomeController as Site1Home;
 use App\Http\Controllers\Site2\HomeController as Site2Home;
 
@@ -43,6 +47,30 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
         // 並び順の更新
         Route::post('categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder');
+
+        Route::get('tag-groups', [TagGroupController::class, 'index'])->name('tag-groups.index');
+        Route::post('tag-groups', [TagGroupController::class, 'store'])->name('tag-groups.store');
+        Route::patch('tag-groups/{tagGroup}', [TagGroupController::class, 'update'])->name('tag-groups.update');
+        Route::delete('tag-groups/{tagGroup}', [TagGroupController::class, 'destroy'])->name('tag-groups.destroy');
+        Route::post('tag-groups/reorder', [TagGroupController::class, 'reorder'])->name('tag-groups.reorder');
+
+        Route::get('tags/by-group/{group}', [TagController::class, 'indexByGroup'])->name('tags.by-group');
+        Route::post('tags', [TagController::class, 'store'])->name('tags.store');
+        Route::patch('tags/{tag}', [TagController::class, 'update'])->name('tags.update');
+        Route::delete('tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
+        Route::post('tags/reorder', [TagController::class, 'reorder'])->name('tags.reorder');
+
+        Route::get('site-tag-groups', [SiteTagGroupController::class, 'index'])->name('site-tag-groups.index');
+        Route::post('site-tag-groups', [SiteTagGroupController::class, 'store'])->name('site-tag-groups.store');
+        Route::patch('site-tag-groups/{tagGroup}', [SiteTagGroupController::class, 'update'])->name('site-tag-groups.update');
+        Route::delete('site-tag-groups/{tagGroup}', [SiteTagGroupController::class, 'destroy'])->name('site-tag-groups.destroy');
+        Route::post('site-tag-groups/reorder', [SiteTagGroupController::class, 'reorder'])->name('site-tag-groups.reorder');
+
+        Route::post('/tag-tag-groups/toggle', [TagTagGroupController::class, 'toggle']);
+        Route::post('/tag-tag-groups/unlink', [TagTagGroupController::class, 'unlink']);
+        Route::get('/site-tag-groups/master-tags', [SiteTagGroupController::class, 'getMasterTags'])->name('site-tag-groups.master-tags');
+        Route::get('/tag-groups/{group}/tags', [TagGroupController::class, 'tags']);
+
     });
 });
 
