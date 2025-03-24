@@ -9,9 +9,25 @@ return [
     ],
 
     'purpose_styles' => [
-        'public' => ['bg' => '#38bdf8', 'text' => '#333'],     // 水色系＋白文字
-        'seo'    => ['bg' => '#facc15', 'text' => '#333'],     // 黄色系＋黒文字
-        'system' => ['bg' => '#9ca3af', 'text' => '#333'],     // グレー系＋黒文字
-        'user'   => ['bg' => '#10b981', 'text' => '#333'],     // 緑系＋白文字
+        'public' => [
+            'bg' => '#38bdf8',
+            'text' => '#333',
+            'border' => '#38bdf8',
+        ],
+        'seo'    => [
+            'bg' => '#facc15',
+            'text' => '#333',
+            'border' => '#facc15',
+        ],
+        'system' => [
+            'bg' => '#9ca3af',
+            'text' => '#333',
+            'border' => '#9ca3af',
+        ],
+        'user'   => [
+            'bg' => '#10b981',
+            'text' => '#333',
+            'border' => '#10b981',
+        ],
     ],
 ];

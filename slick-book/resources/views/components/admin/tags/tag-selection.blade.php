@@ -27,39 +27,31 @@ $textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
             <div class="dark:bg-gray-900 flex flex-wrap gap-2 ml-1 mt-2 ps-2 py-2 rounded">
             @php
                 $selectedIdsForGroup = $selectedTagIds[$group->id] ?? [];
-                $bgColor = $purposeColors[$group->purpose] ?? '#888';
-                $textColor = $purposeTextColors[$group->purpose] ?? '#333';
             @endphp
             @foreach ($group->tags as $tag)
                 @php
                     $isActive = in_array($tag->id, $selectedIdsForGroup);
                 @endphp
-                <div class="tag-item ps-2 pe-2 rounded-full text-sm border-1"
-                        style="
-                            background-color: {{ $isActive ? $bgColor : 'transparent' }};
-                            color: {{ $isActive ? $textColor : '#fff' }};
-                            border-color: {{ $isActive ? $bgColor : '#fff' }};
-                        ">
-                    <button class="tag-toggle-btn me-1"
-                        data-purpose="{{ $group->purpose }}"
-                        data-tag-id="{{ $tag->id }}"
-                        data-site-id="{{ $siteId }}"
-                        data-tag-group-id="">
-                        {{ $tag->name }}
-                    </button>
-                    <button class="edit-m-tag-btn hover:text-yellow-400 me-1"
-                        data-tag-group-id="{{ $group->id }}"
-                        data-id="{{ $tag->id }}"
-                        data-name="{{ $tag->name }}"
-                        data-slug="{{ $tag->slug }}"
-                        data-description="{{ $tag->description }}">
-                        <i data-lucide="pencil" class="w-4 h-4"></i>
-                    </button>
-                    <button class="delete-m-tag-btn hover:text-red-400" data-id="{{ $tag->id }}" data-tag-group-id="{{ $group->id }}">
-                        <i data-lucide="trash" class="w-4 h-4"></i>
-                    </button>
-                </div>
+                <x-admin.ui.tag-item
+                :tag-id="$tag->id"
+                :tag-name="$tag->name"
+                :active="$isActive"
+                :editable="true"
+                :deletable="true"
+                :background="$bgColor"
+                :text="$textColor"
+                :border="$bgColor"
+
+                :is-toggleable="true"
+                :tag-group-id="$group->id"
+                :site-id="$siteId"
+                :purpose="$purpose"
+                :slug="$tag->slug"
+                :description="$tag->description"
+                :group-name="$group->breadcrumb"
+                />
             @endforeach
+        
             </div>
         @endforeach
 
@@ -112,9 +104,10 @@ $textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
         const $btn = $(this);
         const tagId = $btn.attr('data-tag-id');
         const tagGroupId = $btn.attr('data-tag-group-id');
-        const isActive = $btn.hasClass('active');
-        const tagName = $btn.text().trim(); // 表示名
-        const color = $btn.css('border-color');
+        const isActive = $btn.parent('.tag-item').hasClass('active');
+        const tagName = $btn.text().trim();
+        const purpose = $btn.attr('data-purpose') || 'public';
+        const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
 
         $.ajax({
             url: '/tag-tag-groups/toggle',
@@ -125,22 +118,22 @@ $textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
                 tag_group_id: tagGroupId,
             },
             success: function () {
-                $btn.parent('.tag-item').toggleClass('active');
-                const purpose = $btn.attr('data-purpose') || 'public';
-                const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
+                const $item = $btn.parent('.tag-item');
+                $item.toggleClass('active');
 
-                if ($btn.parent('.tag-item').hasClass('active')) {
-                    $btn.parent('.tag-item').css({ backgroundColor: style.bg, color: style.text, borderColor: style.bg });
-                    if (currentSelectedGroupId) {
-                        window.addTagToLeftUI(currentSelectedGroupId, tagId, tagName, style.bg);
-                        lucide.createIcons();
+                if ($item.hasClass('active')) {
+                    $item.css({ backgroundColor: style.bg, color: style.text, borderColor: style.bg });
+                    if (window.currentSelectedGroupId) {
+                        window.addTagToLeftUI(window.currentSelectedGroupId, tagId, tagName, style.bg);
                     }
                 } else {
-                    $btn.parent('.tag-item').css({ backgroundColor: 'transparent', color: '#fff', borderColor: '#fff' });
-                    if (currentSelectedGroupId) {
-                        window.removeTagFromLeftUI(currentSelectedGroupId, tagId);
+                    $item.css({ backgroundColor: 'transparent', color: '#fff', borderColor: '#fff' });
+                    if (window.currentSelectedGroupId) {
+                        window.removeTagFromLeftUI(window.currentSelectedGroupId, tagId);
                     }
                 }
+
+                window.refreshLucideAndBindEvents();
             }
         });
     });

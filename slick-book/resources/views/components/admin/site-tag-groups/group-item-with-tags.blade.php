@@ -36,19 +36,22 @@
         </div>
     </div>
 
-    <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded" id="tags-of-group-{{ $group->id }}" data-group-id="{{ $group->id }}">
-        @if ($group->tags->isNotEmpty())
+    <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded"
+        id="tags-of-group-{{ $group->id }}" data-group-id="{{ $group->id }}">
         @foreach ($group->tags as $tag)
-        <li class="flex items-center space-x-1 bg-indigo-700 text-white ps-2 pe-2 py-1 rounded-full text-sm" data-id="{{ $tag->id }}">
-            <span>{{ $tag->name }}</span>
-            <button class="delete-tag-btn hover:text-red-400"
-                data-id="{{ $tag->id }}">
-                <i data-lucide="x" class="w-4 h-4"></i>
-            </button>
-        </li>
+            <x-admin.ui.tag-item
+                :tag-id="$tag->id"
+                :tag-name="$tag->name"
+                :active="true"
+                :editable="false"
+                :deletable="true"
+                :background="$group->color ?? '#4f46e5'"
+                text="#fff"
+                :border="$group->color ?? '#4f46e5'"
+            />
         @endforeach
-        @endif
     </ul>
+
 
     {{-- 子グループ --}}
     <ul class="sortable ml-4">

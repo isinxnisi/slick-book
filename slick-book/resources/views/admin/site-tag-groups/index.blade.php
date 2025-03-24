@@ -90,10 +90,10 @@
 
     @push('scripts')
     <script>
+        // グローバルに定義
         window.purposeStyles = @json(config('tags.purpose_styles'));
-        // グローバル変数で保持
-        let currentSelectedPurpose = '{{ $purpose }}';
-        let currentSelectedGroupId = null;
+        window.currentSelectedPurpose = '{{ $purpose }}';
+        window.currentSelectedGroupId = null;
 
         $(function() {
             bindRightUIEvents();
@@ -199,7 +199,7 @@
         // タグ追加ボタン
         $(document).on('click', '.add-tag-btn', function() {
             const groupId = $(this).attr('data-group-id');
-            currentSelectedGroupId = groupId;
+            window.currentSelectedGroupId = groupId;
 
             applySelectedTagsToRightPanel(groupId);
 
@@ -291,7 +291,7 @@
                     // 左UIからタグを削除
                     $(this).closest('li').remove();
                     // 右UIからタグを削除
-                    applySelectedTagsToRightPanel(currentSelectedGroupId);
+                    applySelectedTagsToRightPanel(window.currentSelectedGroupId);
                 },
                 error: () => alert('削除に失敗しました')
             });
@@ -366,7 +366,7 @@
                 purpose: selectedPurpose
             }, function (html) {
                 // 選択中の用途を更新
-                currentSelectedPurpose = selectedPurpose;
+                window.currentSelectedPurpose = selectedPurpose;
 
                 $('#tag-edit-panel .hierarchy-tree').html(html);
                 // タブの表示状態を更新
@@ -380,13 +380,19 @@
                     .removeClass('text-gray-400')
                     .css('border-color', style.bg ?? "#4f46e5");
 
-                applySelectedTagsToRightPanel(currentSelectedGroupId);
-                lucide.createIcons();
-                bindRightUIEvents();
+                applySelectedTagsToRightPanel(window.currentSelectedGroupId);
+                window.refreshLucideAndBindEvents();
             });
         });
 
         function bindRightUIEvents() {
+            // イベント重複バインド防止
+            $(document).off('click', '.add-m-tag-inline-btn');
+            $(document).off('click', '.edit-m-tag-btn');
+            $(document).off('click', '.delete-m-tag-btn');
+            $('#inline-tag-cancel').off('click');
+            $('#inline-tag-form').off('submit');
+
             // マスタ：タグ追加
             $(document).on('click', '.add-m-tag-inline-btn', function () {
                 const groupId = $(this).data('group-id');
@@ -499,40 +505,13 @@
             const params = new URLSearchParams(window.location.search);
             const siteId = params.get('site');
 
-            // Ajaxで右UIを再取得
             $.get('/site-tag-groups/master-tags', {
                 site: siteId,
-                purpose: currentSelectedPurpose
+                purpose: window.currentSelectedPurpose
             }, function (html) {
                 $('#tag-selection-body').html(html);
-                applySelectedTagsToRightPanel(currentSelectedGroupId);
-                lucide.createIcons();
-                bindRightUIEvents();
-            });
-        }
-
-        function refreshLeftTagUI() {
-            // 左UIでの更新された内容の反映（タグ名の更新、削除）
-            const groupId = currentSelectedGroupId;
-            if (!groupId) return;
-
-            $.get(`/tag-groups/${groupId}/tags`, function (tags) {
-                const $ul = $(`#tags-of-group-${groupId}`);
-                $ul.empty();
-
-                tags.forEach(tag => {
-                    const li = $(`
-                        <li class="flex items-center space-x-1 bg-indigo-700 text-white ps-2 pe-2 py-1 rounded-full text-sm ui-sortable-handle" data-id="${tag.id}">
-                            <span>${tag.name}</span>
-                            <button class="delete-tag-btn hover:text-red-400" data-id="${tag.id}">
-                                <i data-lucide="x" class="w-4 h-4"></i>
-                            </button>
-                        </li>
-                    `);
-                    $ul.append(li);
-                });
-
-                lucide.createIcons();
+                applySelectedTagsToRightPanel(window.currentSelectedGroupId);
+                window.refreshLucideAndBindEvents();
             });
         }
 
