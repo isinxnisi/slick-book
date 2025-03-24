@@ -19,15 +19,16 @@
 ])
 
 @php
-$bg = $active && $background ? $background : 'transparent';
-$borderColor = $active && $border ? $border : '#fff';
-$deleteClass = $isToggleable ? 'delete-m-tag-btn' : 'delete-tag-btn';
-$deleteIcon = $isToggleable ? 'trash' : 'x';
+$purposeStyles = config('tags.purpose_styles');
+$style = $purposeStyles[$purpose] ?? ['bg' => '#888', 'text' => '#fff', 'border' => '#888'];
+$bg = $active ? $style['bg'] : 'transparent';
+$borderColor = $active ? $style['border'] : '#fff';
+$textColor = $active ? $style['text'] : '#fff';
 @endphp
 
 <li class="flex items-center space-x-1 tag-item {{ $active ? 'active' : '' }} ps-2 pe-2 py-1 rounded-full text-sm"
     data-id="{{ $tagId }}"
-    style="background-color: {{ $bg }}; color: {{ $text }}; border: 1px solid {{ $borderColor }}">
+    style="background-color: {{ $bg }}; color: {{ $textColor }}; border: 1px solid {{ $borderColor }}">
 
     @if($isToggleable)
         <button class="tag-toggle-btn me-1"
@@ -54,10 +55,13 @@ $deleteIcon = $isToggleable ? 'trash' : 'x';
     @endif
 
     @if($deletable)
-    <button class="{{ $deleteClass }} hover:text-red-400"
+    <button class="{{ $isToggleable ? 'delete-m-tag-btn' : 'delete-tag-btn' }} hover:text-red-400"
         data-id="{{ $tagId }}"
-        data-tag-group-id="{{ $tagGroupId }}">
-        <i data-lucide="{{ $deleteIcon }}" class="w-4 h-4"></i>
+        @if(!$isToggleable)
+            data-tag-group-id="{{ $tagGroupId }}"
+        @endif
+    >
+        <i data-lucide="{{ $isToggleable ? 'trash' : 'x' }}" class="w-4 h-4"></i>
     </button>
     @endif
 </li>

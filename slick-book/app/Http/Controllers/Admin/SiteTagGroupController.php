@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Services\TagGroupService;
 use App\Http\Controllers\Controller;
 use App\Models\Site;
 use App\Models\SiteTagGroup;
@@ -12,12 +13,14 @@ use Illuminate\Support\Str;
 
 class SiteTagGroupController extends Controller
 {
+    public function __construct(protected TagGroupService $tagGroupService) {}
+
     public function index(Request $request)
     {
         $siteId = $request->input('site', Site::first()?->id);
         $sites = Site::all();
-
-        // 選択されたサイトに紐づくタググループを取得（親階層から）
+    
+        // サイトに紐づくタググループ（左UI）
         $groups = TagGroup::whereNull('parent_id')
             ->whereIn('id', function ($query) use ($siteId) {
                 $query->select('tag_group_id')
@@ -26,7 +29,7 @@ class SiteTagGroupController extends Controller
             })
             ->with([
                 'parent',
-                'tags' => fn($q) => $q->orderBy('name'),
+                'tags' => fn ($q) => $q->orderBy('name'),
                 'children.parent',
                 'children.tags',
                 'children.children.parent',
@@ -34,8 +37,8 @@ class SiteTagGroupController extends Controller
             ])
             ->orderBy('order')
             ->get();
-
-        // サイトに紐づかないマスタグループのみ表示（階層＋タグ付き）
+    
+        // マスタグループ（右UI）取得 → flatten & purpose注入
         $mastaGroups = TagGroup::whereNull('parent_id')
             ->whereNotIn('id', function ($query) {
                 $query->select('tag_group_id')->from('site_tag_group');
@@ -50,12 +53,13 @@ class SiteTagGroupController extends Controller
             ])
             ->orderBy('order')
             ->get();
-
-        $mastaGroups = $this->flattenGroups($mastaGroups);
-
+    
+        $mastaGroups = $this->tagGroupService->flattenGroups($mastaGroups);
+        $this->tagGroupService->injectPurposeIntoTags($groups);
+    
         $purpose = request()->get('purpose', 'public');
-
-        $selectedTagIds = TagGroup::with(['tags:id']) // タグIDのみ取得
+    
+        $selectedTagIds = TagGroup::with(['tags:id'])
             ->whereIn('id', function ($query) use ($siteId) {
                 $query->select('tag_group_id')
                     ->from('site_tag_group')
@@ -65,7 +69,7 @@ class SiteTagGroupController extends Controller
             ->mapWithKeys(function ($group) {
                 return [$group->id => $group->tags->pluck('id')->toArray()];
             });
-
+    
         return view('admin.site-tag-groups.index', compact(
             'sites',
             'siteId',
@@ -82,7 +86,6 @@ class SiteTagGroupController extends Controller
             'site_id' => 'required|exists:sites,id',
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:tag_groups',
-            'purpose' => 'required|string|max:50',
             'color' => 'nullable|string|max:20',
             'icon' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:1000',
@@ -111,7 +114,6 @@ class SiteTagGroupController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:tag_groups,slug,' . $tagGroup->id,
-            'purpose' => 'required|string|max:50',
             'color' => 'nullable|string|max:20',
             'icon' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:1000',
@@ -143,7 +145,6 @@ class SiteTagGroupController extends Controller
     public function getMasterTags(Request $request)
     {
         $siteId = $request->input('site', Site::first()?->id);
-
         $purpose = $request->get('purpose', 'public');
     
         $mastaGroups = TagGroup::whereNull('parent_id')
@@ -161,9 +162,10 @@ class SiteTagGroupController extends Controller
             ->orderBy('order')
             ->get();
     
-        $mastaGroups = $this->flattenGroups($mastaGroups);
-
-        $selectedTagIds = TagGroup::with(['tags:id']) // タグIDのみ取得
+        $mastaGroups = $this->tagGroupService->flattenGroups($mastaGroups);
+        $this->tagGroupService->injectPurposeIntoTags($mastaGroups);
+    
+        $selectedTagIds = TagGroup::with(['tags:id'])
             ->whereIn('id', function ($query) use ($siteId) {
                 $query->select('tag_group_id')
                     ->from('site_tag_group')
@@ -173,12 +175,12 @@ class SiteTagGroupController extends Controller
             ->mapWithKeys(function ($group) {
                 return [$group->id => $group->tags->pluck('id')->toArray()];
             });
-
+    
         return view('components.admin.tags.tag-selection', [
-            'groups' => $mastaGroups, // マスタタググループ
-            'selectedTagIds' => $selectedTagIds, // サイトでON状態のタグID
-            'purpose' => $purpose, // 用途
-            'siteId' => $siteId, // サイトID
+            'groups' => $mastaGroups,
+            'selectedTagIds' => $selectedTagIds,
+            'purpose' => $purpose,
+            'siteId' => $siteId,
         ])->render();
     }
 
@@ -209,5 +211,20 @@ class SiteTagGroupController extends Controller
         }
     
         return $flattened;
+    }
+
+    protected function injectPurposeIntoTags($groups)
+    {
+        foreach ($groups as $group) {
+            foreach ($group->tags as $tag) {
+                $firstMasterGroup = $tag->tagGroups->first();
+                $tag->purpose = $firstMasterGroup?->purpose ?? 'public';
+            }
+    
+            // 再帰的に子グループにも適用
+            if ($group->children && $group->children->isNotEmpty()) {
+                $this->injectPurposeIntoTags($group->children);
+            }
+        }
     }
 }

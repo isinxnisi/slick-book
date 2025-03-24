@@ -124,7 +124,13 @@ $textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
                 if ($item.hasClass('active')) {
                     $item.css({ backgroundColor: style.bg, color: style.text, borderColor: style.bg });
                     if (window.currentSelectedGroupId) {
-                        window.addTagToLeftUI(window.currentSelectedGroupId, tagId, tagName, style.bg);
+                        window.addTagToLeftUI(
+                            window.currentSelectedGroupId,
+                            tagId,
+                            tagName,
+                            style.bg,
+                            style.text
+                        );
                     }
                 } else {
                     $item.css({ backgroundColor: 'transparent', color: '#fff', borderColor: '#fff' });

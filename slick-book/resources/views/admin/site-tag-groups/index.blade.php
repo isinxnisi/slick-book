@@ -64,10 +64,6 @@
                         <input type="text" id="editPanel-group-slug" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
                     </div>
                     <div class="mb-2">
-                        <label for="editPanel-group-purpose">用途</label>
-                        <input type="text" id="editPanel-group-purpose" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
-                    </div>
-                    <div class="mb-2">
                         <label for="editPanel-group-color">色コード</label>
                         <input type="color" id="editPanel-group-color" class="form-control form-control-color w-100" title="色を選択">
                     </div>

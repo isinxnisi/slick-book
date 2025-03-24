@@ -36,20 +36,34 @@
         </div>
     </div>
 
-    <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded"
-        id="tags-of-group-{{ $group->id }}" data-group-id="{{ $group->id }}">
+    <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded" id="tags-of-group-{{ $group->id }}" data-group-id="{{ $group->id }}">
+        @if ($group->tags->isNotEmpty())
         @foreach ($group->tags as $tag)
+            @php
+                $purpose = $tag->purpose;
+                $styleSet = config('tags.purpose_styles')[$purpose] ?? [
+                    'bg' => '#4f46e5',
+                    'text' => '#fff',
+                    'border' => '#4f46e5',
+                ];
+            @endphp
+
             <x-admin.ui.tag-item
                 :tag-id="$tag->id"
                 :tag-name="$tag->name"
                 :active="true"
                 :editable="false"
                 :deletable="true"
-                :background="$group->color ?? '#4f46e5'"
-                text="#fff"
-                :border="$group->color ?? '#4f46e5'"
+                :background="$styleSet['bg']"
+                :text="$styleSet['text']"
+                :border="$styleSet['border']"
+
+                :is-toggleable="false"
+                :tag-group-id="$group->id"
+                :purpose="$purpose"
             />
         @endforeach
+        @endif
     </ul>
 
 
