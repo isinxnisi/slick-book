@@ -1,4 +1,4 @@
-@section('title', 'サイトタグ管理')
+@section('title', 'タグ設定（サイト別）')
 @php
     $icons = config('icons.list');
     $defaultIcon = config('icons.default', 'folder');

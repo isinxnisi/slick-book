@@ -1,4 +1,4 @@
-@section('title', 'カテゴリ階層設定')
+@section('title', 'カテゴリ設定')
 <x-app-layout>
     <x-slot name="header">
         <!-- サイト切替タブ -->
