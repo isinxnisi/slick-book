@@ -25,6 +25,7 @@ class TagController extends Controller
             'slug' => 'nullable|string|max:255|unique:tags,slug',
             'description' => 'nullable|string',
             'tag_group_id' => 'required|exists:tag_groups,id',
+            'purpose' => 'required|string|max:50',
         ]);
 
         if (empty($validated['slug'])) {
@@ -49,6 +50,7 @@ class TagController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:tags,slug,' . $tag->id,
             'description' => 'nullable|string',
+            'purpose' => 'required|string|max:50', 
         ]);
 
         $tag->update($validated);

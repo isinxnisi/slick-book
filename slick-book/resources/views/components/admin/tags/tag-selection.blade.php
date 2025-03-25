@@ -60,6 +60,7 @@ $textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
             <form id="inline-tag-form" class="space-y-3">
                 <input type="hidden" name="tag_id" id="inline-tag-id">
                 <input type="hidden" name="tag_group_id" id="inline-tag-group-id">
+                <input type="hidden" name="purpose" id="inline-tag-purpose" value="{{ $purpose }}">
                 <div>
                     <div class="flex items-center justify-between">
                         <label class="text-sm text-gray-300">追加先グループ</label>

@@ -18,10 +18,15 @@ class Tag extends Model
         'color',
         'is_visible',
         'canonical_name',
+        'purpose',
     ];
 
     protected $casts = [
         'is_visible' => 'boolean',
+    ];
+
+    protected $attributes = [
+        'purpose' => 'public', // デフォルト値
     ];
 
     /**
