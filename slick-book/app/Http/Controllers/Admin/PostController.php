@@ -38,7 +38,10 @@ class PostController extends Controller
     {
         $siteId = $request->input('site', Site::first()?->id);
         $sites = Site::all();
-        return view('admin.posts.create', compact('sites', 'siteId'));
+        $selectedTagIdsByPurpose = collect(config('tags.purposes'))->mapWithKeys(function ($label, $purpose) {
+            return [$purpose => []];
+        });
+        return view('admin.posts.create', compact('sites', 'siteId', 'selectedTagIdsByPurpose'));
     }
 
     /**

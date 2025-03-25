@@ -65,6 +65,7 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::patch('site-tag-groups/{tagGroup}', [SiteTagGroupController::class, 'update'])->name('site-tag-groups.update');
         Route::delete('site-tag-groups/{tagGroup}', [SiteTagGroupController::class, 'destroy'])->name('site-tag-groups.destroy');
         Route::post('site-tag-groups/reorder', [SiteTagGroupController::class, 'reorder'])->name('site-tag-groups.reorder');
+        Route::get('site-tag-groups/tags', [SiteTagGroupController::class, 'tags']);
 
         Route::post('/tag-tag-groups/toggle', [TagTagGroupController::class, 'toggle']);
         Route::post('/tag-tag-groups/unlink', [TagTagGroupController::class, 'unlink']);

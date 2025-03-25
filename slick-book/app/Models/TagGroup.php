@@ -52,4 +52,9 @@ class TagGroup extends Model
     {
         return $this->belongsToMany(Site::class, 'site_tag_group');
     }
+
+    public function siteTagGroups()
+    {
+        return $this->hasMany(SiteTagGroup::class);
+    }
 }
