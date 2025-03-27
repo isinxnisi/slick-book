@@ -11,7 +11,7 @@
                 @endif
             </span>
             <button class="edit-group-btn text-sm text-yellow-400 hover:text-yellow-500"
-                data-id="{{ $group->id }}"
+                data-tag-id="{{ $group->id }}"
                 data-name="{{ $group->name }}"
                 data-slug="{{ $group->slug }}"
                 data-purpose="{{ $group->purpose }}"
@@ -24,7 +24,7 @@
                 <i data-lucide="square-plus"></i>
             </button>
             <button class="delete-group-btn text-sm text-red-400 hover:text-red-500"
-                data-id="{{ $group->id }}">
+                data-tag-id="{{ $group->id }}">
                 <i data-lucide="trash-2"></i>
             </button>
         </div>
