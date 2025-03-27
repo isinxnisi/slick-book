@@ -29,9 +29,9 @@
             </div>
         </div>
 
-        <div class="ui-right-panel dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="ui-right-panel" style="overflow-x: hidden;">
             <!-- タグ詳細編集パネル -->
-            <div class="panel-content p-4 text-gray-900 dark:text-gray-100" id="tag-edit-panel" style="display: none;">
+            <div id="tag-edit-panel" class="panel-content p-4 text-gray-900 dark:text-gray-100 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
                 <h2 class="text-lg font-bold mb-2">タグ<span class="mode-text"></span></h2>
                 <form id="tag-edit-form">
                     <input type="hidden" id="editPanel-tag-id">
@@ -56,7 +56,7 @@
                 </form>
             </div>
             <!-- タググループ編集パネル（右側） -->
-            <div class="panel-content p-4 text-gray-900 dark:text-gray-100" id="group-edit-panel" style="display: none;">
+            <div id="group-edit-panel" class="panel-content p-4 text-gray-900 dark:text-gray-100 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
                 <h2 class="text-lg font-bold mb-2">タググループ<span class="mode-text"></span></h2>
                 <form id="group-edit-form">
                     <input type="hidden" id="editPanel-group-id">
@@ -168,7 +168,7 @@
             $('#editPanel-group-parent_id').val('');
             $('.ui-right-panel').find('.panel-content').hide();
             $('#group-edit-panel').find('.mode-text').text('追加');
-            $('#group-edit-panel').slideDown(100);
+            window.fadeSlideInRight($('#group-edit-panel'));
         });
 
         // タググループ子階層作成
@@ -185,7 +185,7 @@
             $('#editPanel-group-parent_id').val(parentId);
             $('.ui-right-panel').find('.panel-content').hide();
             $('#group-edit-panel').find('.mode-text').text('追加');
-            $('#group-edit-panel').slideDown(100);
+            window.fadeSlideInRight($('#group-edit-panel'));
         });
 
         // タググループ編集ボタン
@@ -201,7 +201,7 @@
             $('#editPanel-group-description').val($(this).data('description'));
             $('.ui-right-panel').find('.panel-content').hide();
             $('#group-edit-panel').find('.mode-text').text('編集');
-            $('#group-edit-panel').slideDown(100);
+            window.fadeSlideInRight($('#group-edit-panel'));
         });
 
         // タグ追加ボタン
@@ -216,7 +216,7 @@
 
             $('.ui-right-panel').find('.panel-content').hide();
             $('#tag-edit-panel').find('.mode-text').text('追加');
-            $('#tag-edit-panel').slideDown(100);
+            window.fadeSlideInRight($('#tag-edit-panel'));
         });
 
         // タグ編集ボタン
@@ -235,7 +235,7 @@
 
             $('.ui-right-panel').find('.panel-content').hide();
             $('#tag-edit-panel').find('.mode-text').text('編集');
-            $('#tag-edit-panel').slideDown(100);
+            window.fadeSlideInRight($('#tag-edit-panel'));
         });
 
         // 保存

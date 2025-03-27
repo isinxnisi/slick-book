@@ -6,3 +6,36 @@ svg.lucide.lucide-edit {
     color: inherit !important;
     background-color: inherit !important;
 }
+
+html {
+    scrollbar-gutter: stable;
+    background-color: #282828;
+}
+
+/* Chrome, Safari, Opera 用 */
+::-webkit-scrollbar {
+    width: 12px;
+    /* スクロールバーの幅 */
+}
+
+::-webkit-scrollbar-track {
+    background: #282828;
+    /* トラックの背景色 */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #282828;
+    /* サム（つまみ）の色 */
+    border-radius: 6px;
+    /* 角を丸く */
+    border: 3px solid #1a1a1a;
+    /* トラックと同色の境界線でインセット風に */
+}
+
+/* Firefox 用 */
+* {
+    scrollbar-width: thin;
+    /* 「thin」で細めのスクロールバー */
+    scrollbar-color: #336981 #1a1a1a;
+    /* サムとトラックの色 */
+}

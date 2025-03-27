@@ -10,4 +10,5 @@ import { createIcons, icons } from 'lucide';
 
 lucide.createIcons({ icons });
 
+import './admin-ui';
 import './hierarchy';
