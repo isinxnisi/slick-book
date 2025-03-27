@@ -30,7 +30,7 @@
     $textColor = $text ?? ($active ? $defaultStyle['text'] : '#fff');
 @endphp
 
-<li class="flex items-center space-x-1 tag-item {{ $active ? 'active' : '' }} ps-2 pe-2 py-1 rounded-full text-sm"
+<li class="tag-item flex items-center space-x-1 tag-item {{ $active ? 'active' : '' }} ps-2 pe-2 py-1 rounded-full text-sm"
     data-tag-id="{{ $tagId }}"
     data-group-id="{{ $tagGroupId }}"
     data-site-id="{{ $siteId }}"

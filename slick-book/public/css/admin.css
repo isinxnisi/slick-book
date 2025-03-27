@@ -117,3 +117,8 @@ main {
     scrollbar-color: #1a1a1a #1a1a1a;
     /* サムとトラックの色 */
 }
+
+.tag-item {
+    font-size: 11px !important;
+    height: 22px;
+}
