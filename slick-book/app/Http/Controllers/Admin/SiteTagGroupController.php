@@ -21,22 +21,7 @@ class SiteTagGroupController extends Controller
         $sites = Site::all();
     
         // サイトに紐づくタググループ（左UI）
-        $groups = TagGroup::whereNull('parent_id')
-            ->whereIn('id', function ($query) use ($siteId) {
-                $query->select('tag_group_id')
-                    ->from('site_tag_group')
-                    ->where('site_id', $siteId);
-            })
-            ->with([
-                'parent',
-                'tags' => fn ($q) => $q->orderBy('name'),
-                'children.parent',
-                'children.tags',
-                'children.children.parent',
-                'children.children.tags',
-            ])
-            ->orderBy('order')
-            ->get();
+        $groups = new TagGroup()->getSiteTagGroupTree($siteId);
     
         // マスタグループ（右UI）取得 → flatten & purpose注入
         $mastaGroups = TagGroup::whereNull('parent_id')
@@ -182,54 +167,6 @@ class SiteTagGroupController extends Controller
             'purpose' => $purpose,
             'siteId' => $siteId,
         ])->render();
-    }
-
-    public function tags(Request $request)
-    {
-        $siteId = $request->input('site');
-        $purpose = $request->input('purpose', 'public');
-
-        // 仮データ or 実データ：site_id & purpose に応じてタググループとタグを取得
-        // $tagGroups = TagGroup::with(['tags' => function ($query) {
-        //         $query->select('tags.id', 'tags.name');
-        //     }])
-        //     ->where('purpose', $purpose)
-        //     ->whereHas('siteTagGroups', function ($q) use ($siteId) {
-        //         $q->where('site_id', $siteId);
-        //     })
-        //     ->get()
-        //     ->map(function ($group) {
-        //         return [
-        //             'name' => $group->name,
-        //             'tags' => $group->tags->map(fn($tag) => [
-        //                 'id' => $tag->id,
-        //                 'name' => $tag->name,
-        //             ]),
-        //         ];
-        //     });
-        $tagGroups = TagGroup::with(['tags' => function ($query) {
-                $query->select('tags.id', 'tags.name');
-            }])
-            ->whereHas('siteTagGroups', function ($q) use ($siteId) {
-                $q->where('site_id', $siteId);
-            })
-            ->get();
-        $this->tagGroupService->injectPurposeIntoTags($tagGroups);
-
-        // 選択状態の保持
-        $selectedTagIds = TagGroup::with(['tags:id'])
-            ->whereHas('siteTagGroups', function ($q) use ($siteId) {
-                $q->where('site_id', $siteId);
-            })
-            ->get()
-            ->mapWithKeys(function ($group) {
-                return [$group->id => $group->tags->pluck('id')->toArray()];
-            });
-
-        return view('components.admin.tags.tag-selection', [
-            'groups' => $tagGroups,
-            'selectedTagIds' => $selectedTagIds,
-        ]);
     }
 
     protected function updateGroupOrder(array $node, $parentId)

@@ -30,6 +30,7 @@
 
         <div class="ui-right-panel dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="panel-content p-4 text-gray-900 dark:text-gray-100" id="tag-edit-panel" style="display: none;">
+                <h3 id="tag-selection-group-name" class="text-lg font-bold mb-3 text-gray-900 dark:text-gray-100"></h3>
 
                 <!-- タグ用途切り替えタブ -->
                 <x-admin.tags.purpose-tabs :active-purpose="$purpose" />
@@ -42,10 +43,6 @@
                         :purpose="$purpose"
                         :site-id="$siteId"
                         />
-                    <ul class="tree" id="tag-group-list">
-                        @foreach($mastaGroups as $group)
-                        @endforeach
-                    </ul>
                 </div>
                 <div class="mt-4 flex justify-start space-x-2">
                     <button type="button" id="tag-panel-cancel" class="bg-gray-600 text-white px-4 py-2 rounded">キャンセル</button>
@@ -58,6 +55,7 @@
                     <input type="hidden" id="editPanel-group-id">
                     <input type="hidden" id="editPanel-group-parent_id">
                     <input type="hidden" id="editPanel-site-id" value="{{ $siteId }}">
+                    <input type="hidden" id="editPanel-group-purpose">
 
                     <div class="mb-2">
                         <label for="editPanel-group-name">表示名</label>
@@ -128,7 +126,7 @@
                     const $list = $(this);
                     const groupId = $list.attr('data-group-id');
                     const tagIds = $list.children('li').map(function() {
-                        return $(this).attr('data-id');
+                        return $(this).attr('data-tag-id');
                     }).get();
 
                     $.post('/tags/reorder', {
@@ -210,10 +208,12 @@
         // タグ追加ボタン
         $(document).on('click', '.add-tag-btn', function() {
             const groupId = $(this).attr('data-group-id');
+            const groupName = $(this).attr('data-group-name');
             window.currentSelectedGroupId = groupId;
 
             applySelectedTagsToRightPanel(groupId);
 
+            $('#tag-selection-group-name').text(groupName);
             $('.ui-right-panel').find('.panel-content').hide();
             $('#tag-edit-panel').find('.mode-text').text('追加');
             $('#tag-edit-panel').slideDown(100);
@@ -285,9 +285,9 @@
             $('#tag-edit-panel').slideUp();
         });
 
-        // タグ削除
+        // サイト：タグ削除
         $(document).on('click', '.delete-tag-btn', function () {
-            const tagId = $(this).attr('data-id');
+            const tagId = $(this).attr('data-tag-id');
             const groupId = $(this).closest('.sortable-tags').attr('data-group-id'); // ULに group-id がある前提
 
             $.ajax({
@@ -308,7 +308,7 @@
             });
         });
 
-        // タググループ削除
+        // サイト：タググループ削除
         $(document).on('click', '.delete-group-btn', function () {
             if (!confirm('このタググループを削除してもよろしいですか？')) return;
 
@@ -324,45 +324,7 @@
             });
         });
 
-        function applySelectedTagsToRightPanel(groupId) {
-            const selectedTagIds = getCurrentTagIdsFromLeftUI(groupId);
-
-            $('.tag-toggle-btn').each(function () {
-                const $btn = $(this);
-                const tagId = parseInt($btn.attr('data-tag-id'));
-                const purpose = $btn.attr('data-purpose') || 'public';
-                const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
-
-                $btn.attr('data-tag-group-id', groupId);
-
-                if (selectedTagIds.includes(tagId)) {
-                    $btn.parent('.tag-item').addClass('active').css({
-                        backgroundColor: style.bg,
-                        color: style.text,
-                        borderColor: style.bg
-                    });
-                } else {
-                    $btn.parent('.tag-item').removeClass('active').css({
-                        backgroundColor: 'transparent',
-                        color: '#fff',
-                        borderColor: '#fff'
-                    });
-                }
-            });
-        }
-
-        function getCurrentTagIdsFromLeftUI(groupId) {
-            const $groupUl = $(`#tags-of-group-${groupId}`);
-            const tagIds = [];
-            $groupUl.find('li').each(function () {
-                const tagId = parseInt($(this).attr('data-id'));
-                if (!isNaN(tagId)) {
-                    tagIds.push(tagId);
-                }
-            });
-            return tagIds;
-        }
-
+        // マスタ：用途タブの切替
         $(document).on('click', '.purpose-tab', function () {
             const selectedPurpose = $(this).attr('data-purpose');
             const style = window.purposeStyles?.[selectedPurpose] || { bg: '#888', text: '#fff' };
@@ -396,6 +358,7 @@
             });
         });
 
+        // マスタ：イベントバインド
         function bindRightUIEvents() {
             // イベント重複バインド防止
             $(document).off('click', '.add-m-tag-inline-btn');
@@ -421,7 +384,7 @@
 
             // マスタ：タグ編集ボタン
             $(document).on('click', '.edit-m-tag-btn', function () {
-                const tagId = $(this).attr('data-id');
+                const tagId = $(this).attr('data-tag-id');
                 const groupId = $(this).data('group-id');
                 const groupName = $(this).data('group-name');
                 const tagName = $(this).attr('data-name');
@@ -441,10 +404,10 @@
 
             // マスタ：タグ削除ボタン
             $(document).on('click', '.delete-m-tag-btn', function () {
-                const tagId = $(this).attr('data-id');
+                const tagId = $(this).attr('data-tag-id');
 
                 if (!confirm('このタグを削除してもよろしいですか？')) return;
-
+                console.log('TEST');
                 $.ajax({
                     url: `/tags/${tagId}`,
                     method: 'DELETE',
@@ -453,7 +416,7 @@
                         // 再描画してUI更新
                         refreshRightTagUI();
                         // 左UIを更新
-                        refreshLeftTagUI();
+                        window.refreshLeftTagUI();
                     },
                     error: function () {
                         alert('削除に失敗しました');
@@ -461,6 +424,7 @@
                 });
             });
 
+            // マスタ：タグ追加：キャンセル
             $('#inline-tag-cancel').on('click', function () {
                 $('#inline-tag-form-container').slideUp(200);
             });
@@ -468,21 +432,22 @@
             // マスタ：タグ保存
             $('#inline-tag-form').on('submit', function (e) {
                 e.preventDefault();
+                // 送信データ
                 const tagId = $('#inline-tag-id').val();
                 const data = {
                     tag_id: tagId,
                     tag_group_id: $('#inline-tag-group-id').val(),
                     name: $('#inline-tag-name').val(),
                     slug: $('#inline-tag-slug').val(),
+                    purpose: $('#inline-tag-purpose').val(),
                     description: $('#inline-tag-description').val(),
                     _token: '{{ csrf_token() }}'
                 };
     
                 if (!tagId) {
+                    // 新規
                     $.post('/tags', data, function (res) {
                         $('#inline-tag-form-container').slideUp(0);
-                        const params = new URLSearchParams(window.location.search);
-                        const siteId = params.get('site');
         
                         // 右UIのタグ一覧を再取得
                         refreshRightTagUI();
@@ -495,16 +460,14 @@
                         url: `/tags/${tagId}`,
                         method: 'PATCH',
                         data: data,
-                        success: () => {
+                        success: (tagData) => {
                             $('#inline-tag-form-container').slideUp(0);
-                            const params = new URLSearchParams(window.location.search);
-                            const siteId = params.get('site');
             
                             // 右UIのタグ一覧を再取得
                             refreshRightTagUI();
 
                             // 左UIを更新
-                            refreshLeftTagUI();
+                            refreshLeftTagBtn(tagData);
                         }
                     });
                     
@@ -512,6 +475,51 @@
             });
         }
 
+        // グループ階層選択：選択中のタグボタンをアクティブにする
+        function applySelectedTagsToRightPanel(groupId) {
+            // 選択中のタグIDリスト
+            const selectedTagIds = getCurrentTagIdsFromLeftUI(groupId);
+            // 選択中のタグをアクティブにする
+            $('.tag-toggle-btn').each(function () {
+                const $btn = $(this);
+                const tagId = parseInt($btn.attr('data-tag-id'));
+                const purpose = $btn.attr('data-purpose') || 'public';
+                const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
+
+                $btn.attr('data-tag-group-id', groupId);
+
+                if (selectedTagIds.includes(tagId)) {
+                    // 選択中のタグ
+                    $btn.parent('.tag-item').addClass('active').css({
+                        backgroundColor: style.bg,
+                        color: style.text,
+                        borderColor: style.bg
+                    });
+                } else {
+                    // 未選択のタグ
+                    $btn.parent('.tag-item').removeClass('active').css({
+                        backgroundColor: 'transparent',
+                        color: '#fff',
+                        borderColor: '#fff'
+                    });
+                }
+            });
+        }
+
+        // 左UIで選択中のタグIDリストを取得
+        function getCurrentTagIdsFromLeftUI(groupId) {
+            const $groupUl = $(`#tags-of-group-${groupId}`);
+            const tagIds = [];
+            $groupUl.find('li').each(function () {
+                const tagId = parseInt($(this).attr('data-tag-id'));
+                if (!isNaN(tagId)) {
+                    tagIds.push(tagId);
+                }
+            });
+            return tagIds;
+        }
+
+        // タグ選択UI：タグの更新
         function refreshRightTagUI() {
             const params = new URLSearchParams(window.location.search);
             const siteId = params.get('site');
@@ -526,6 +534,62 @@
             });
         }
 
+        // タグ選択UI：タグの更新
+        function refreshLeftTagBtn(tagdata) {
+            const params = new URLSearchParams(window.location.search);
+            const siteId = params.get('site');
+            // サイト設定中の同タグすべてを対象に処理
+            $(`.tag-item[data-tag-id="${tagdata.id}"]`).each(function() {
+                // タグ名のみ反映しておく
+                $(this).attr('data-tag-name', tagdata.name);
+                $(this).find('.tag-name').text(tagdata.name);
+            });
+        }
+
+        // 右UIパネル：タグの選択／選択解除
+        $(document).on('click', '.tag-toggle-btn', function () {
+            const $btn = $(this);
+            const tagId = $btn.attr('data-tag-id');
+            const tagGroupId = $btn.attr('data-tag-group-id');
+            const isActive = $btn.parent('.tag-item').hasClass('active');
+            const tagName = $btn.text().trim();
+            const purpose = $btn.attr('data-purpose') || 'public';
+            const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
+
+            $.ajax({
+                url: '/tag-tag-groups/toggle',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    tag_id: tagId,
+                    tag_group_id: tagGroupId,
+                },
+                success: function () {
+                    const $item = $btn.parent('.tag-item');
+                    $item.toggleClass('active');
+
+                    if ($item.hasClass('active')) {
+                        $item.css({ backgroundColor: style.bg, color: style.text, borderColor: style.bg });
+                        if (window.currentSelectedGroupId) {
+                            window.addTagToLeftUI(
+                                window.currentSelectedGroupId,
+                                tagId,
+                                tagName,
+                                style.bg,
+                                style.text
+                            );
+                        }
+                    } else {
+                        $item.css({ backgroundColor: 'transparent', color: '#fff', borderColor: '#fff' });
+                        if (window.currentSelectedGroupId) {
+                            window.removeTagFromLeftUI(window.currentSelectedGroupId, tagId);
+                        }
+                    }
+
+                    window.refreshLucideAndBindEvents();
+                }
+            });
+        });
     </script>
     @endpush
 </x-app-layout>

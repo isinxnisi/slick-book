@@ -1,5 +1,5 @@
 <li id="tag-group-{{ $group->id }}" class="group-item cursor-pointer pl-2 py-1 rounded" data-id="{{ $group->id }}">
-    <div class="flex items-center justify-between">
+    <div class="group-content flex items-center justify-between">
         <div class="space-x-1">
             <span>
                 @if ($group->icon)
@@ -30,13 +30,13 @@
         </div>
         <div class="flex items-center justify-between w-auto">
             <!-- タグ選択ボタン -->
-            <button class="add-tag-btn text-sm text-green-400 hover:text-green-500 mt-2 ml-4" data-purpose="{{ $group->purpose }}" data-group-id="{{ $group->id }}">
+            <button class="add-tag-btn text-sm text-green-400 hover:text-green-500 mt-2 ml-4" data-purpose="{{ $group->purpose }}" data-group-id="{{ $group->id }}" data-group-name="{{ $group->breadcrumb }}">
                 <i class="inline-block text-green-400 me-2" data-lucide="square-plus"></i><span>タグ選択</span>
             </button>
         </div>
     </div>
 
-    <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded" id="tags-of-group-{{ $group->id }}" data-group-id="{{ $group->id }}">
+    <ul class="site-group-tags sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded" id="tags-of-group-{{ $group->id }}" data-group-id="{{ $group->id }}">
         @if ($group->tags->isNotEmpty())
         @foreach ($group->tags as $tag)
             @php
