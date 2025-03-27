@@ -9,6 +9,10 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -22,7 +26,7 @@
     <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
             @if (Route::has('login'))
-                <nav class="flex items-center justify-end gap-4">
+                <nav id="header-nav" class="flex items-center justify-end gap-4" style="position: relative; opacity: 0;">
                     @auth
                         <a
                             href="{{ url('/dashboard') }}"
@@ -51,14 +55,32 @@
         </header>
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row" style="margin-top: -10em">
-                <div class="mx-auto bg-[#fff2f2] dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0"
-                    style="position: relative;">
+                <div id="welcome-logo" class="mx-auto bg-[#fff2f2] dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0"
+                    style="position: relative; display: none; top: -20px;">
                     <x-admin.application-logo class="mx-auto mt-4 mb-5 pb-5 w-50 fill-current text-gray-500" />
                     <span class="w-100 py-3 ps-2 text-center" style="color:#333; font-size: 3.5em; position: absolute; top: 60%; left: 0;">SLICK BOOK</span>
                     <div class="absolute inset-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"></div>
                 </div>
             </main>
         </div>
+        <script>
+            $(document).ready(function() {
+              $('#welcome-logo')
+                .css({ opacity: 0, display: 'block' }) // 最初は透明＆表示状態に
+                .animate(
+                  { opacity: 1, top: '0px' },          // フェードイン & 下に移動
+                  800,                                // アニメーション時間: 2秒
+                  'swing'                              // イージング: "swing" または "linear"
+                );
+                $('#header-nav')
+                  .css({ opacity: 0 }) // 最初は透明＆表示状態に
+                  .animate(
+                    { opacity: 1, top: '0px' },          // フェードイン & 下に移動
+                    3000,                                // アニメーション時間: 2秒
+                    'swing'                              // イージング: "swing" または "linear"
+                  );
+            });
+        </script>
 
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
