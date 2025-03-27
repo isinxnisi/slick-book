@@ -31,6 +31,9 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+        // 記事
+        Route::get('posts/tags', [PostController::class, 'tags'])->name('posts.tags');
         Route::resource('posts', PostController::class);
 
         Route::resource('hierarchies', HierarchyController::class);

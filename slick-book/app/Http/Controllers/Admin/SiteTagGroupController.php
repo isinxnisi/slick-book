@@ -21,22 +21,7 @@ class SiteTagGroupController extends Controller
         $sites = Site::all();
     
         // サイトに紐づくタググループ（左UI）
-        $groups = TagGroup::whereNull('parent_id')
-            ->whereIn('id', function ($query) use ($siteId) {
-                $query->select('tag_group_id')
-                    ->from('site_tag_group')
-                    ->where('site_id', $siteId);
-            })
-            ->with([
-                'parent',
-                'tags' => fn ($q) => $q->orderBy('name'),
-                'children.parent',
-                'children.tags',
-                'children.children.parent',
-                'children.children.tags',
-            ])
-            ->orderBy('order')
-            ->get();
+        $groups = new TagGroup()->getSiteTagGroupTree($siteId);
     
         // マスタグループ（右UI）取得 → flatten & purpose注入
         $mastaGroups = TagGroup::whereNull('parent_id')

@@ -18,10 +18,15 @@ class Tag extends Model
         'color',
         'is_visible',
         'canonical_name',
+        'purpose',
     ];
 
     protected $casts = [
         'is_visible' => 'boolean',
+    ];
+
+    protected $attributes = [
+        'purpose' => 'public', // デフォルト値
     ];
 
     /**
@@ -49,5 +54,10 @@ class Tag extends Model
     public function canonical()
     {
         return $this->belongsTo(Tag::class, 'canonical_id');
+    }
+
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class, 'post_tag')->withTimestamps();
     }
 }

@@ -28,4 +28,20 @@ class Category extends Model
     {
         return $this->hasMany(self::class, 'parent_id')->with('children');
     }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function getBreadcrumbAttribute()
+    {
+        $titles = [];
+        $category = $this;
+        while ($category) {
+            array_unshift($titles, $category->title);
+            $category = $category->parent;
+        }
+        return implode(' > ', $titles);
+    }
 }

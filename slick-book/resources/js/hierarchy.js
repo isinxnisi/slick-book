@@ -6,13 +6,13 @@ window.addTagToLeftUI = function (groupId, tagId, tagName, background = '#4f46e5
         return;
     }
 
-    if ($groupUl.find(`[data-id="${tagId}"]`).length === 0) {
+    if ($groupUl.find(`[data-tag-id="${tagId}"]`).length === 0) {
         const li = `
             <li class="flex items-center space-x-1 tag-item active ps-2 pe-2 py-1 rounded-full text-sm ui-sortable-handle"
-                data-id="${tagId}"
+                data-tag-id="${tagId}"
                 style="background-color: ${background}; color: ${textColor}; border: 1px solid ${background}">
                 <span>${tagName}</span>
-                <button class="delete-tag-btn hover:text-red-400" data-id="${tagId}">
+                <button class="delete-tag-btn hover:text-red-400" data-tag-id="${tagId}">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </li>
@@ -24,7 +24,7 @@ window.addTagToLeftUI = function (groupId, tagId, tagName, background = '#4f46e5
 
 
 window.removeTagFromLeftUI = function (groupId, tagId) {
-    $(`#tags-of-group-${groupId} [data-id="${tagId}"]`).remove();
+    $(`#tags-of-group-${groupId} [data-tag-id="${tagId}"]`).remove();
 };
 
 window.removeTagFromRightUI = function (tagId) {
@@ -39,21 +39,20 @@ window.removeTagFromRightUI = function (tagId) {
 window.refreshLeftTagUI = function () {
     const groupId = window.currentSelectedGroupId;
     if (!groupId) return;
+    let style = { bg: '#888', text: '#fff' };
 
     $.get(`/tag-groups/${groupId}/tags`, function (tags) {
         const $ul = $(`#tags-of-group-${groupId}`);
         $ul.empty();
 
-        const bgColor = $ul.closest('li').find('span[style*="background-color"]').css('background-color') || '#4f46e5';
-        const textColor = '#333'; // TODO: 必要なら groupId → purpose → style 定義から取得可
-
         tags.forEach(tag => {
+            style = window.purposeStyles?.[tag.purpose] || { bg: '#888', text: '#fff' };
             const li = `
                 <li class="flex items-center space-x-1 tag-item active ps-2 pe-2 py-1 rounded-full text-sm ui-sortable-handle"
-                    data-id="${tag.id}"
-                    style="background-color: ${bgColor}; color: ${textColor}; border: 1px solid ${bgColor}">
+                    data-tag-id="${tag.id}"
+                    style="background-color: ${style.bg}; color: ${style.text}; border: 1px solid ${style.bg}">
                     <span>${tag.name}</span>
-                    <button class="delete-tag-btn hover:text-red-400" data-id="${tag.id}">
+                    <button class="delete-tag-btn hover:text-red-400" data-tag-id="${tag.id}">
                         <i data-lucide="x" class="w-4 h-4"></i>
                     </button>
                 </li>

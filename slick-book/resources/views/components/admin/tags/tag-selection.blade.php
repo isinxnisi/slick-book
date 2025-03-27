@@ -60,6 +60,7 @@ $textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
             <form id="inline-tag-form" class="space-y-3">
                 <input type="hidden" name="tag_id" id="inline-tag-id">
                 <input type="hidden" name="tag_group_id" id="inline-tag-group-id">
+                <input type="hidden" name="purpose" id="inline-tag-purpose" value="{{ $purpose }}">
                 <div>
                     <div class="flex items-center justify-between">
                         <label class="text-sm text-gray-300">追加先グループ</label>
@@ -97,51 +98,3 @@ $textColor = $purposeStyles[$purpose]['text'] ?? '#fff';
         </div>
     </div>
 </div>
-
-@push('scripts')
-<script>
-    $(document).on('click', '.tag-toggle-btn', function () {
-        const $btn = $(this);
-        const tagId = $btn.attr('data-tag-id');
-        const tagGroupId = $btn.attr('data-tag-group-id');
-        const isActive = $btn.parent('.tag-item').hasClass('active');
-        const tagName = $btn.text().trim();
-        const purpose = $btn.attr('data-purpose') || 'public';
-        const style = window.purposeStyles?.[purpose] || { bg: '#888', text: '#fff' };
-
-        $.ajax({
-            url: '/tag-tag-groups/toggle',
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                tag_id: tagId,
-                tag_group_id: tagGroupId,
-            },
-            success: function () {
-                const $item = $btn.parent('.tag-item');
-                $item.toggleClass('active');
-
-                if ($item.hasClass('active')) {
-                    $item.css({ backgroundColor: style.bg, color: style.text, borderColor: style.bg });
-                    if (window.currentSelectedGroupId) {
-                        window.addTagToLeftUI(
-                            window.currentSelectedGroupId,
-                            tagId,
-                            tagName,
-                            style.bg,
-                            style.text
-                        );
-                    }
-                } else {
-                    $item.css({ backgroundColor: 'transparent', color: '#fff', borderColor: '#fff' });
-                    if (window.currentSelectedGroupId) {
-                        window.removeTagFromLeftUI(window.currentSelectedGroupId, tagId);
-                    }
-                }
-
-                window.refreshLucideAndBindEvents();
-            }
-        });
-    });
-</script>
-@endpush
