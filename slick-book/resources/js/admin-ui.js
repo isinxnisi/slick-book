@@ -6,7 +6,7 @@
 window.fadeSlideInRight = function ($elem, duration = 100) {
     // 初期状態：表示はブロック、透明、右に100%移動（※必要に応じてピクセル値に変更）
     $elem.css({
-        display: 'block',
+        display: 'flex',
         opacity: 0,
         transform: 'translateX(100%)',
         transition: 'none'

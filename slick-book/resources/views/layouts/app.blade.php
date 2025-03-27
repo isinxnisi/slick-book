@@ -30,7 +30,7 @@
 
             <!-- Page Heading -->
             @isset($header)
-            <header class="dark:bg-gray-800 shadow">
+            <header id="content-header" class="dark:bg-gray-800 shadow">
                 <div class="mx-auto">
                     {{ $header }}
                 </div>

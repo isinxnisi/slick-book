@@ -11,7 +11,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-[3fr_2.0fr] gap-4">
         <!-- タググループ階層ツリー -->
-        <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="overflow-hidden">
             <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="hierarchy-tree p-4 text-gray-900 dark:text-gray-100">
                     <ul class="tree sortable" id="tag-group-list">
@@ -28,30 +28,38 @@
             </div>
         </div>
 
-        <div class="ui-right-panel" style="overflow-x: hidden;">
-            <div id="tag-edit-panel" class="panel-content p-4 text-gray-900 dark:text-gray-100 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
-                <h3 id="tag-selection-group-name" class="text-lg font-bold mb-3 text-gray-900 dark:text-gray-100"></h3>
-
-                <!-- タグ用途切り替えタブ -->
-                <x-admin.tags.purpose-tabs :active-purpose="$purpose" />
-
-                <!-- マスタ：タググループ階層ツリー -->
-                <div id="tag-selection-body" class="hierarchy-tree mt-3 p-0 text-gray-900 dark:text-gray-100">
-                    <x-admin.tags.tag-selection
-                        :groups="$mastaGroups"
-                        :selected-tag-ids="$selectedTagIds"
-                        :purpose="$purpose"
-                        :site-id="$siteId"
-                        />
+        <div class="ui-right-panel sm:rounded-lg" style="overflow-x: hidden;">
+            <div id="tag-edit-panel" class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 shadow-sm sm:rounded-lg" style="display: none;">
+                <div class="panel-header py-2 px-4 mb-0 border-b border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                        <span class="text-gray-400">タグ選択 : </span>
+                        <span id="tag-selection-group-name"></span>
+                    </h3>
                 </div>
-                <div class="mt-4 flex justify-start space-x-2">
-                    <button type="button" id="tag-panel-cancel" class="bg-gray-600 text-white px-4 py-2 rounded">キャンセル</button>
+                <div class="panel-content p-4">
+                    <!-- タグ用途切り替えタブ -->
+                    <x-admin.tags.purpose-tabs :active-purpose="$purpose" />
+    
+                    <!-- マスタ：タググループ階層ツリー -->
+                    <div id="tag-selection-body" class="hierarchy-tree mt-3 p-0 text-gray-900 dark:text-gray-100">
+                        <x-admin.tags.tag-selection
+                            :groups="$mastaGroups"
+                            :selected-tag-ids="$selectedTagIds"
+                            :purpose="$purpose"
+                            :site-id="$siteId"
+                            />
+                    </div>
+                    <div class="mt-4 flex justify-start space-x-2">
+                        <button type="button" id="tag-panel-cancel" class="bg-gray-600 text-white px-4 py-2 rounded">閉じる</button>
+                    </div>
                 </div>
             </div>
 
-            <div id="group-edit-panel" class="panel-content p-4 text-gray-900 dark:text-gray-100 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
-                <h2 class="text-lg font-bold mb-2">タググループ<span class="mode-text"></span></h2>
-                <form id="group-edit-form">
+            <div id="group-edit-panel" class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 shadow-sm sm:rounded-lg" style="display: none;">
+                <div class="panel-header py-2 px-4 mb-0 border-b border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">タググループ<span class="mode-text"></span></h3>
+                </div>
+                <form id="group-edit-form" class="panel-content p-4">
                     <input type="hidden" id="editPanel-group-id">
                     <input type="hidden" id="editPanel-group-parent_id">
                     <input type="hidden" id="editPanel-site-id" value="{{ $siteId }}">
@@ -168,7 +176,7 @@
 
             $('#editPanel-group-description').val('');
             $('#editPanel-group-parent_id').val('');
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#group-edit-panel').find('.mode-text').text('追加');
             window.fadeSlideInRight($('#group-edit-panel'));
         });
@@ -185,7 +193,7 @@
             $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).attr('data-description'));
             $('#editPanel-group-parent_id').val(parentId);
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#group-edit-panel').find('.mode-text').text('追加');
             window.fadeSlideInRight($('#group-edit-panel'));
         });
@@ -200,7 +208,7 @@
             $('#editPanel-group-color').val($(this).attr('data-color'));
             $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).attr('data-description'));
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#group-edit-panel').find('.mode-text').text('編集');
             window.fadeSlideInRight($('#group-edit-panel'));
         });
@@ -214,7 +222,7 @@
             applySelectedTagsToRightPanel(groupId);
 
             $('#tag-selection-group-name').text(groupName);
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#tag-edit-panel').find('.mode-text').text('追加');
             window.fadeSlideInRight($('#tag-edit-panel'));
         });

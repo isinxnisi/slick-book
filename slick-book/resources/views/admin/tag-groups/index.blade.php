@@ -29,74 +29,82 @@
             </div>
         </div>
 
-        <div class="ui-right-panel" style="overflow-x: hidden;">
+        <div class="ui-right-panel ui-scrollable sm:rounded-lg" style="overflow-x: hidden;">
             <!-- タグ詳細編集パネル -->
-            <div id="tag-edit-panel" class="panel-content p-4 text-gray-900 dark:text-gray-100 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
-                <h2 class="text-lg font-bold mb-2">タグ<span class="mode-text"></span></h2>
-                <form id="tag-edit-form">
-                    <input type="hidden" id="editPanel-tag-id">
-                    <input type="hidden" id="editPanel-tag-group-id">
-
-                    <div class="mb-2">
-                        <label for="editPanel-tag-name">タグ名</label>
-                        <input type="text" id="editPanel-tag-name" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
-                    </div>
-                    <div class="mb-2">
-                        <label for="editPanel-tag-slug">スラッグ</label>
-                        <input type="text" id="editPanel-tag-slug" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
-                    </div>
-                    <div class="mb-2">
-                        <label for="editPanel-tag-description">説明</label>
-                        <textarea id="editPanel-tag-description" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700"></textarea>
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-2">
-                        <button type="button" id="tag-panel-cancel" class="bg-gray-600 text-white px-4 py-2 rounded">キャンセル</button>
-                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">保存</button>
-                    </div>
-                </form>
+            <div id="tag-edit-panel" class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 shadow-sm sm:rounded-lg" style="display: none;">
+                <div class="panel-header py-2 px-4 mb-0 border-b border-gray-700">
+                    <h2 class="text-lg font-bold mb-2">タグ<span class="mode-text"></span></h2>
+                </div>
+                <div class="panel-content p-4">
+                    <form id="tag-edit-form">
+                        <input type="hidden" id="editPanel-tag-id">
+                        <input type="hidden" id="editPanel-tag-group-id">
+    
+                        <div class="mb-2">
+                            <label for="editPanel-tag-name">タグ名</label>
+                            <input type="text" id="editPanel-tag-name" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                        </div>
+                        <div class="mb-2">
+                            <label for="editPanel-tag-slug">スラッグ</label>
+                            <input type="text" id="editPanel-tag-slug" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                        </div>
+                        <div class="mb-2">
+                            <label for="editPanel-tag-description">説明</label>
+                            <textarea id="editPanel-tag-description" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700"></textarea>
+                        </div>
+                        <div class="mt-4 flex justify-end space-x-2">
+                            <button type="button" id="tag-panel-cancel" class="bg-gray-600 text-white px-4 py-2 rounded">キャンセル</button>
+                            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">保存</button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <!-- タググループ編集パネル（右側） -->
-            <div id="group-edit-panel" class="panel-content p-4 text-gray-900 dark:text-gray-100 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
-                <h2 class="text-lg font-bold mb-2">タググループ<span class="mode-text"></span></h2>
-                <form id="group-edit-form">
-                    <input type="hidden" id="editPanel-group-id">
-                    <input type="hidden" id="editPanel-group-parent_id">
-                    <input type="hidden" id="editPanel-purpose-hidden" name="purpose" value="{{ $purpose }}">
+            <div id="group-edit-panel" class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
+                <div class="panel-header py-2 px-4 mb-0 border-b border-gray-700">
+                    <h2 class="text-lg font-bold mb-2">タググループ<span class="mode-text"></span></h2>
+                </div>
+                <div class="panel-content p-4">
+                    <form id="group-edit-form">
+                        <input type="hidden" id="editPanel-group-id">
+                        <input type="hidden" id="editPanel-group-parent_id">
+                        <input type="hidden" id="editPanel-purpose-hidden" name="purpose" value="{{ $purpose }}">
 
-                    <div class="mb-2">
-                        <label for="editPanel-group-name">表示名</label>
-                        <input type="text" id="editPanel-group-name" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
-                    </div>
-                    <div class="mb-2">
-                        <label for="editPanel-group-slug">スラッグ</label>
-                        <input type="text" id="editPanel-group-slug" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
-                    </div>
-                    <div class="mb-2">
-                        <label for="editPanel-group-color">色コード</label>
-                        <input type="color" id="editPanel-group-color" class="form-control form-control-color w-100" title="色を選択">
-                    </div>
-                    <div class="mb-2">
-                        <label for="editPanel-group-icon">アイコン</label>
-                        <select id="editPanel-group-icon"
-                                class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
-                            @foreach($icons as $key => $label)
-                                <option value="{{ $key }}"
-                                    class="dark:text-white dark:bg-gray-800"
-                                    @if(old('icon', $group->icon ?? '') == $key) selected @endif>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label for="editPanel-group-description">説明</label>
-                        <textarea id="editPanel-group-description" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700"></textarea>
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-2">
-                        <button type="button" id="group-panel-cancel" class="bg-gray-600 text-white px-4 py-2 rounded">キャンセル</button>
-                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">保存</button>
-                    </div>
-                </form>
+                        <div class="mb-2">
+                            <label for="editPanel-group-name">表示名</label>
+                            <input type="text" id="editPanel-group-name" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                        </div>
+                        <div class="mb-2">
+                            <label for="editPanel-group-slug">スラッグ</label>
+                            <input type="text" id="editPanel-group-slug" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                        </div>
+                        <div class="mb-2">
+                            <label for="editPanel-group-color">色コード</label>
+                            <input type="color" id="editPanel-group-color" class="form-control form-control-color w-100" title="色を選択">
+                        </div>
+                        <div class="mb-2">
+                            <label for="editPanel-group-icon">アイコン</label>
+                            <select id="editPanel-group-icon"
+                                    class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                                @foreach($icons as $key => $label)
+                                    <option value="{{ $key }}"
+                                        class="dark:text-white dark:bg-gray-800"
+                                        @if(old('icon', $group->icon ?? '') == $key) selected @endif>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="editPanel-group-description">説明</label>
+                            <textarea id="editPanel-group-description" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700"></textarea>
+                        </div>
+                        <div class="mt-4 flex justify-end space-x-2">
+                            <button type="button" id="group-panel-cancel" class="bg-gray-600 text-white px-4 py-2 rounded">キャンセル</button>
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">保存</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -166,7 +174,7 @@
             $('#editPanel-group-icon').val('{{ $defaultIcon }}');
             $('#editPanel-group-description').val('');
             $('#editPanel-group-parent_id').val('');
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#group-edit-panel').find('.mode-text').text('追加');
             window.fadeSlideInRight($('#group-edit-panel'));
         });
@@ -183,7 +191,7 @@
             $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).data('description'));
             $('#editPanel-group-parent_id').val(parentId);
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#group-edit-panel').find('.mode-text').text('追加');
             window.fadeSlideInRight($('#group-edit-panel'));
         });
@@ -199,7 +207,7 @@
             $('#editPanel-group-color').val($(this).data('color'));
             $('#editPanel-group-icon').val($(this).attr('data-icon') || '{{ $defaultIcon }}');
             $('#editPanel-group-description').val($(this).data('description'));
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#group-edit-panel').find('.mode-text').text('編集');
             window.fadeSlideInRight($('#group-edit-panel'));
         });
@@ -214,7 +222,7 @@
             $('#editPanel-tag-description').val('');
             $('#editPanel-tag-group-id').val(groupId);
 
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#tag-edit-panel').find('.mode-text').text('追加');
             window.fadeSlideInRight($('#tag-edit-panel'));
         });
@@ -233,7 +241,7 @@
             $('#editPanel-tag-description').val(tagDescription);
             $('#editPanel-tag-group-id').val(groupId);
 
-            $('.ui-right-panel').find('.panel-content').hide();
+            $('.ui-right-panel').find('.panel').hide();
             $('#tag-edit-panel').find('.mode-text').text('編集');
             window.fadeSlideInRight($('#tag-edit-panel'));
         });

@@ -8,8 +8,80 @@ svg.lucide.lucide-edit {
 }
 
 html {
-    scrollbar-gutter: stable;
+    overflow: hidden;
     background-color: #282828;
+    scroll-behavior: smooth;
+}
+
+nav#nav-header {
+    position: sticky;
+    top: 0;
+    height: 64px;
+    z-index: 1000;
+}
+
+header#content-header {
+    position: sticky;
+    top: 64px;
+    height: 39px;
+    z-index: 999;
+}
+
+main {
+    max-height: calc(100vh - 102px);
+    overflow-y: auto;
+}
+
+.ui-right-panel {
+    position: sticky;
+    top: 0;
+    max-height: calc(100vh - 150px);
+    overflow-y: hidden;
+}
+
+.ui-right-panel>.panel {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    position: relative;
+}
+
+.ui-right-panel>.panel>.panel-header {
+    flex-shrink: 0;
+    position: relative;
+}
+
+.ui-right-panel>.panel>.panel-content {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+}
+main::after,
+header#content-header::after,
+.ui-right-panel>.panel>.panel-header::after,
+.ui-right-panel>.panel::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 20px;
+    /* ユーザー操作をブロックしない */
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 上部の影 */
+header#content-header::after,
+.ui-right-panel>.panel>.panel-header::after {
+    bottom: -20px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), transparent);
+}
+
+/* 下部の影 */
+main::after,
+.ui-right-panel>.panel::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
 }
 
 /* Chrome, Safari, Opera 用 */
@@ -37,5 +109,11 @@ html {
     scrollbar-width: thin;
     /* 「thin」で細めのスクロールバー */
     scrollbar-color: #336981 #1a1a1a;
+    /* サムとトラックの色 */
+}
+main {
+    scrollbar-width: thin;
+    /* 「thin」で細めのスクロールバー */
+    scrollbar-color: #1a1a1a #1a1a1a;
     /* サムとトラックの色 */
 }
