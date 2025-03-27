@@ -504,6 +504,9 @@
                     });
                 }
             });
+            // サイト：選択グループ階層をアクティブにする
+            $('.group-item').removeClass('active');
+            $(`#tag-group-${groupId}`).addClass('active');
         }
 
         // 左UIで選択中のタグIDリストを取得

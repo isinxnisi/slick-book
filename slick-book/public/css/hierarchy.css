@@ -106,3 +106,7 @@
     height: 22px;
     float: left;
 }
+
+.group-item.active > .group-content .title {
+    color: #40f920;
+}
