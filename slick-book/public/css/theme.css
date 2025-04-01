@@ -1,0 +1,189 @@
+#html-preview {
+    width: 100%;
+}
+
+h1 {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+.post-body h2 {
+    /* border-bottom: 1px solid #ccc; */
+    margin-top: 2em;
+}
+
+
+.note {
+    background: #f8f8d8;
+    border-left: 4px solid #f2c037;
+    padding: 1em;
+    margin: 1em 0;
+    font-style: italic;
+}
+
+
+.tag-list {
+    list-style: none;
+    display: inline-block;
+}
+
+.tag-list li {
+    float: left;
+}
+
+.tag-list li.tag-item {
+    font-size: 11px !important;
+    font-weight: bold !important;
+    font-style: italic !important;
+    height: 22px;
+}
+
+.tag-list li.tag-item .tag {
+    background-color: #eef;
+    padding: 4px 8px;
+    margin-right: 5px;
+    border-radius: 4px;
+}
+
+
+
+
+.toc {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 0.95rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 1em 1.2em;
+    border-radius: 8px;
+    max-width: 600px;
+    line-height: 1.6;
+    background: #ffffff;
+    box-shadow: 0px 4px 4px 0px #3333330d;
+    background: #ededed;
+    border: 1px solid #FFF;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.toc li {
+    margin: 0.2em 0;
+}
+
+.toc a {
+    color: #2563eb;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.toc a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* 階層ごとのインデント */
+.toc-level-2 {
+    margin-left: 1em;
+}
+
+.toc-level-3 {
+    margin-left: 2em;
+}
+
+.toc-level-4 {
+    margin-left: 3em;
+}
+
+.toc-level-5 {
+    margin-left: 4em;
+}
+
+.toc-level-6 {
+    margin-left: 5em;
+}
+
+
+
+
+.post-body h2,
+.post-body h3,
+.post-body h4 {
+    position: relative;
+    scroll-margin-top: 80px;
+    /* 見出しにジャンプしてもヘッダーに隠れないように */
+    padding-left: 0.5em;
+    border-left: 4px solid #3b82f6;
+    margin-top: 2em;
+    font-weight: 600;
+    color: #111827;
+}
+
+.post-body h2 {
+    font-size: 1.5rem;
+    /* border-color: #2563eb; */
+}
+
+.post-body h3 {
+    font-size: 1.25rem;
+    /* border-color: #3b82f6; */
+}
+
+.post-body h4 {
+    font-size: 1.1rem;
+    /* border-color: #60a5fa; */
+}
+
+
+
+.note {
+    background-color: #fef9c3;
+    border-left: 4px solid #facc15;
+    padding: 1em;
+    margin: 1.5em 0;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: #4b5563;
+}
+
+
+
+.post-body ul {
+    margin-top: 1.5em;
+}
+
+.c-postTitle__date {
+    border-right: 1px solid var(--color_border);
+    font-weight: 400;
+    line-height: 1;
+    margin-right: .75em;
+    padding: .5em .75em .5em 0;
+    text-align: center;
+    border-right: 1px solid #999;
+    max-width: 80px;
+    font-style: italic;
+    color: #666;
+}
+.c-postTitle__date .__y {
+    display: block;
+    font-size: 20px;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.c-postTitle__date .__md {
+    display: block;
+    font-size: 24px;
+}

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use League\CommonMark\CommonMarkConverter;
@@ -17,8 +18,15 @@ class MarkdownService
         $config = [
             'heading_permalink' => [
                 'html_class' => 'heading-permalink',
-                'insert' => 'before',
-                'symbol' => '¶',
+                'id_prefix' => '', // 例: 'heading-'
+                'insert' => 'before', // 'before' or 'after'
+                'symbol' => '¶', // 任意
+                'title' => 'Link to this heading',
+            ],
+            'commonmark' => [
+                'enable_em' => true,
+                'enable_strong' => true,
+                'enable_lax_line_breaks' => true, // ← ここが自動改行の有効化
             ],
         ];
 
@@ -31,12 +39,37 @@ class MarkdownService
 
     public function convertToHtml(string $markdown): string
     {
-        $html = $this->converter->convert($markdown);
+        // 先に [code lang="xxx"] を HTML化（Markdown変換前）
+        $markdown = preg_replace_callback('/\[code(?:\s+lang=["\']?([a-zA-Z0-9]+)["\']?)?](.*?)\[\/code]/s', function ($matches) {
+            $language = $matches[1] ?? '';
+            $content = trim($matches[2]);
+
+            // 特殊文字をエスケープ
+            $escaped = htmlspecialchars($content);
+            $class = $language ? "language-{$language}" : '';
+
+            return "<pre><code class=\"{$class}\">{$escaped}</code></pre>";
+        }, $markdown);
 
         // ショートコード [ad] を広告HTMLに置換
         $adHtml = view('ads.default')->render();
-        $html = str_replace('[ad]', $adHtml, $html);
-    
+        $markdown = str_replace('[ad]', $adHtml, $markdown);
+
+        // ショートコード [note]...[/note] を <div class="note">...</div> に変換
+        $markdown = preg_replace_callback('/\[note](.*?)\[\/note]/s', function ($matches) {
+            return '<div class="note">' . nl2br(e(trim($matches[1]))) . '</div>';
+        }, $markdown);
+
+        $html = $this->converter->convert($markdown);
+
+        // 見出しタグにIDを付与
+        $html = preg_replace_callback('/<h([1-6])>(.*?)<\/h\1>/', function ($matches) {
+            $level = $matches[1];
+            $text = strip_tags($matches[2]);
+            $id = Str::slug($text, '-', 'ja');
+            return "<h{$level} id=\"{$id}\">{$matches[2]}</h{$level}>";
+        }, $html);
+
         return $html;
     }
 
@@ -48,7 +81,7 @@ class MarkdownService
         foreach ($matches as $match) {
             $level = strlen($match[1]);
             $text = htmlspecialchars($match[2]);
-            $slug = Str::slug($text);
+            $slug = Str::slug($text, '-', 'ja');
             $toc .= "<li class=\"toc-level-{$level}\"><a href=\"#{$slug}\">{$text}</a></li>";
         }
         $toc .= '</ul>';

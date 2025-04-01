@@ -18,6 +18,7 @@ class Post extends Model
         'html_body',
         'toc',
         'status',
+        'category_id',
         'created_user',
         'updated_user',
         'deleted_user',
@@ -50,5 +51,10 @@ class Post extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'post_tag')->withTimestamps();
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }
