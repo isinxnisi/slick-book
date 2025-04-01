@@ -30,4 +30,12 @@ return [
             'border' => '#10b981',
         ],
     ],
+
+    'post_purpose_styles' => [
+        'public' => [
+            'bg' => '#24637f',
+            'text' => '#FFF',
+            'border' => '#24637f',
+        ],
+    ],
 ];

@@ -15,8 +15,8 @@
             <div class="p-6 text-gray-900 dark:text-gray-100">
 
                 @foreach ($posts as $post)
-                <div>
-                    <h2><a href="{{ route('posts.show', $post->id) }}">{{ $post->title }}</a></h2>
+                <div class="mt-2 border-t border-l border-gray-700 rounded-md shadow-md p-3 ms-0 text-xs">
+                    <h2 class="text-lg bold"><a href="{{ route('posts.edit', $post->id) }}">{{ $post->title }}</a></h2>
                     <p>{{ Str::limit($post->body, 100) }}</p>
                 </div>
                 @endforeach

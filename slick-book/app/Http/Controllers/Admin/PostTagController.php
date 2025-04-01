@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -18,54 +19,58 @@ class PostTagController extends Controller
 
     public function toggle(Request $request)
     {
+        $postId = $request->input('post_id');
         $tagId = $request->input('tag_id');
-        $groupId = $request->input('tag_group_id');
 
-        if (!$tagId || !$groupId) {
+        if (!$tagId || !$postId) {
             return response()->json(['error' => 'Missing parameters'], 400);
         }
 
-        $exists = DB::table('tag_tag_group')
+        $status = 0;
+        $exists = DB::table('post_tag')
+            ->where('post_id', $postId)
             ->where('tag_id', $tagId)
-            ->where('tag_group_id', $groupId)
             ->exists();
 
         if ($exists) {
-            DB::table('tag_tag_group')
+            DB::table('post_tag')
+                ->where('post_id', $postId)
                 ->where('tag_id', $tagId)
-                ->where('tag_group_id', $groupId)
                 ->delete();
+            $status = 1;
+
         } else {
-            $maxOrder = DB::table('tag_tag_group')
-                ->where('tag_group_id', $groupId)
+            $maxOrder = DB::table('post_tag')
+                ->where('post_id', $postId)
                 ->max('order') ?? 0;
 
-            DB::table('tag_tag_group')->insert([
+            DB::table('post_tag')->insert([
+                'post_id' => $postId,
                 'tag_id' => $tagId,
-                'tag_group_id' => $groupId,
                 'order' => $maxOrder + 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+            $status = 2;
         }
 
-        return response()->json(['status' => 'ok']);
+        return response()->json(['status' => $status]);
     }
 
     public function unlink(Request $request)
     {
         $tagId = $request->input('tag_id');
-        $groupId = $request->input('tag_group_id');
+        $postId = $request->input('post_id');
 
-        if (!$tagId || !$groupId) {
+        if (!$tagId || !$postId) {
             return response()->json(['error' => 'パラメータ不足'], 400);
         }
 
-        DB::table('tag_tag_group')
+        DB::table('post_tag')
             ->where('tag_id', $tagId)
-            ->where('tag_group_id', $groupId)
+            ->where('post_id', $postId)
             ->delete();
 
-        return response()->json(['message' => 'グループとの紐づけを解除しました']);
+        return response()->json(['message' => '投稿との紐づけを解除しました']);
     }
 }

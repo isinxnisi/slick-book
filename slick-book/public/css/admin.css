@@ -46,20 +46,26 @@ main {
     position: relative;
 }
 
+#ui-post-panel .panel-header,
 .ui-right-panel>.panel>.panel-header {
     flex-shrink: 0;
     position: relative;
 }
 
+#ui-post-panel,
 .ui-right-panel>.panel>.panel-content {
     flex: 1;
     overflow-y: auto;
     position: relative;
+    scrollbar-gutter: stable;
 }
+
 main::after,
 header#content-header::after,
 .ui-right-panel>.panel>.panel-header::after,
-.ui-right-panel>.panel::after {
+.ui-right-panel>.panel::after,
+#ui-post-panel .panel-header::after,
+#ui-post-panel .panel-content::after {
     content: "";
     position: absolute;
     left: 0;
@@ -72,14 +78,16 @@ header#content-header::after,
 
 /* 上部の影 */
 header#content-header::after,
-.ui-right-panel>.panel>.panel-header::after {
+.ui-right-panel>.panel>.panel-header::after,
+#ui-post-panel .panel-header::after {
     bottom: -20px;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), transparent);
 }
 
 /* 下部の影 */
 main::after,
-.ui-right-panel>.panel::after {
+.ui-right-panel>.panel::after,
+#ui-post-panel .panel-content::after {
     bottom: 0;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
 }
@@ -122,3 +130,20 @@ main {
     font-size: 11px !important;
     height: 22px;
 }
+
+/* .open-tab .open-tab-container {
+    animation-duration: 0.15s;
+    animation-name: openTab;
+    max-height: 350px;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+}
+
+@keyframes openTab {
+    from {
+        max-height: 0px;
+    }
+    to {
+        max-height: 350px;
+    }
+} */

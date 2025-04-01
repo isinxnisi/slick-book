@@ -61,6 +61,7 @@ class TagController extends Controller
     {
         // タグとタググループの関連を削除（中間テーブル）
         $tag->tagGroups()->detach();
+        $tag->posts()->detach();
 
         // タグ自体を削除
         $tag->delete();

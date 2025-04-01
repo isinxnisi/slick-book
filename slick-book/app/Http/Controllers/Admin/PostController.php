@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -6,6 +7,8 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Site;
 use App\Models\TagGroup;
+use App\Models\PostTag;
+use App\Models\Tag;
 use App\Services\CategoryService;
 use App\Services\MarkdownService;
 use App\Services\TagGroupService;
@@ -22,7 +25,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::where('is_deleted', false)->paginate(10);
+        $posts = Post::where('status', '!=', 'temp')
+            ->where('is_deleted', false)
+            ->paginate(10);
+
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -44,13 +50,13 @@ class PostController extends Controller
     {
         $siteId = $request->input('site', Site::first()?->id);
         $sites = Site::all();
-    
+
         // 既存のドラフト記事があるか確認
-        $post = Post::where('status', 'draft')
-                    ->where('created_user', Auth::id())
-                    ->orderBy('created', 'desc')
-                    ->first();
-    
+        $post = Post::where('status', 'temp')
+            ->where('created_user', Auth::id())
+            ->orderBy('created', 'desc')
+            ->first();
+
         // なければ仮レコードを作成
         if (!$post) {
             $post = Post::create([
@@ -59,18 +65,24 @@ class PostController extends Controller
                 'body' => '',
                 'html_body' => '',
                 'toc' => '',
-                'status' => 'draft',
-                'created_user' => auth()->id(),
+                'status' => 'temp',
+                'created_user' => Auth::id(),
                 'created' => now(),
             ]);
         }
-    
+
         // タグ選択用のデータを作成
-        $selectedTagIdsByPurpose = collect(config('tags.purposes'))->mapWithKeys(function ($label, $purpose) {
-            return [$purpose => []];
+        $selectedTagIdsByPurpose = collect(config('tags.purposes'))->mapWithKeys(function ($label, $purpose) use ($post) {
+            return [
+                $purpose => Tag::where('purpose', $purpose)
+                    ->whereIn('id', function ($query) use ($post) {
+                        $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
+                    })
+                    ->orderBy('order')
+                    ->get(),
+            ];
         });
-    
-    
+
         // カテゴリ
         $categories = Category::where('site_id', $siteId)
             ->whereNull('parent_id')
@@ -89,43 +101,79 @@ class PostController extends Controller
      */
     public function store(Request $request, MarkdownService $markdown)
     {
+        $postId = $request->input('id');
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'status' => 'required|in:draft,published',
+            'category_id' => 'nullable|exists:categories,id',
             'selected_tag_ids' => 'nullable|array', // 追加
         ]);
-    
+
         $htmlBody = $markdown->convertToHtml($validated['body']);
         $toc = $markdown->generateTOC($validated['body']);
-    
-        $post = Post::create([
+
+        $post = Post::where('id', $postId)->first();
+        $post->update([
             'title' => $validated['title'],
-            'slug' => Str::slug($validated['title'], '-', 'ja'),
+            'slug' => Str::slug($validated['title'], null, 'ja'),
             'body' => $validated['body'],
             'html_body' => $htmlBody,
             'toc' => $toc,
             'status' => $validated['status'],
-            'created_user' => Auth::id(),
-            'created' => now(),
+            'category_id' => $validated['category_id'],
+            'updated_user' => Auth::id(),
+            'updated' => now(),
         ]);
-    
+
         // タグの紐付け処理追加
-        $tagIds = collect($validated['selected_tag_ids'])->flatten()->unique()->toArray();
+        $tagIds = [];
+        foreach ($validated['selected_tag_ids'] as $key => $tagList) {
+            $tagList = json_decode($tagList);
+            $tagList = array_column($tagList, 'id');
+            $tagIds = [...$tagIds, ...$tagList];
+        }
+        dd($tagIds);
         $post->tags()->sync($tagIds);
-    
-        return redirect()->route('posts.show', $post);
+
+        return redirect()->route('posts.edit', $post);
     }
 
     /**
      * 記事編集フォームの表示
      */
-    public function edit(Post $post)
+    public function edit(Request $request, Post $post)
     {
         if ($post->is_deleted) {
             abort(404);
         }
-        return view('admin.posts.edit', compact('post'));
+        $siteId = $request->input('site', Site::first()?->id);
+        $sites = Site::all();
+
+        // タグ選択用のデータを作成
+        $selectedTagIdsByPurpose = collect(config('tags.purposes'))->mapWithKeys(function ($label, $purpose) use ($post) {
+            return [
+                $purpose => Tag::where('purpose', $purpose)
+                    ->whereIn('id', function ($query) use ($post) {
+                        $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
+                    })
+                    ->orderBy('order')
+                    ->get(),
+            ];
+        });
+
+        // カテゴリ
+        $categories = Category::where('site_id', $siteId)
+            ->whereNull('parent_id')
+            ->with(['children' => function ($q) {
+                $q->orderBy('order');
+            }])
+            ->orderBy('order')
+            ->get();
+        $categories = $this->categoryService->flatten($categories);
+
+        return view('admin.posts.edit', compact('sites', 'siteId', 'selectedTagIdsByPurpose', 'post', 'categories'));
     }
 
     /**
@@ -141,6 +189,8 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'status' => 'required|in:draft,published',
+            'category_id' => 'nullable|exists:categories,id',
+            'selected_tag_ids' => 'nullable|array', // 追加
         ]);
 
         $htmlBody = $markdown->convertToHtml($validated['body']);
@@ -153,11 +203,20 @@ class PostController extends Controller
             'html_body' => $htmlBody,
             'toc' => $toc,
             'status' => $validated['status'],
+            'category_id' => $validated['category_id'],
             'updated_user' => Auth::id(),
             'updated' => now(),
         ]);
 
-        return redirect()->route('posts.show', $post);
+        // タグの紐付け処理追加
+        $tagIds = [];
+        foreach ($validated['selected_tag_ids'] as $key => $tagList) {
+            $tagList = json_decode($tagList);
+            $tagIds = [...$tagIds, ...$tagList];
+        }
+        $post->tags()->sync($tagIds);
+
+        return redirect()->route('posts.edit', $post);
     }
 
     /**
@@ -181,50 +240,50 @@ class PostController extends Controller
     public function tags(Request $request)
     {
         $siteId = $request->input('site');
+        $postId = $request->input('post');
         $purpose = $request->input('purpose', 'public');
 
-        // 仮データ or 実データ：site_id & purpose に応じてタググループとタグを取得
-        // $tagGroups = TagGroup::with(['tags' => function ($query) {
-        //         $query->select('tags.id', 'tags.name');
-        //     }])
-        //     ->where('purpose', $purpose)
-        //     ->whereHas('siteTagGroups', function ($q) use ($siteId) {
-        //         $q->where('site_id', $siteId);
-        //     })
-        //     ->get()
-        //     ->map(function ($group) {
-        //         return [
-        //             'name' => $group->name,
-        //             'tags' => $group->tags->map(fn($tag) => [
-        //                 'id' => $tag->id,
-        //                 'name' => $tag->name,
-        //             ]),
-        //         ];
-        //     });
-        // $tagGroups = TagGroup::with(['tags' => function ($query) {
-        //         $query->select('tags.id', 'tags.name');
-        //     }])
-        //     ->whereHas('siteTagGroups', function ($q) use ($siteId) {
-        //         $q->where('site_id', $siteId);
-        //     })
-        //     ->get();
-        // $this->tagGroupService->injectPurposeIntoTags($tagGroups);
         $tagGroups = new TagGroup()->getSiteTagGroupTree($siteId, $purpose);
         $tagGroups = $this->tagGroupService->flattenGroups($tagGroups);
-        // dd(array_column($tagGroups->toArray(), 'name'));die;
-        // 選択状態の保持
-        $selectedTagIds = TagGroup::with(['tags:id'])
-            ->whereHas('siteTagGroups', function ($q) use ($siteId) {
-                $q->where('site_id', $siteId);
-            })
-            ->get()
-            ->mapWithKeys(function ($group) {
-                return [$group->id => $group->tags->pluck('id')->toArray()];
-            });
 
-        return view('components.admin.tags.tag-selection', [
+        // 選択状態
+        $post = Post::where('id', $postId)->first();
+        $selectedTagIdsByPurpose = collect(config('tags.purposes'))->mapWithKeys(function ($label, $purpose) use ($post) {
+            return [
+                $purpose => Tag::where('purpose', $purpose)
+                    ->whereIn('id', function ($query) use ($post) {
+                        $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
+                    })
+                    ->orderBy('order')
+                    ->get(),
+            ];
+        });
+
+        return view('components.admin.tags.post-tag-selection', [
             'groups' => $tagGroups,
-            'selectedTagIds' => $selectedTagIds,
+            'selectedTagIds' => $selectedTagIdsByPurpose[$purpose],
+        ]);
+    }
+
+    public function preview(Request $request, MarkdownService $markdown)
+    {
+        $postId = $request->input('post_id');
+        $title = $request->input('title') ?? '';
+        $body = $request->input('body') ?? '';
+        $selectedTags = json_decode($request->input('selected_tags') ?? '[]');
+        $selectedTagIds = array_column($selectedTags, 'id');
+
+        $post = Post::where('id', $postId)->first();
+
+        $toc = $markdown->generateTOC($body);
+        $post->title = htmlspecialchars($title);
+        $post->html_body = $markdown->convertToHtml($body);
+        $post->tags = Tag::whereIn('id', $selectedTagIds)->get();
+
+        // return $htmlBody;
+        return view('components.admin.posts.preview', [
+            'post' => $post,
+            'toc' => $toc,
         ]);
     }
 }

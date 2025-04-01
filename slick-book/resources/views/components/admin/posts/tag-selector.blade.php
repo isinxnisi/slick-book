@@ -1,5 +1,6 @@
 @props([
     'groups' => collect(),
+    'post',
     'siteId',
     'selectedTagIdsByPurpose' => [],
     'purpose' => 'public',
@@ -10,7 +11,7 @@
     $purposeStyles = config('tags.purpose_styles');
 @endphp
 
-<div class="py-3">
+<div class="py-2">
     @foreach ($purposes as $key => $label)
         <input type="hidden" name="selected_tag_ids[{{ $key }}]" id="selected-tags-{{ $key }}" 
             value='@json($selectedTagIdsByPurpose[$key] ?? [])'>
@@ -21,7 +22,7 @@
             @if ($groups->isNotEmpty())
                 @include('components.admin.tags.post-tag-selection', [
                     'groups' => $groups,
-                    'selectedTagIds' => $selectedTagIds,
+                    'selectedTagIds' => $selectedTagIdsByPurpose[$purpose],
                     'purpose' => $purpose,
                     'siteId' => $siteId
                 ])
@@ -36,9 +37,10 @@
 <script>
     window.fetchTagSelector = function () {
         const siteId = @json($siteId);
+        const postId = @json($post->id);
         const purpose = @json($purpose);
 
-        $.get(`/posts/tags`, { site: siteId, purpose }, function (html) {
+        $.get(`/posts/tags`, { site: siteId, post: postId, purpose }, function (html) {
             $('#tag-selector-content').html(html);
 
             // ★ ここでイベントバインドを行う
@@ -76,6 +78,7 @@
             updateSelectedTagsInput(purpose);
 
             window.refreshLucideAndBindEvents();
+            window.fetchTagSelector();
         });
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\PostTagController;
 use App\Http\Controllers\Admin\TagGroupController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\SiteTagGroupController;
@@ -33,8 +34,13 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
         // 記事
+        Route::get('posts', [PostController::class, 'index'])->name('posts.index');
+        Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
+        Route::post('posts', [PostController::class, 'store'])->name('posts.store');
+        Route::post('posts/preview', [PostController::class, 'preview'])->name('posts.preview');
         Route::get('posts/tags', [PostController::class, 'tags'])->name('posts.tags');
-        Route::resource('posts', PostController::class);
+        Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+        Route::patch('posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
         Route::resource('hierarchies', HierarchyController::class);
         Route::post('/hierarchies/reorder', [HierarchyController::class, 'reorder'])->name('hierarchies.reorder');
@@ -74,6 +80,8 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::get('/site-tag-groups/master-tags', [SiteTagGroupController::class, 'getMasterTags'])->name('site-tag-groups.master-tags');
         Route::get('/tag-groups/{group}/tags', [TagGroupController::class, 'tags']);
 
+        Route::post('/post-tags/toggle', [PostTagController::class, 'toggle']);
+        Route::post('/post-tags/unlink', [PostTagController::class, 'unlink']);
     });
 });
 
