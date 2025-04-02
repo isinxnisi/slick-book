@@ -34,11 +34,19 @@
 
                     <input type="hidden" name="id" value="{{ $post->id }}">
 
-                    <label  class="mt-3">タイトル:</label>
+                    <div class="flex h-6 mt-3">
+                        <div class="align-self-center text-left">
+                            <label>タイトル:</label>
+                        </div>
+                    </div>
                     <x-admin.text-input name="title" type="text" class="mt-1 block w-full" :value="old('title', $post->title ?? '')" autofocus autocomplete="title" />
                     <x-admin.input-error class="mt-2" :messages="$errors->get('title')" />
 
-                    <label  class="mt-3">公開タグ:</label>
+                    <div class="flex h-6 mt-3">
+                        <div class="align-self-center text-left">
+                            <label>公開タグ:</label>
+                        </div>
+                    </div>
                     <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 mt-1 p-2 rounded" id="tags-of-group-post">
                         @if ($post->tags->isNotEmpty())
                         @foreach ($post->tags as $tag)
@@ -68,8 +76,18 @@
                         @endif
                     </ul>
 
-                    <label  class="mt-3">本文 (Markdown):</label>
-                    <x-admin.textarea name="body" class="block w-full" rows="15" autofocus autocomplete="body">
+                    <div class="flex h-10 mt-3">
+                        <div class="align-self-center text-left">
+                            <label>本文 (Markdown):</label>
+                        </div>
+                        <div class="flex-1 align-self-center text-right">
+                            <button class="md-code-btn" type="button" onclick="window.wrapWithCodeTag('br')">br</button>
+                            <button class="md-code-btn" type="button" onclick="window.wrapWithCodeTag('toc')">toc</button>
+                            <button class="md-code-btn" type="button" onclick="window.wrapWithCodeTag('mark')">mark</button>
+                            <button class="md-code-btn" type="button" onclick="window.wrapWithCodeTag('code', true)">code</button>
+                        </div>
+                    </div>
+                    <x-admin.textarea id="post-markdown" name="body" class="block w-full" rows="15" autofocus autocomplete="body">
                         {{ old('body', $post->body ?? '') }}
                     </x-admin.textarea>
                     <x-admin.input-error class="mt-2" :messages="$errors->get('body')" />
@@ -397,6 +415,24 @@
             selectedTagIds.pop(cancelIndex);
             selectedTagIds = JSON.stringify(selectedTagIds);
             $('[name="selected_tag_ids[' + purpose + ']"]').val(selectedTagIds);
+        }
+
+        function wrapWithCodeTag() {
+            const textarea = document.getElementById("content");
+
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+
+            const before = textarea.value.substring(0, start);
+            const after = textarea.value.substring(end);
+
+            const newText = `${before}[code]${selectedText}[/code]${after}`;
+            textarea.value = newText;
+
+            // カーソル位置を調整（選択を再設定してもよい）
+            textarea.focus();
+            textarea.setSelectionRange(start + 6, start + 6 + selectedText.length); // [code] の6文字を考慮
         }
     </script>
     @endpush

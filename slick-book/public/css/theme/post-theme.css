@@ -7,14 +7,34 @@ h1 {
     font-weight: bold;
 }
 
-h2 {
-    font-size: 16px;
-    font-weight: bold;
+article code {
+    background: #dfdfdf;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    top: -1px;
+    position: relative;
 }
 
-h3 {
+article hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+article h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+article h3 {
     font-size: 14px;
     font-weight: bold;
+    margin-bottom: 20px;
 }
 
 
@@ -62,16 +82,16 @@ h3 {
 .toc {
     font-family: 'Segoe UI', sans-serif;
     font-size: 0.95rem;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    /* background: #f9fafb; */
+    /* border: 1px solid #e5e7eb; */
     padding: 1em 1.2em;
     border-radius: 8px;
     max-width: 600px;
     line-height: 1.6;
-    background: #ffffff;
+    /* background: #ffffff; */
     box-shadow: 0px 4px 4px 0px #3333330d;
-    background: #ededed;
-    border: 1px solid #FFF;
+    /* background: #ededed; */
+    /* border: 1px solid #FFF; */
 }
 
 .toc ul {
@@ -80,8 +100,28 @@ h3 {
     margin: 0;
 }
 
-.toc li {
+.toc li[class*="language-"] {
     margin: 0.2em 0;
+}
+
+.toc li.language-2 {
+    padding-left: 20px;
+}
+
+.toc li.language-3 {
+    padding-left: 40px;
+}
+
+.toc li.language-4 {
+    padding-left: 60px;
+}
+
+.toc li.language-5 {
+    padding-left: 80px;
+}
+
+.toc li.language-6 {
+    padding-left: 100px;
 }
 
 .toc a {
@@ -168,7 +208,7 @@ h3 {
 .c-postTitle__date {
     border-right: 1px solid var(--color_border);
     font-weight: 400;
-    line-height: 1;
+    line-height: 30px;
     margin-right: .75em;
     padding: .5em .75em .5em 0;
     text-align: center;
@@ -177,13 +217,30 @@ h3 {
     font-style: italic;
     color: #666;
 }
+
 .c-postTitle__date .__y {
     display: block;
     font-size: 20px;
-    line-height: 1;
+    line-height: 30px;
     margin-bottom: 4px;
 }
+
 .c-postTitle__date .__md {
     display: block;
-    font-size: 24px;
+    font-size: 20px;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"],
+pre.code {
+    width: calc(100% + 1em);
+    left: -0.5em;
+    position: relative;
+    border-radius: 0.25em;
+}
+
+:not(pre)>code[class*="language-"],
+pre[class*="language-"],
+pre.code code span {
+    font-size: 13px;
 }

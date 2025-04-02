@@ -270,8 +270,7 @@ class PostController extends Controller
         $postId = $request->input('post_id');
         $title = $request->input('title') ?? '';
         $body = $request->input('body') ?? '';
-        $selectedTags = json_decode($request->input('selected_tags') ?? '[]');
-        $selectedTagIds = array_column($selectedTags, 'id');
+        $selectedTagIds = json_decode($request->input('selected_tags') ?? '[]');
 
         $post = Post::where('id', $postId)->first();
 
