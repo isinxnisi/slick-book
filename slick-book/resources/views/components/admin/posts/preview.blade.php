@@ -9,13 +9,13 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    @vite(['resources/css/app.css'])
+    <link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/prism-themes/prism-dracula.css') }}">
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"> --}}
 
     <!-- Scripts -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    @vite(['resources/css/app.css'])
-
-    
 </head>
 
 <body class="font-sans antialiased">
@@ -24,18 +24,20 @@
             $purposeStyles = config('tags.post_purpose_styles');
             $defaultStyle = $purposeStyles['public'];
         @endphp
-        <main class="p-6">
-            <div class="flex">
-                <time class="c-postTitle__date flex-1" datetime="2023-03-16" aria-hidden="true">
-                    <span class="__y">2023</span>
-                    <span class="__md">3/16</span>
+        <main id="post-article" class="container py-6">
+            <div class="row justify-content-md-center rounded-md bg-gray-100 p-8">
+
+            <div class="flex px-4">
+                <time class="c-postTitle__date flex-1" datetime="2025-04-20" aria-hidden="true">
+                    <span class="__y">2025</span>
+                    <span class="__md">4/20</span>
                 </time>
                 {{-- タイトル --}}
                 <h1 class="">{{ $post->title }}</h1>
             </div>
         
             {{-- タグ一覧 --}}
-            <ul class="tag-list mt-4 p-0">
+            <ul class="tag-list mt-4 px-4">
                 @foreach ($post->tags as $tag)
                     <li class="tag-item">
                         <a class="tag" style="background-color: {{ $defaultStyle['bg'] }}; color: {{ $defaultStyle['text'] }}; border: 1px solid {{ $defaultStyle['bg'] }}">
@@ -44,20 +46,16 @@
                     </li>
                 @endforeach
             </ul>
-            <article class="post mt-4">
-
+            <article class="post mt-4 px-4">
                 {{-- 本文（HTML） --}}
                 <div class="post-layout" style="gap: 2rem;">
-                    <div class="toc mx-auto">
-                        {{-- 目次（オプション） --}}
-                        {!! $toc !!}
-                    </div>
                     <div class="post-content">
                         <div class="post-body">{!! $post->html_body !!}</div>
                     </div>
                 </div>
 
             </article>
+            </div>
         </main>
     </div>
 
@@ -66,11 +64,9 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     {{-- PRISM --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- 必要な言語を追加 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {

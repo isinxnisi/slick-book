@@ -48,18 +48,28 @@ class MarkdownService
             $escaped = htmlspecialchars($content);
             $class = $language ? "language-{$language}" : '';
 
-            return "<pre><code class=\"{$class}\">{$escaped}</code></pre>";
+            return "<pre class=\"code\"><code class=\"{$class}\">{$escaped}</code></pre>";
         }, $markdown);
-
-        // ショートコード [ad] を広告HTMLに置換
-        $adHtml = view('ads.default')->render();
-        $markdown = str_replace('[ad]', $adHtml, $markdown);
 
         // ショートコード [note]...[/note] を <div class="note">...</div> に変換
         $markdown = preg_replace_callback('/\[note](.*?)\[\/note]/s', function ($matches) {
             return '<div class="note">' . nl2br(e(trim($matches[1]))) . '</div>';
         }, $markdown);
 
+        // ショートコード [code]...[/code] を <code>...</code> に変換
+        $markdown = preg_replace_callback('/\[mark](.*?)\[\/mark]/s', function ($matches) {
+            return '<code>' . nl2br(e(trim($matches[1]))) . '</code>';
+        }, $markdown);
+
+        // ショートコード [ad] を広告HTMLに置換
+        $adHtml = view('ads.default')->render();
+        $markdown = str_replace('[ad]', $adHtml, $markdown);
+
+        // ショートコード [toc] を見出しHTMLに置換
+        $tocHtml = $this->generateTOC($markdown);
+        $markdown = str_replace('[toc]', $tocHtml, $markdown);
+
+        $markdown = str_replace("[br]", "\n<br>\n", $markdown);
         $html = $this->converter->convert($markdown);
 
         // 見出しタグにIDを付与
@@ -77,14 +87,14 @@ class MarkdownService
     {
         preg_match_all('/^(#{1,6})\s*(.+)$/m', $markdown, $matches, PREG_SET_ORDER);
 
-        $toc = '<ul>';
+        $toc = '<div class="toc my-4 mx-auto border border-gray-200 bg-gray-100"><ul>';
         foreach ($matches as $match) {
             $level = strlen($match[1]);
             $text = htmlspecialchars($match[2]);
             $slug = Str::slug($text, '-', 'ja');
             $toc .= "<li class=\"toc-level-{$level}\"><a href=\"#{$slug}\">{$text}</a></li>";
         }
-        $toc .= '</ul>';
+        $toc .= '</ul></div>';
 
         return $toc;
     }

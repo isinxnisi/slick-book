@@ -12,3 +12,4 @@ lucide.createIcons({ icons });
 
 import './admin-ui';
 import './hierarchy';
+import './post-entry';
