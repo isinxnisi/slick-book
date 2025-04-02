@@ -134,7 +134,6 @@ class PostController extends Controller
             $tagList = array_column($tagList, 'id');
             $tagIds = [...$tagIds, ...$tagList];
         }
-        dd($tagIds);
         $post->tags()->sync($tagIds);
 
         return redirect()->route('posts.edit', $post);
