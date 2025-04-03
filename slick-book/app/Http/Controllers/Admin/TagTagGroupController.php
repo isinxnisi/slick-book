@@ -5,9 +5,19 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * マスタ: タグ所属グループ管理 Controller class
+ */
 class TagTagGroupController extends Controller
 {
+    /**
+     * Ajax: マスタ: タグとグループとの紐づけを登録
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function toggle(Request $request)
     {
         $tagId = $request->input('tag_id');
@@ -44,6 +54,12 @@ class TagTagGroupController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
+    /**
+     * Ajax: マスタ: タグとグループとの紐づけを解除
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function unlink(Request $request)
     {
         $tagId = $request->input('tag_id');
