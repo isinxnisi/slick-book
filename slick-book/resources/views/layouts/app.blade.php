@@ -13,7 +13,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/hierarchy.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 
     <!-- Scripts -->
     <script src="https://unpkg.com/lucide@latest"></script>

@@ -13,7 +13,7 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/lucide@latest"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}">
 </head>
 
 <body class="font-sans antialiased">

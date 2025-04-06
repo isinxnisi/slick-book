@@ -254,6 +254,7 @@
             const data = {
                 name: $('#editPanel-tag-name').val(),
                 slug: $('#editPanel-tag-slug').val(),
+                purpose: $('#editPanel-purpose-hidden').val(),
                 description: $('#editPanel-tag-description').val(),
                 _token: '{{ csrf_token() }}'
             };

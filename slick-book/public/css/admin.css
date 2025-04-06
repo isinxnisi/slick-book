@@ -156,3 +156,31 @@ main {
     font-size: 12px;
     background: #1c1c1c1c;
 }
+
+/* -----------------------------------
+    記事日付
+----------------------------------- */
+
+.c-postTitle__date {
+    border-right: 1px solid var(--color_border);
+    font-weight: 400;
+    line-height: 20px;
+    margin-right: .75em;
+    padding: .5em .75em .5em .5em;
+    text-align: center;
+    font-style: italic;
+    color: #cfcfcf;
+}
+
+.c-postTitle__date .__ymd
+.c-postTitle__date .__time {
+    display: block;
+    font-size: 18px;
+    line-height: 20px;
+    margin-bottom: 4px;
+}
+
+.c-postTitle__date .__md {
+    display: block;
+    font-size: 20px;
+}

@@ -68,7 +68,6 @@
                                 :background="$styleSet['bg']"
                                 :text="$styleSet['text']"
                                 :border="$styleSet['border']"
-                
                                 :is-toggleable="false"
                                 :purpose="$purpose"
                             />
@@ -404,7 +403,7 @@
                 .contents()
                 .find("head")
                 .append(
-                '<link rel="stylesheet" href="{{ asset('css/theme.css') }}" type="text/css">'
+                '<link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}" type="text/css">'
                 );
         });
 

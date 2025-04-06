@@ -15,13 +15,26 @@ use App\Services\TagGroupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 
+/**
+ * 記事管理 Controller class
+ */
 class PostController extends Controller
 {
+    /**
+     * コンストラクタ
+     *
+     * @param TagGroupService $tagGroupService
+     * @param CategoryService $categoryService
+     */
     public function __construct(protected TagGroupService $tagGroupService, protected CategoryService $categoryService) {}
 
     /**
-     * 記事一覧の表示
+     * 記事管理｜記事一覧
+     *
+     * @return View
      */
     public function index()
     {
@@ -33,7 +46,10 @@ class PostController extends Controller
     }
 
     /**
-     * 記事詳細の表示
+     * 記事管理｜記事詳細
+     *
+     * @param Post $post
+     * @return View
      */
     public function show(Post $post)
     {
@@ -44,7 +60,10 @@ class PostController extends Controller
     }
 
     /**
-     * 新規記事作成フォーム表示
+     * 記事管理｜新規記事作成フォーム
+     *
+     * @param Request $request
+     * @return View
      */
     public function create(Request $request)
     {
@@ -79,7 +98,8 @@ class PostController extends Controller
                         $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
                     })
                     ->orderBy('order')
-                    ->get(),
+                    ->pluck('id')
+                    ->toArray(),
             ];
         });
 
@@ -97,7 +117,11 @@ class PostController extends Controller
     }
 
     /**
-     * 記事の保存処理
+     * 記事管理｜記事の保存処理
+     *
+     * @param Request $request
+     * @param MarkdownService $markdown
+     * @return RedirectResponse
      */
     public function store(Request $request, MarkdownService $markdown)
     {
@@ -131,7 +155,6 @@ class PostController extends Controller
         $tagIds = [];
         foreach ($validated['selected_tag_ids'] as $key => $tagList) {
             $tagList = json_decode($tagList);
-            $tagList = array_column($tagList, 'id');
             $tagIds = [...$tagIds, ...$tagList];
         }
         $post->tags()->sync($tagIds);
@@ -140,7 +163,11 @@ class PostController extends Controller
     }
 
     /**
-     * 記事編集フォームの表示
+     * 記事管理｜記事編集フォーム
+     *
+     * @param Request $request
+     * @param Post $post
+     * @return View
      */
     public function edit(Request $request, Post $post)
     {
@@ -158,7 +185,8 @@ class PostController extends Controller
                         $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
                     })
                     ->orderBy('order')
-                    ->get(),
+                    ->pluck('id')
+                    ->toArray(),
             ];
         });
 
@@ -176,7 +204,12 @@ class PostController extends Controller
     }
 
     /**
-     * 記事の更新処理
+     * 記事管理｜記事の更新処理
+     *
+     * @param Request $request
+     * @param Post $post
+     * @param MarkdownService $markdown
+     * @return RedirectResponse
      */
     public function update(Request $request, Post $post, MarkdownService $markdown)
     {
@@ -219,7 +252,10 @@ class PostController extends Controller
     }
 
     /**
-     * 記事の削除処理
+     * 記事管理｜記事の削除処理
+     *
+     * @param Post $post
+     * @return RedirectResponse
      */
     public function destroy(Post $post)
     {
@@ -236,6 +272,12 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 
+    /**
+     * 記事管理｜投稿タグ管理UI
+     *
+     * @param Request $request
+     * @return View
+     */
     public function tags(Request $request)
     {
         $siteId = $request->input('site');
@@ -254,7 +296,8 @@ class PostController extends Controller
                         $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
                     })
                     ->orderBy('order')
-                    ->get(),
+                    ->pluck('id')
+                    ->toArray(),
             ];
         });
 
@@ -264,6 +307,13 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * 記事管理｜プレビュー
+     *
+     * @param Request $request
+     * @param MarkdownService $markdown
+     * @return void
+     */
     public function preview(Request $request, MarkdownService $markdown)
     {
         $postId = $request->input('post_id');
@@ -278,7 +328,6 @@ class PostController extends Controller
         $post->html_body = $markdown->convertToHtml($body);
         $post->tags = Tag::whereIn('id', $selectedTagIds)->get();
 
-        // return $htmlBody;
         return view('components.admin.posts.preview', [
             'post' => $post,
             'toc' => $toc,

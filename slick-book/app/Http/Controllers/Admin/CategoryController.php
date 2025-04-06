@@ -38,18 +38,18 @@ class CategoryController extends Controller
             'color' => 'nullable|string|max:20',
             'is_visible' => 'nullable|boolean',
         ]);
-        
+
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['title'], null, 'ja');
         }
-    
+
         // ✅ order を親カテゴリ内で最大値 +1 に設定
         $maxOrder = Category::where('parent_id', $validated['parent_id'] ?? null)
             ->where('site_id', $validated['site_id'])
             ->max('order');
-    
+
         $validated['order'] = is_null($maxOrder) ? 1 : $maxOrder + 1;
-    
+
         $category = Category::create($validated);
         return response()->json($category, 201);
     }
@@ -89,12 +89,12 @@ class CategoryController extends Controller
     protected function updateCategoryOrder(array $node, $parentId)
     {
         static $order = 1;
-    
+
         Category::where('id', $node['id'])->update([
             'parent_id' => $parentId,
             'order' => $order++,
         ]);
-    
+
         foreach ($node['children'] ?? [] as $child) {
             $this->updateCategoryOrder($child, $node['id']);
         }

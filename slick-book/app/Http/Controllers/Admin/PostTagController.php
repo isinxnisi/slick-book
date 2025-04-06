@@ -12,11 +12,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * 投稿タグ Controller class
+ */
 class PostTagController extends Controller
 {
-    // public function __construct(protected TagGroupService $tagGroupService) {}
-
+    /**
+     * 投稿: 公開タグ: 登録処理
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function toggle(Request $request)
     {
         $postId = $request->input('post_id');
@@ -57,6 +65,12 @@ class PostTagController extends Controller
         return response()->json(['status' => $status]);
     }
 
+    /**
+     * 投稿: 公開タグ: 解除処理
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function unlink(Request $request)
     {
         $tagId = $request->input('tag_id');
