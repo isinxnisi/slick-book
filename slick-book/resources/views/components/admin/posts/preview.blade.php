@@ -35,7 +35,7 @@
                 {{-- タイトル --}}
                 <h1 class="">{{ $post->title }}</h1>
             </div>
-        
+
             {{-- タグ一覧 --}}
             <ul class="tag-list mt-4 px-4">
                 @foreach ($post->tags as $tag)

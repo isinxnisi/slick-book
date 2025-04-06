@@ -2,29 +2,10 @@
     width: 100%;
 }
 
-h1 {
-    font-size: xx-large;
-    font-weight: bold;
-}
-
-article code {
-    background: #dfdfdf;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-weight: 700;
-    font-size: 13px;
-    display: inline-block;
-    margin-left: 5px;
-    margin-right: 5px;
-    top: -1px;
-    position: relative;
-}
-
-article hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
+/* -----------------------------------
+    タイトル・見出し
+----------------------------------- */
+/* 
 article h2 {
     font-size: 16px;
     font-weight: bold;
@@ -35,23 +16,83 @@ article h3 {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 20px;
-}
+} */
 
+h1 {
+    font-size: xx-large;
+    font-weight: bold;
+}
 
 .post-body h2 {
     /* border-bottom: 1px solid #ccc; */
     margin-top: 2em;
 }
 
-
-.note {
-    background: #f8f8d8;
-    border-left: 4px solid #f2c037;
-    padding: 1em;
-    margin: 1em 0;
-    font-style: italic;
+.post-body h2,
+.post-body h3,
+.post-body h4 {
+    position: relative;
+    scroll-margin-top: 80px;
+    /* 見出しにジャンプしてもヘッダーに隠れないように */
+    padding-left: 0.5em;
+    border-left: 4px solid #3b82f6;
+    margin-top: 2em;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 20px;
 }
 
+.post-body h2 {
+    font-size: 1.5rem;
+    /* border-color: #2563eb; */
+}
+
+.post-body h3 {
+    font-size: 1.25rem;
+    /* border-color: #3b82f6; */
+}
+
+.post-body h4 {
+    font-size: 1.1rem;
+    /* border-color: #60a5fa; */
+}
+
+.post-body ul {
+    margin-top: 1.5em;
+}
+
+/* -----------------------------------
+    タイトル日付
+----------------------------------- */
+
+.c-postTitle__date {
+    border-right: 1px solid var(--color_border);
+    font-weight: 400;
+    line-height: 30px;
+    margin-right: .75em;
+    padding: .5em .75em .5em 0;
+    text-align: center;
+    border-right: 1px solid #999;
+    max-width: 80px;
+    font-style: italic;
+    color: #666;
+}
+
+.c-postTitle__date .__y {
+    display: block;
+    font-size: 20px;
+    line-height: 30px;
+    margin-bottom: 4px;
+}
+
+.c-postTitle__date .__md {
+    display: block;
+    font-size: 20px;
+}
+
+/* -----------------------------------
+    記事タグ
+----------------------------------- */
 
 .tag-list {
     list-style: none;
@@ -76,8 +117,18 @@ article h3 {
     border-radius: 4px;
 }
 
+/* -----------------------------------
+    区切り線
+----------------------------------- */
 
+article hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 
+/* -----------------------------------
+    目次
+----------------------------------- */
 
 .toc {
     font-family: 'Segoe UI', sans-serif;
@@ -156,79 +207,26 @@ article h3 {
     margin-left: 5em;
 }
 
+/* -----------------------------------
+    強調
+----------------------------------- */
 
-
-
-.post-body h2,
-.post-body h3,
-.post-body h4 {
+article code {
+    background: #dfdfdf;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    top: -1px;
     position: relative;
-    scroll-margin-top: 80px;
-    /* 見出しにジャンプしてもヘッダーに隠れないように */
-    padding-left: 0.5em;
-    border-left: 4px solid #3b82f6;
-    margin-top: 2em;
-    font-weight: 600;
-    color: #111827;
 }
 
-.post-body h2 {
-    font-size: 1.5rem;
-    /* border-color: #2563eb; */
-}
-
-.post-body h3 {
-    font-size: 1.25rem;
-    /* border-color: #3b82f6; */
-}
-
-.post-body h4 {
-    font-size: 1.1rem;
-    /* border-color: #60a5fa; */
-}
-
-
-
-.note {
-    background-color: #fef9c3;
-    border-left: 4px solid #facc15;
-    padding: 1em;
-    margin: 1.5em 0;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    color: #4b5563;
-}
-
-
-
-.post-body ul {
-    margin-top: 1.5em;
-}
-
-.c-postTitle__date {
-    border-right: 1px solid var(--color_border);
-    font-weight: 400;
-    line-height: 30px;
-    margin-right: .75em;
-    padding: .5em .75em .5em 0;
-    text-align: center;
-    border-right: 1px solid #999;
-    max-width: 80px;
-    font-style: italic;
-    color: #666;
-}
-
-.c-postTitle__date .__y {
-    display: block;
-    font-size: 20px;
-    line-height: 30px;
-    margin-bottom: 4px;
-}
-
-.c-postTitle__date .__md {
-    display: block;
-    font-size: 20px;
-}
+/* -----------------------------------
+    コード
+----------------------------------- */
 
 :not(pre)>code[class*="language-"],
 pre[class*="language-"],
@@ -243,4 +241,26 @@ pre.code {
 pre[class*="language-"],
 pre.code code span {
     font-size: 13px;
+}
+
+/* -----------------------------------
+    注釈
+----------------------------------- */
+
+.note {
+    background: #f8f8d8;
+    border-left: 4px solid #f2c037;
+    padding: 1em;
+    margin: 1em 0;
+    font-style: italic;
+}
+
+.note {
+    background-color: #fef9c3;
+    border-left: 4px solid #facc15;
+    padding: 1em;
+    margin: 1.5em 0;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: #4b5563;
 }
