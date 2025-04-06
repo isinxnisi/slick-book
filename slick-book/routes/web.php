@@ -11,7 +11,8 @@ use App\Http\Controllers\Admin\TagGroupController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\SiteTagGroupController;
 use App\Http\Controllers\Admin\TagTagGroupController;
-use App\Http\Controllers\Site1\HomeController as Site1Home;
+use App\Http\Controllers\Blog\HomeController as BlogHome;
+use App\Http\Controllers\Blog\PostController as BlogPostController;
 use App\Http\Controllers\Site2\HomeController as Site2Home;
 
 // 環境設定からドメインを取得
@@ -86,8 +87,9 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 });
 
 // 公開サイト1
-Route::domain($domains['site1'])->group(function () {
-    Route::get('/', [Site1Home::class, 'index'])->name('site1.home');
+Route::domain($domains['blog'])->group(function () {
+    Route::get('/', [BlogHome::class, 'index'])->name('blog.home');
+    Route::get('post/{post}', [BlogPostController::class, 'view'])->name('posts.view');
 });
 
 // 公開サイト2
