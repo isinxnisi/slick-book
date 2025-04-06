@@ -98,7 +98,8 @@ class PostController extends Controller
                         $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
                     })
                     ->orderBy('order')
-                    ->get(),
+                    ->pluck('id')
+                    ->toArray(),
             ];
         });
 
@@ -154,7 +155,6 @@ class PostController extends Controller
         $tagIds = [];
         foreach ($validated['selected_tag_ids'] as $key => $tagList) {
             $tagList = json_decode($tagList);
-            $tagList = array_column($tagList, 'id');
             $tagIds = [...$tagIds, ...$tagList];
         }
         $post->tags()->sync($tagIds);
@@ -185,7 +185,8 @@ class PostController extends Controller
                         $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
                     })
                     ->orderBy('order')
-                    ->get(),
+                    ->pluck('id')
+                    ->toArray(),
             ];
         });
 
@@ -295,7 +296,8 @@ class PostController extends Controller
                         $query->select('tag_id')->from('post_tag')->where('post_id', $post->id);
                     })
                     ->orderBy('order')
-                    ->get(),
+                    ->pluck('id')
+                    ->toArray(),
             ];
         });
 
@@ -326,7 +328,6 @@ class PostController extends Controller
         $post->html_body = $markdown->convertToHtml($body);
         $post->tags = Tag::whereIn('id', $selectedTagIds)->get();
 
-        // return $htmlBody;
         return view('components.admin.posts.preview', [
             'post' => $post,
             'toc' => $toc,

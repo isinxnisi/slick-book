@@ -73,7 +73,7 @@ class TagController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:tags,slug,' . $tag->id,
             'description' => 'nullable|string',
-            'purpose' => 'required|string|max:50', 
+            'purpose' => 'required|string|max:50',
         ]);
 
         $tag->update($validated);

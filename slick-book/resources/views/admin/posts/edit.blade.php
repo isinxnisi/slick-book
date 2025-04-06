@@ -30,7 +30,7 @@
                             name="selected_tag_ids[{{ $purposeKey }}]"
                             id="selected-tags-{{ $purposeKey }}"
                             form="post-form"
-                            value='@json(array_column($selectedTagIdsByPurpose[$purposeKey]->toArray() ?? [], 'id'))'>
+                            value='@json($selectedTagIdsByPurpose[$purposeKey])'>
                     @endforeach
 
                     <input type="hidden" name="id" value="{{ $post->id }}">
@@ -170,7 +170,7 @@
                                 </h4>
                             </div>
                             <div x-show="open.selectTags" class="open-tab p-0">
-                                <x-admin.posts.tag-selector 
+                                <x-admin.posts.tag-selector
                                     :site-id="$siteId"
                                     :post="$post"
                                     :selected-tag-ids-by-purpose="$selectedTagIdsByPurpose"
@@ -405,7 +405,7 @@
                 .contents()
                 .find("head")
                 .append(
-                '<link rel="stylesheet" href="{{ asset('css/theme.css') }}" type="text/css">'
+                '<link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}" type="text/css">'
                 );
         });
 

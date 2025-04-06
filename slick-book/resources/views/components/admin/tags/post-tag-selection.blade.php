@@ -22,7 +22,7 @@
             <div class="dark:bg-gray-900 flex flex-wrap gap-2 mt-0 ps-2 py-2 rounded">
             @foreach ($group->tags as $tag)
                 @php
-                    $isActive = in_array($tag->id, array_column($selectedTagIds->toArray(), 'id'));
+                    $isActive = in_array($tag->id, $selectedTagIds);
                 @endphp
                 <x-admin.ui.tag-item
                     :tag-id="$tag->id"
@@ -40,7 +40,7 @@
                     :group-name="$group->breadcrumb"
                     />
             @endforeach
-        
+
             </div>
         @endforeach
         </div>
