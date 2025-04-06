@@ -39,7 +39,7 @@
                     <form id="tag-edit-form">
                         <input type="hidden" id="editPanel-tag-id">
                         <input type="hidden" id="editPanel-tag-group-id">
-    
+
                         <div class="mb-2">
                             <label for="editPanel-tag-name">タグ名</label>
                             <input type="text" id="editPanel-tag-name" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
@@ -183,7 +183,7 @@
         $(document).on('click', '.add-btn', function() {
             const parentId = $(this).data('id');
             $('#editPanel-purpose-hidden').val('{{ $purpose }}');
-            
+
             $('#editPanel-group-id').val('');
             $('#editPanel-group-name').val($(this).data('name'));
             $('#editPanel-group-slug').val($(this).data('slug'));
