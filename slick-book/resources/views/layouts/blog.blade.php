@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css'])
+    <link rel="stylesheet" href="{{ asset('css/theme/site-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/prism-themes/prism-dracula.css') }}">
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"> --}}
@@ -18,17 +19,16 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-gray-200">
     <div class="min-h-screen flex">
-        <!-- サイドメニュー -->
-        {{-- @include('layouts.sidebar') --}}
 
         <!-- メインコンテンツ -->
         <div class="flex-1">
+            @include('components.blog.navigation', ['pageTitle' => View::getSections()['title'] ?? ''])
 
             <!-- Page Heading -->
             @isset($header)
-            <header id="content-header" class="shadow">
+            <header id="content-header" class="sticky top-0 border-b border-gray-100 text-gray-200 bg-gray-700 shadow-sm">
                 <div class="mx-auto">
                     {{ $header }}
                 </div>
@@ -36,8 +36,22 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="p-6">
-                {{ $slot }}
+            <main class="">
+                <div class="flex py-6">
+                    <!-- サイドメニュー -->
+                    @include('components.blog.sidebar')
+
+                    <div id="main-layout" class="flex mx-auto">
+                        <div class="container px-6">
+                            {{ $slot }}
+                        </div>
+                        <aside>
+                            @isset($rAside)
+                            {{ $rAside }}
+                            @endisset
+                        </aside>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

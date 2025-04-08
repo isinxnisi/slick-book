@@ -24,7 +24,7 @@ class PostController extends Controller
 
         $toc = $post->toc;
 
-        return view('components.admin.posts.preview', [
+        return view('blog.post-view', [
             'post' => $post,
             'toc' => $toc,
         ]);
