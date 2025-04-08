@@ -7,9 +7,20 @@ use App\Models\Category;
 use App\Models\Site;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 
+/**
+ * サイトカテゴリ管理 Controller class
+ */
 class CategoryController extends Controller
 {
+    /**
+     * サイトカテゴリ管理: 登録・更新
+     *
+     * @param Request $request
+     * @return View
+     */
     public function tree(Request $request)
     {
         $siteId = $request->input('site', Site::first()?->id);
@@ -25,6 +36,16 @@ class CategoryController extends Controller
         return view('admin.categories.tree', compact('sites', 'siteId', 'categories'));
     }
 
+    /* ////////////////////////////////
+        Ajax
+    //////////////////////////////// */
+
+    /**
+     * Ajax: サイトカテゴリ管理: 登録処理
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -54,6 +75,13 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
+    /**
+     * Ajax: サイトカテゴリ管理: 更新処理
+     *
+     * @param Request $request
+     * @param Category $category
+     * @return JsonResponse
+     */
     public function update(Request $request, Category $category)
     {
         $validated = $request->validate([
@@ -71,12 +99,24 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
+    /**
+     * Ajax: サイトカテゴリ: 削除処理
+     *
+     * @param Category $category
+     * @return JsonResponse
+     */
     public function destroy(Category $category)
     {
         $category->delete();
         return response()->json(['message' => '削除しました']);
     }
 
+    /**
+     * Ajax: サイトカテゴリ: ソート処理
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function reorder(Request $request)
     {
         foreach ($request->input('hierarchy', []) as $node) {
@@ -86,6 +126,17 @@ class CategoryController extends Controller
         return response()->json(['message' => '並び順を更新しました']);
     }
 
+    /* ////////////////////////////////
+        Protected
+    //////////////////////////////// */
+
+    /**
+     * サイトカテゴリ並べ替え（再帰処理）
+     *
+     * @param array $node
+     * @param int $parentId
+     * @return void
+     */
     protected function updateCategoryOrder(array $node, $parentId)
     {
         static $order = 1;
