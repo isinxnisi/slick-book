@@ -47,6 +47,10 @@ class TagGroupController extends Controller
         return view('admin.tag-groups.index', compact('groups', 'purpose'));
     }
 
+    /* ////////////////////////////////
+        Ajax
+    //////////////////////////////// */
+
     /**
      * Ajax: マスタ: タグ・グループ登録処理
      *

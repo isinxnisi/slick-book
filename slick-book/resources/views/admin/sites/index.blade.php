@@ -19,6 +19,7 @@
                             <th class="text-left">ID</th>
                             <th class="text-left">名前</th>
                             <th class="text-left">スラッグ</th>
+                            <th class="text-left">ドメイン</th>
                             <th class="text-left">操作</th>
                         </tr>
                     </thead>
@@ -28,6 +29,7 @@
                             <td class="py-2">{{ $site->id }}</td>
                             <td class="py-2">{{ $site->name }}</td>
                             <td class="py-2">{{ $site->slug }}</td>
+                            <td class="py-2">{{ $site->domain }}</td>
                             <td class="py-2">
                                 <a href="{{ route('sites.edit', $site) }}" class="text-sm text-green-400 hover:text-green-500">
                                     <i data-lucide="edit"></i>

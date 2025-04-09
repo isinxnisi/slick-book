@@ -272,8 +272,12 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 
+    /* ////////////////////////////////
+        Ajax
+    //////////////////////////////// */
+
     /**
-     * 記事管理｜投稿タグ管理UI
+     * Ajax: 記事管理｜投稿タグ管理UI
      *
      * @param Request $request
      * @return View
@@ -308,7 +312,7 @@ class PostController extends Controller
     }
 
     /**
-     * 記事管理｜プレビュー
+     * Ajax: 記事管理｜プレビュー
      *
      * @param Request $request
      * @param MarkdownService $markdown

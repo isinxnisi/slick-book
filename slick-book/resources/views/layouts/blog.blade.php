@@ -6,29 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <title>{{$currentSite->name}}｜@yield('title')</title>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css'])
+    <link rel="stylesheet" href="{{ asset('css/theme/site-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/prism-themes/prism-dracula.css') }}">
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"> --}}
 
     <!-- Scripts -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    @vite(['resources/js/blog.js'])
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-gray-200">
     <div class="min-h-screen flex">
-        <!-- サイドメニュー -->
-        {{-- @include('layouts.sidebar') --}}
 
         <!-- メインコンテンツ -->
         <div class="flex-1">
+            @include('components.blog.navigation', ['pageTitle' => View::getSections()['title'] ?? ''])
 
             <!-- Page Heading -->
             @isset($header)
-            <header id="content-header" class="shadow">
+            <header id="content-header" class="sticky top-0 border-b border-gray-100 text-gray-200 bg-gray-700 shadow-sm">
                 <div class="mx-auto">
                     {{ $header }}
                 </div>
@@ -36,9 +38,27 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="p-6">
-                {{ $slot }}
+            <main class="pb-6 shadow-lg">
+                <div class="flex py-6">
+
+                    <div id="main-layout" class="flex mx-auto">
+                        <!-- サイドメニュー -->
+                        @include('components.blog.sidebar')
+
+                        <div class="container px-6" style="max-width: 920px">
+                            {{ $slot }}
+                        </div>
+                        <aside>
+                            @isset($rAside)
+                            {{ $rAside }}
+                            @endisset
+                        </aside>
+                    </div>
+                </div>
             </main>
+            <footer class="text-gray-800 bg-gray-300" style="height: 100px">
+
+            </footer>
         </div>
     </div>
 

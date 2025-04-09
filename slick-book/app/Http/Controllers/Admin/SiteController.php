@@ -45,6 +45,7 @@ class SiteController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:sites,slug',
+            'domain' => 'nullable|string|max:255|unique:sites,domain',
             'description' => 'nullable|string',
         ]);
 
@@ -75,6 +76,7 @@ class SiteController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:sites,slug,' . $site->id,
+            'domain' => 'nullable|string|max:255|unique:sites,domain,' . $site->id,
             'description' => 'nullable|string',
         ]);
 
