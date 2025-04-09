@@ -1,14 +1,15 @@
 @section('title', '記事一覧')
 <x-app-layout>
     <x-slot name="header">
+        <!-- サイト切替タブ -->
+        <x-admin.ui.site-tabs :sites="$sites" :active-id="$siteId" />
     </x-slot>
 
     <div class="mb-4">
-        <a href="{{ route('posts.create') }}" class="btn bg-indigo-800 text-white px-4 py-2 rounded hover:bg-indigo-900">
+        <a href="{{ route('posts.create') }}?site={{ $siteId }}" class="btn bg-indigo-800 text-white px-4 py-2 rounded hover:bg-indigo-900">
             新規投稿
         </a>
     </div>
-
 
     <div class="max-w-5xl">
         <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">

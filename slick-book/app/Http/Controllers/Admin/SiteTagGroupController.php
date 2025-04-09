@@ -34,8 +34,8 @@ class SiteTagGroupController extends Controller
      */
     public function index(Request $request)
     {
-        $siteId = $request->input('site', Site::first()?->id);
-        $sites = Site::all();
+        $siteId = $request->input('site', Site::orderBy('id')->first()?->id);
+        $sites = Site::orderBy('id')->get();
 
         // サイトに紐づくタググループ（左UI）
         $groups = new TagGroup()->getSiteTagGroupTree($siteId);
@@ -177,7 +177,7 @@ class SiteTagGroupController extends Controller
      */
     public function getMasterTags(Request $request)
     {
-        $siteId = $request->input('site', Site::first()?->id);
+        $siteId = $request->input('site', Site::orderBy('id')->first()?->id);
         $purpose = $request->get('purpose', 'public');
 
         $mastaGroups = TagGroup::whereNull('parent_id')

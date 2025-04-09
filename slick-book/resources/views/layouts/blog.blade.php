@@ -45,7 +45,7 @@
                         <!-- サイドメニュー -->
                         @include('components.blog.sidebar')
 
-                        <div class="container px-6" style="max-width: 920px">
+                        <div class="container px-6" style="width: 920px">
                             {{ $slot }}
                         </div>
                         <aside>

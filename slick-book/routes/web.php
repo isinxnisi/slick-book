@@ -13,7 +13,6 @@ use App\Http\Controllers\Admin\SiteTagGroupController;
 use App\Http\Controllers\Admin\TagTagGroupController;
 use App\Http\Controllers\Blog\HomeController as BlogHome;
 use App\Http\Controllers\Blog\PostController as BlogPostController;
-use App\Http\Controllers\Site2\HomeController as Site2Home;
 
 // 環境設定からドメインを取得
 $domains = config('multisite');
@@ -86,14 +85,11 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
     });
 });
 
-// 公開サイト1
-Route::domain($domains['blog'])->middleware(['load.site'])->group(function () {
+// 公開サイト
+Route::middleware(['load.site'])->group(function () {
     Route::get('/', [BlogHome::class, 'index'])->name('blog.home');
     Route::get('post/{post}', [BlogPostController::class, 'view'])->name('posts.view');
 });
 
-// 公開サイト2
-Route::domain($domains['site2'])->group(function () {
-    Route::get('/', [Site2Home::class, 'index'])->name('site2.home');
-});
+
 require __DIR__.'/auth.php';

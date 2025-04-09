@@ -33,6 +33,7 @@
                     @endforeach
 
                     <input type="hidden" name="id" value="{{ $post->id }}">
+                    <input type="hidden" name="site_id" value="{{ $siteId }}">
 
                     <div class="flex h-6 mt-3">
                         <div class="align-self-center text-left">

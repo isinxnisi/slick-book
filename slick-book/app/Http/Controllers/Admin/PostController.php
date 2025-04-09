@@ -34,15 +34,20 @@ class PostController extends Controller
     /**
      * 記事管理｜記事一覧
      *
+     * @param Request $request
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
+        $sites = Site::orderBy('id')->get();
+        $siteId = $request->input('site', Site::orderBy('id')->first()?->id);
+
         $posts = Post::where('status', '!=', 'temp')
+            ->where('site_id', $siteId)
             ->where('is_deleted', false)
             ->paginate(10);
 
-        return view('admin.posts.index', compact('posts'));
+        return view('admin.posts.index', compact('sites', 'siteId', 'posts'));
     }
 
     /**
@@ -67,8 +72,8 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        $siteId = $request->input('site', Site::first()?->id);
-        $sites = Site::all();
+        $sites = Site::orderBy('id')->get();
+        $siteId = $request->input('site', Site::orderBy('id')->first()?->id);
 
         // 既存のドラフト記事があるか確認
         $post = Post::where('status', 'temp')
@@ -89,6 +94,8 @@ class PostController extends Controller
                 'created' => now(),
             ]);
         }
+        // サイトIDをセット
+        $post->site_id = $siteId;
 
         // タグ選択用のデータを作成
         $selectedTagIdsByPurpose = collect(config('tags.purposes'))->mapWithKeys(function ($label, $purpose) use ($post) {
@@ -131,6 +138,7 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'status' => 'required|in:draft,published',
+            'site_id' => 'required|exists:sites,id',
             'category_id' => 'nullable|exists:categories,id',
             'selected_tag_ids' => 'nullable|array', // 追加
         ]);
@@ -146,6 +154,7 @@ class PostController extends Controller
             'html_body' => $htmlBody,
             'toc' => $toc,
             'status' => $validated['status'],
+            'site_id' => $validated['site_id'],
             'category_id' => $validated['category_id'],
             'updated_user' => Auth::id(),
             'updated' => now(),
@@ -174,8 +183,8 @@ class PostController extends Controller
         if ($post->is_deleted) {
             abort(404);
         }
-        $siteId = $request->input('site', Site::first()?->id);
-        $sites = Site::all();
+        $sites = Site::orderBy('id')->get();
+        $siteId = $request->input('site', Site::orderBy('id')->first()?->id);
 
         // タグ選択用のデータを作成
         $selectedTagIdsByPurpose = collect(config('tags.purposes'))->mapWithKeys(function ($label, $purpose) use ($post) {

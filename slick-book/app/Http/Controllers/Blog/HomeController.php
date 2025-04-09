@@ -11,7 +11,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $site = app('CurrentSite');
+
         $posts = Post::where('status', 'published')
+            ->where('site_id', $site->id)
             ->where('is_deleted', false)
             ->paginate(10);
 
