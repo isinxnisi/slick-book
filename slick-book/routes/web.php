@@ -87,7 +87,7 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 });
 
 // 公開サイト1
-Route::domain($domains['blog'])->group(function () {
+Route::domain($domains['blog'])->middleware(['load.site'])->group(function () {
     Route::get('/', [BlogHome::class, 'index'])->name('blog.home');
     Route::get('post/{post}', [BlogPostController::class, 'view'])->name('posts.view');
 });

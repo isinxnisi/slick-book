@@ -12,6 +12,7 @@ class Site extends Model
     protected $fillable = [
         'name',
         'slug',
+        'domain',
         'description',
         'deleted_at',
     ];

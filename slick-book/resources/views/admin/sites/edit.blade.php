@@ -35,6 +35,11 @@
                     </div>
 
                     <div class="mb-4">
+                        <label class="block text-sm">ドメイン</label>
+                        <x-admin.text-input name="domain" type="text" class="mt-1 block w-full" :value="old('domain', $site->domain)" required />
+                    </div>
+
+                    <div class="mb-4">
                         <label class="block text-sm">説明</label>
                         <x-admin.textarea name="description" class="mt-1 block w-full">{{ old('description', $site->description) }}</x-admin.textarea>
                     </div>
