@@ -8,7 +8,7 @@
         $purposeStyles = config('tags.post_purpose_styles');
         $defaultStyle = $purposeStyles['public'];
     @endphp
-    <div id="post-article" class="row post-container justify-content-md-center rounded-md bg-gray-100 p-8">
+    <div id="post-article" class="container justify-content-md-center rounded-md bg-gray-100 p-8">
 
         <div class="flex px-4">
             <time class="c-postTitle__date flex-1" datetime="2025-04-20" aria-hidden="true">
@@ -39,7 +39,7 @@
 
         </article>
     </div>
-    <div class="row post-container justify-content-md-center rounded-md bg-gray-100 p-8 mt-4">
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 mt-4">
         <div class="mt-0 px-4">
             <h2 class="content-headding">おすすめ記事</h2>
             <div class="py-0">
@@ -84,7 +84,8 @@
     </div>
 
     <x-slot name="rAside">
-        <div class="add bg-gray-300" style="width: 300px; height: 250px">
+        <div class="add bg-gray-300 overflow-hidden rounded shadow-sm" style="width: 300px;">
+            <img src="{{asset('img/example-labo-img.png')}}" alt="">
         </div>
         <div class="add hidden bg-gray-300" style="width: 300px; height: 250px; margin-top: 20px">
         </div>

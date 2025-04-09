@@ -7,6 +7,7 @@
                     <a href="{{ route('blog.home') }}">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center me-2">
+                            <img src="{{asset('img/my-lab-charactor.png')}}" alt="" class="rounded shadow-sm" style="height:33px;">
                             <span class="flex-1 px-2">{{$currentSite->name}}</span>
                         </div>
                     </a>

@@ -15,10 +15,10 @@
     <link rel="stylesheet" href="{{ asset('css/theme/site-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/prism-themes/prism-dracula.css') }}">
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"> --}}
 
     <!-- Scripts -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    @vite(['resources/js/blog.js'])
 </head>
 
 <body class="font-sans antialiased bg-gray-200">
@@ -38,13 +38,14 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="">
+            <main class="pb-6 shadow-lg">
                 <div class="flex py-6">
-                    <!-- サイドメニュー -->
-                    @include('components.blog.sidebar')
 
                     <div id="main-layout" class="flex mx-auto">
-                        <div class="container px-6">
+                        <!-- サイドメニュー -->
+                        @include('components.blog.sidebar')
+
+                        <div class="container px-6" style="max-width: 920px">
                             {{ $slot }}
                         </div>
                         <aside>
@@ -55,6 +56,9 @@
                     </div>
                 </div>
             </main>
+            <footer class="text-gray-800 bg-gray-300" style="height: 100px">
+
+            </footer>
         </div>
     </div>
 

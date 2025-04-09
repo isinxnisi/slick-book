@@ -179,6 +179,8 @@ article hr {
     color: #2563eb;
     text-decoration: none;
     transition: color 0.2s ease;
+    border-left: 3px solid #cfcfcf;
+    padding-left: 10px;
 }
 
 .toc a:hover {
