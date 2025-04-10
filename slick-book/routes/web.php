@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SiteMediaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PostController;
@@ -29,6 +30,11 @@ Route::domain($domains['admin'])->group(function () {
 
 Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
     Route::middleware('auth')->group(function () {
+        // アップロード画像の参照用
+        Route::get('/media/{site}/{type}/{filename}', [SiteMediaController::class, 'admin'])
+            ->where('filename', '.*')
+            ->name('admin.media');
+
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -87,6 +93,11 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 
 // 公開サイト
 Route::middleware(['load.site'])->group(function () {
+    // アップロード画像の参照用
+    Route::get('/media/{type}/{filename}', [SiteMediaController::class, 'public'])
+        ->where('filename', '.*')
+        ->name('secure.media');
+
     Route::get('/', [BlogHome::class, 'index'])->name('blog.home');
     Route::get('post/{post}', [BlogPostController::class, 'view'])->name('posts.view');
 });

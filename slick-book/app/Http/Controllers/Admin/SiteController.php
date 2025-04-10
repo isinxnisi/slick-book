@@ -49,7 +49,18 @@ class SiteController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        Site::create($validated);
+        $site = Site::create($validated);
+
+        foreach ($request->file('images', []) as $type => $file) {
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs("sites/{$site->id}/{$type}", $filename, 'public');
+
+            $site->images()->updateOrCreate(
+                ['type' => $type],
+                ['path' => $path]
+            );
+        }
+
         return redirect()->route('sites.index')->with('success', 'サイトを作成しました');
     }
 
@@ -81,6 +92,17 @@ class SiteController extends Controller
         ]);
 
         $site->update($validated);
+
+        foreach ($request->file('images', []) as $type => $file) {
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs("sites/{$site->id}/{$type}", $filename, 'public');
+
+            $site->images()->updateOrCreate(
+                ['type' => $type],
+                ['path' => $path]
+            );
+        }
+
         return redirect()->route('sites.index')->with('success', 'サイトを更新しました');
     }
 

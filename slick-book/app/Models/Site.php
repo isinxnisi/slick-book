@@ -16,4 +16,10 @@ class Site extends Model
         'description',
         'deleted_at',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(SiteImage::class);
+    }
+
 }

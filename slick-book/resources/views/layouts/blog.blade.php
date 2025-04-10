@@ -7,6 +7,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{$currentSite->name}}｜@yield('title')</title>
+    @php
+        $favicon = $currentSite->images->firstWhere('type', 'favicon');
+    @endphp
+
+    @if ($favicon)
+        <link rel="icon" type="image/png" href="{{ route('secure.media', [
+            'type' => 'favicon',
+            'filename' => basename($favicon->path),
+        ]) }}">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
