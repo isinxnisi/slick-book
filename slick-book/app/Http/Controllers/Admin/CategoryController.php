@@ -23,8 +23,8 @@ class CategoryController extends Controller
      */
     public function tree(Request $request)
     {
-        $siteId = $request->input('site', Site::first()?->id);
-        $sites = Site::all();
+        $siteId = $request->input('site', Site::orderBy('id')->first()?->id);
+        $sites = Site::orderBy('id')->get();
         $categories = Category::where('site_id', $siteId)
             ->whereNull('parent_id')
             ->with(['children' => function ($q) {

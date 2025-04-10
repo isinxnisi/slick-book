@@ -21,6 +21,10 @@ class PostController extends Controller
      */
     public function view(Request $request, Post $post)
     {
+        $site = app('CurrentSite');
+        if ($post->site_id != $site->id) {
+            abort(404);
+        }
 
         $toc = $post->toc;
 

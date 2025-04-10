@@ -2,8 +2,7 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <!-- サイト切替タブ -->
-        <x-admin.ui.site-tabs :sites="$sites" :active-id="$siteId" />
+        <h3 class="text-gray-300 bold py-2 ps-4">{{ $sites->firstWhere('id', $siteId)->name ?? '' }}</h3>
     </x-slot>
 
     <div class="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6">

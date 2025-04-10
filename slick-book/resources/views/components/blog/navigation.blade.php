@@ -7,8 +7,31 @@
                     <a href="{{ route('blog.home') }}">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center me-2">
-                            <img src="{{asset('img/my-lab-charactor.png')}}" alt="" class="rounded shadow-sm" style="height:33px;">
-                            <span class="flex-1 px-2">{{$currentSite->name}}</span>
+                            @php
+                                $naviLogo = $post->naviLogo ?? $currentSite->images->firstWhere('type', 'navi-logo');
+                            @endphp
+
+                            @if ($naviLogo)
+                                <img src="{{ route('secure.media', [
+                                    'type' => 'navi-logo',
+                                    'filename' => basename($naviLogo->path),
+                                ]) }}"
+                                alt="{{ $naviLogo->alt ?? '記事のサムネイル画像' }}"
+                                class="" style="height:33px;">
+                            @else
+                                @php
+                                    $siteIcon = $post->siteIcon ?? $currentSite->images->firstWhere('type', 'site-icon');
+                                @endphp
+                                @if ($siteIcon)
+                                    <img src="{{ route('secure.media', [
+                                        'type' => 'site-icon',
+                                        'filename' => basename($siteIcon->path),
+                                    ]) }}"
+                                    alt="{{ $siteIcon->alt ?? '記事のサムネイル画像' }}"
+                                    class="rounded shadow-sm" style="height:33px;">
+                                @endif
+                                <span class="flex-1 px-2">{{$currentSite->name}}</span>
+                            @endif
                         </div>
                     </a>
                 </h2>

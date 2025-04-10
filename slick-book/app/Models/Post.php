@@ -18,6 +18,7 @@ class Post extends Model
         'html_body',
         'toc',
         'status',
+        'site_id',
         'category_id',
         'created_user',
         'updated_user',
