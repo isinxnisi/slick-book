@@ -26,7 +26,7 @@
         </div>
 
         <!-- 記事メニュー -->
-        <div class="py-4 rounded bg-white shadow-sm">
+        <div class="text-sm py-4 rounded bg-white shadow-sm">
             <a href="{{ route('blog.home') }}"
                class="block p-2 ps-2 text-gray-600 hover:bg-gray-200
                       {{ request()->routeIs('blog.home') ? 'border-r-4 border-indigo-100 bg-indigo-100 dark:bg-gray-200 font-semibold' : '' }}">
@@ -36,21 +36,14 @@
                 記事カテゴリ
                 <svg x-bind:class="{ 'rotate-180': open.posts }" class="h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
             </button>
-
+            @php
+                // rootカテゴリ（親なし）だけを対象に表示
+                $categories = $currentSite->categories->where('parent_id', null)->sortBy('order');
+            @endphp
             <ul x-show="open.posts" class="mt-2 space-y-1">
-                <li class="">
-                    <a href="{{ route('blog.home') }}"
-                       class="block p-2 ps-4 text-gray-600 hover:bg-gray-200">
-                        HOME
-                    </a>
-                </li>
-                <li class="">
-                    <a href="{{ route('posts.create') }}"
-                       class="block p-2 ps-4 text-gray-600 hover:bg-gray-200
-                              {{ request()->routeIs('posts.create') ? 'border-r-4 border-indigo-100 bg-indigo-100 dark:bg-gray-200 font-semibold' : '' }}">
-                        記事の投稿
-                    </a>
-                </li>
+                @foreach ($categories as $category)
+                    @include('components.blog.partials.category-menu-item', ['category' => $category])
+                @endforeach
             </ul>
         </div>
 

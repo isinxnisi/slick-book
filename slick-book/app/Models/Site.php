@@ -22,4 +22,8 @@ class Site extends Model
         return $this->hasMany(SiteImage::class);
     }
 
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'site_id')->with('children');
+    }
 }

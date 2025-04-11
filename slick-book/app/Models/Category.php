@@ -44,4 +44,9 @@ class Category extends Model
         }
         return implode(' > ', $titles);
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'category_id');
+    }
 }

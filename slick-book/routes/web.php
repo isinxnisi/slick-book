@@ -100,6 +100,9 @@ Route::middleware(['load.site'])->group(function () {
 
     Route::get('/', [BlogHome::class, 'index'])->name('blog.home');
     Route::get('post/{post}', [BlogPostController::class, 'view'])->name('posts.view');
+
+    Route::get('/category/{slug}', [\App\Http\Controllers\Blog\CategoryController::class, 'view'])
+        ->name('blog.category');
 });
 
 

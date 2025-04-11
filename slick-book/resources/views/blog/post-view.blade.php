@@ -11,9 +11,9 @@
     <div id="post-article" class="container justify-content-md-center rounded-md bg-gray-100 p-8">
 
         <div class="flex px-4">
-            <time class="c-postTitle__date flex-1" datetime="2025-04-20" aria-hidden="true">
-                <span class="__y">2025</span>
-                <span class="__md">4/20</span>
+            <time class="c-postTitle__date flex-1" datetime="{{ $post->published }}" aria-hidden="true">
+                <span class="__y">{{ $post->published->format('Y') }}</span>
+                <span class="__md">{{ $post->published->format('m/d') }}</span>
             </time>
             {{-- タイトル --}}
             <h1 class="">{{ $post->title }}</h1>
@@ -54,8 +54,8 @@
                                 <a class="" href="{{ route('posts.view', $post->id) }}">{{ $post->title }}</a>
                             </h2>
                             <div class="d-flex">
-                                <time class="d-inline-block py-2 me-2" datetime="{{ $post->created }}" aria-hidden="true">
-                                    <span class="__ymd">{{ $post->created->format('y/m/d H:i:s') }}</span>
+                                <time class="d-inline-block py-2 me-2" datetime="{{ $post->published }}" aria-hidden="true">
+                                    <span class="__ymd">{{ $post->published->format('y/m/d H:i:s') }}</span>
                                 </time>
                                 <ul class="tag-list mt-2 px-0">
                                     @foreach ($post->tags as $tag)

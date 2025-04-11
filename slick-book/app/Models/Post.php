@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
+    use SoftDeletes;
     use HasFactory;
 
     protected $table = 'posts';
@@ -20,17 +21,20 @@ class Post extends Model
         'status',
         'site_id',
         'category_id',
+        'published_user',
+        'published_at',
         'created_user',
         'updated_user',
         'deleted_user',
-        'deleted',
+        'deleted_at',
         'is_deleted',
     ];
 
     protected $casts = [
-        'created' => 'datetime',
-        'updated' => 'datetime',
-        'deleted' => 'datetime',
+        'published_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
         'is_deleted' => 'boolean',
     ];
 
@@ -57,5 +61,21 @@ class Post extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function getPublishedAttribute()
+    {
+        if (is_null($this->published_at)) {
+            return $this->created_at;
+        }
+        return $this->published_at;
+    }
+
+    public function scopePublished($query)
+    {
+        return $query
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->where('status', 'published'); // ← 任意でstatus判定なども
     }
 }
