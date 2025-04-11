@@ -16,6 +16,10 @@ class HomeController extends Controller
         $posts = Post::where('status', 'published')
             ->where('site_id', $site->id)
             ->where('is_deleted', false)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return view('blog.home', compact('posts'));

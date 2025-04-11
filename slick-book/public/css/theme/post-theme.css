@@ -21,6 +21,7 @@ article h3 {
 h1 {
     font-size: xx-large;
     font-weight: bold;
+    word-break: break-word;
 }
 
 .post-body h2 {

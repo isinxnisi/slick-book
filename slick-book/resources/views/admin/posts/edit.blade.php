@@ -58,7 +58,6 @@
                                     'border' => '#4f46e5',
                                 ];
                             @endphp
-                
                             <x-admin.ui.tag-item
                                 :tag-id="$tag->id"
                                 :tag-name="$tag->name"
@@ -68,7 +67,6 @@
                                 :background="$styleSet['bg']"
                                 :text="$styleSet['text']"
                                 :border="$styleSet['border']"
-                
                                 :is-toggleable="false"
                                 :purpose="$purpose"
                             />
@@ -138,6 +136,17 @@
                                     </select>
                                 </div>
                                 <x-admin.input-error class="mt-2" :messages="$errors->get('status')" />
+                            </div>
+
+                            <!-- 公開日時フィールド -->
+                            <div class="mb-2 ps-2">
+                                <div class="flex items-center space-x-4">
+                                    <label class="w-20 text-left text-xs">公開日時:</label>
+                                    <input type="datetime-local" name="published_at" form="post-form"
+                                    class="flex-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm p-2 ms-0 text-xs"
+                                    value="{{ old('published_at', $post->published_at ?? ($post->status == 'published'? new Datetime()->format('Y-m-d H:i'): '')) }}">
+                                </div>
+                                <x-admin.input-error class="mt-2" :messages="$errors->get('published_at')" />
                             </div>
 
                             <!-- カテゴリフィールド -->

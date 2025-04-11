@@ -19,9 +19,9 @@
                 <div class="mt-2 border-t border-l border-gray-700 rounded-md shadow-md p-3 ms-0 text-xs">
                     <div class="row justify-content-md-center rounded-md">
                         <div class="px-2 w-20 border-r border-gray-700 d-flex align-items-center">
-                            <time class="c-postTitle__date d-inline-block" datetime="{{ $post->created }}" aria-hidden="true">
-                                <span class="__ymd">{{ $post->created->format('y/m/d') }}</span>
-                                <span class="__time">{{ $post->created->format('H:i:s') }}</span>
+                            <time class="c-postTitle__date d-inline-block" datetime="{{ $post->published }}" aria-hidden="true">
+                                <span class="__ymd">{{ $post->published->format('y/m/d') }}</span>
+                                <span class="__time">{{ $post->published->format('H:i:s') }}</span>
                             </time>
                         </div>
                         <div class="px-2 w-20 border-r border-gray-700 d-flex align-items-center">

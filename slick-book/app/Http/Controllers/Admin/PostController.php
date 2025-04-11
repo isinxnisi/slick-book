@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 
 /**
  * 記事管理 Controller class
@@ -78,7 +79,7 @@ class PostController extends Controller
         // 既存のドラフト記事があるか確認
         $post = Post::where('status', 'temp')
             ->where('created_user', Auth::id())
-            ->orderBy('created', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
 
         // なければ仮レコードを作成
@@ -91,7 +92,7 @@ class PostController extends Controller
                 'toc' => '',
                 'status' => 'temp',
                 'created_user' => Auth::id(),
-                'created' => now(),
+                'created_at' => now(),
             ]);
         }
         // サイトIDをセット
@@ -140,6 +141,7 @@ class PostController extends Controller
             'status' => 'required|in:draft,published',
             'site_id' => 'required|exists:sites,id',
             'category_id' => 'nullable|exists:categories,id',
+            'published_at' => 'nullable|date',
             'selected_tag_ids' => 'nullable|array', // 追加
         ]);
 
@@ -156,6 +158,9 @@ class PostController extends Controller
             'status' => $validated['status'],
             'site_id' => $validated['site_id'],
             'category_id' => $validated['category_id'],
+            'published_user' => ($post->status != 'published' && $validated['status'] == 'published')? Auth::id(): ($post->published_user ?? null),
+            'published_at' => !empty($validated['published_at'])? new Carbon($validated['published_at']):
+                (($post->status != 'published' && $validated['status'] == 'published')? new Carbon($validated['published_at']): null),
             'updated_user' => Auth::id(),
             'updated' => now(),
         ]);
@@ -231,6 +236,7 @@ class PostController extends Controller
             'body' => 'required|string',
             'status' => 'required|in:draft,published',
             'category_id' => 'nullable|exists:categories,id',
+            'published_at' => 'nullable|date',
             'selected_tag_ids' => 'nullable|array', // 追加
         ]);
 
@@ -245,6 +251,9 @@ class PostController extends Controller
             'toc' => $toc,
             'status' => $validated['status'],
             'category_id' => $validated['category_id'],
+            'published_user' => ($post->status != 'published' && $validated['status'] == 'published')? Auth::id(): ($post->published_user ?? null),
+            'published_at' => !empty($validated['published_at'])? new Carbon($validated['published_at']):
+                (($post->status != 'published' && $validated['status'] == 'published')? new Carbon($validated['published_at']): null),
             'updated_user' => Auth::id(),
             'updated' => now(),
         ]);

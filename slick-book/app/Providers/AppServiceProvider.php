@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,5 +31,11 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Blade::component('layouts.blog', 'blog-layout');
+
+        View::composer('components.blog.sidebar', function ($view) {
+            $site = app('CurrentSite');
+            $site->load('categories.children'); // eager load
+            $view->with('currentSite', $site);
+        });
     }
 }
