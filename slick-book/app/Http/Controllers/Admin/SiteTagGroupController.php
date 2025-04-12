@@ -38,7 +38,7 @@ class SiteTagGroupController extends Controller
         $sites = Site::orderBy('id')->get();
 
         // サイトに紐づくタググループ（左UI）
-        $groups = new TagGroup()->getSiteTagGroupTree($siteId);
+        $groups = (new TagGroup())->getSiteTagGroupTree($siteId);
 
         // マスタグループ（右UI）取得 → flatten & purpose注入
         $mastaGroups = TagGroup::whereNull('parent_id')

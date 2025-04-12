@@ -103,6 +103,8 @@ Route::middleware(['load.site'])->group(function () {
 
     Route::get('/category/{slug}', [\App\Http\Controllers\Blog\CategoryController::class, 'view'])
         ->name('blog.category');
+    Route::get('/tag/{slug}', [\App\Http\Controllers\Blog\TagController::class, 'view'])
+        ->name('blog.tag');
 });
 
 

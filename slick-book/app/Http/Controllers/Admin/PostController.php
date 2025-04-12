@@ -306,7 +306,7 @@ class PostController extends Controller
         $postId = $request->input('post');
         $purpose = $request->input('purpose', 'public');
 
-        $tagGroups = new TagGroup()->getSiteTagGroupTree($siteId, $purpose);
+        $tagGroups = (new TagGroup())->getSiteTagGroupTree($siteId, $purpose);
         $tagGroups = $this->tagGroupService->flattenGroups($tagGroups);
 
         // 選択状態

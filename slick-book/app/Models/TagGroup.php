@@ -58,6 +58,15 @@ class TagGroup extends Model
         return $this->hasMany(SiteTagGroup::class);
     }
 
+    public function scopeForSite($query, $siteId)
+    {
+        return $query->whereIn('tag_groups.id', function ($q) use ($siteId) {
+            $q->select('tag_group_id')
+              ->from('site_tag_group')
+              ->where('site_id', $siteId);
+        });
+    }
+
     public function getSiteTagGroupTree($siteId, $purpose = null, $depth = 2)
     {
         // サイトに紐づくトップレベルのタググループを取得

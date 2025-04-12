@@ -60,4 +60,22 @@ class Tag extends Model
     {
         return $this->belongsToMany(Post::class, 'post_tag')->withTimestamps();
     }
+
+    public function scopeForSite($query, $siteId)
+    {
+        return $query->whereIn('id', function ($query) use ($siteId) {
+            $query->select('tag_id')
+                ->from('tag_tag_group')
+                ->whereIn('tag_group_id', function ($q) use ($siteId) {
+                    $q->select('tag_group_id')
+                      ->from('site_tag_group')
+                      ->where('site_id', $siteId);
+                });
+        });
+    }
+
+    public function tagGroupsForSite($siteId)
+    {
+        return $this->tagGroups()->forSite($siteId);
+    }
 }
