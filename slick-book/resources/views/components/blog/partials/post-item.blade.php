@@ -1,7 +1,16 @@
 <div class="post-item-bar mt-2 border-t border-l border-gray-200 rounded-md shadow-md p-3 ms-0 text-xs bg-white">
     <div class="row justify-content-md-center rounded-md">
         <div class="thumnail d-flex px-2 w-30 border-r border-gray-200 align-items-center">
-            <img src="{{ asset('img/noImage.jpg') }}" alt="">
+            @php
+                $image = $post->thumbnail_image;
+            @endphp
+            @if ($image)
+                <img src="{{ route('secure.media', ['path' => $image->path]) }}"
+                     alt="{{ $image->alt }}"
+                     class="rounded shadow">
+            @else
+                <img class="rounded shadow-sm" src="{{ asset('img/noImage.jpg') }}" alt="">
+            @endif
         </div>
         <div class="post-info flex-1 px-4">
             {{-- タイトル --}}

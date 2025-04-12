@@ -13,8 +13,7 @@
 
     @if ($favicon)
         <link rel="icon" type="image/png" href="{{ route('secure.media', [
-            'type' => 'favicon',
-            'filename' => basename($favicon->path),
+            'path' => 'favicon/' . basename($favicon->path),
         ]) }}">
     @endif
 

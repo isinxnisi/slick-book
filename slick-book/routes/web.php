@@ -34,8 +34,8 @@ Route::domain($domains['admin'])->group(function () {
 Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
     Route::middleware('auth')->group(function () {
         // アップロード画像の参照用
-        Route::get('/media/{site}/{type}/{filename}', [SiteMediaController::class, 'admin'])
-            ->where('filename', '.*')
+        Route::get('/media/{site}/{path}', [SiteMediaController::class, 'admin'])
+            ->where('path', '.*')
             ->name('admin.media');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -97,8 +97,8 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 // 公開サイト
 Route::middleware(['load.site'])->group(function () {
     // アップロード画像の参照用
-    Route::get('/media/{type}/{filename}', [SiteMediaController::class, 'public'])
-        ->where('filename', '.*')
+    Route::get('/media/{path}', [SiteMediaController::class, 'public'])
+        ->where('path', '.*')
         ->name('secure.media');
 
     Route::get('/', [BlogHome::class, 'index'])->name('blog.home');

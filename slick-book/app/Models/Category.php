@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ * カテゴリ Model
  *
  * @property int $id
  * @property int $site_id

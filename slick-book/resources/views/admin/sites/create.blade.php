@@ -47,8 +47,7 @@
                                     <div class="mt-2 mb-2">
                                         <img src="{{ route('admin.media', [
                                                 'site' => $site->id,
-                                                'type' => $type,
-                                                'filename' => basename($image->path)
+                                                'path' => "{$type}/" . basename($image->path)
                                             ]) }}"
                                             alt="{{ $image->alt ?? $label }}"
                                             class="h-16 rounded shadow border">

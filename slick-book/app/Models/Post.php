@@ -118,6 +118,11 @@ class Post extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function site()
+    {
+        return $this->belongsTo(Site::class);
+    }
+
     public function getPublishedAttribute()
     {
         if (is_null($this->published_at)) {
@@ -132,5 +137,27 @@ class Post extends Model
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now())
             ->where('status', 'published'); // ← 任意でstatus判定なども
+    }
+
+    public function getThumbnailImageAttribute()
+    {
+        // 再帰的にカテゴリ画像を取得
+        $category = $this->category;
+        while ($category) {
+            if (!empty($category->image_path)) {
+                return new \App\Models\SiteImage([
+                    'path' => $category->image_path,
+                    'alt' => $category->title . 'カテゴリの画像',
+                ]);
+            }
+            $category = $category->parent;
+        }
+
+        // サイト画像（site_imagesテーブルの正式なレコード）
+        if ($this->site && $this->site->images) {
+            return $this->site->images->firstWhere('type', 'site_thumbnail');
+        }
+
+        return null;
     }
 }

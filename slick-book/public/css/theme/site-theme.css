@@ -73,10 +73,12 @@ header#content-header {
 }
 .post-item-bar .thumnail {
     display: flex;
-    width: fit-content;
+    width: 150px;
 }
 .post-item-bar .thumnail img {
     height: 100px;
+    width: 150px;
+    object-fit: cover;
 }
 .post-info .title {
     height: 60px;
