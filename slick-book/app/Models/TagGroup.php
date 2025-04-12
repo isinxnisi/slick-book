@@ -5,6 +5,50 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $purpose
+ * @property string|null $color
+ * @property string|null $icon
+ * @property int|null $parent_id
+ * @property int $order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, TagGroup> $children
+ * @property-read int|null $children_count
+ * @property-read mixed $breadcrumb
+ * @property-read TagGroup|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SiteTagGroup> $siteTagGroups
+ * @property-read int|null $site_tag_groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Site> $sites
+ * @property-read int|null $sites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tag> $tags
+ * @property-read int|null $tags_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup forSite($siteId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereIcon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup wherePurpose($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup withoutTrashed()
+ * @mixin \Eloquent
+ */
 class TagGroup extends Model
 {
     use SoftDeletes;
