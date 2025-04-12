@@ -24,11 +24,26 @@ class CategoryController extends Controller
     {
         $site = app('CurrentSite');
 
-        $category = Category::where('slug', $slug)->where('site_id', $site->id)->firstOrFail();
+        $category = Category::with('childrenRecursive')
+            ->where('slug', $slug)
+            ->where('site_id', $site->id)
+            ->firstOrFail();
 
-        // カテゴリの記事一覧などを取得
-        $posts = $category->posts()->where('site_id', $site->id)->published()->latest()->get();
+        // 対象カテゴリ + 子孫カテゴリすべてのID
+        $categoryIds = $category->descendant_ids;
 
-        return view('blog.category', compact('category', 'posts'));
+        // 投稿一覧（このカテゴリと子孫カテゴリ）
+        $posts = \App\Models\Post::whereIn('category_id', $categoryIds)
+            ->where('site_id', $site->id)
+            ->published()
+            ->latest('published_at')
+            ->get();
+
+        // 紐づくタグ一覧（重複なし）
+        $categoryTags = \App\Models\Tag::whereHas('posts', function ($query) use ($categoryIds) {
+            $query->whereIn('category_id', $categoryIds);
+        })->distinct()->get();
+
+        return view('blog.category', compact('category', 'posts', 'categoryTags'));
     }
 }

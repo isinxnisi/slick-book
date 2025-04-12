@@ -26,7 +26,9 @@ class Category extends Model
 
     public function children()
     {
-        return $this->hasMany(self::class, 'parent_id')->with('children');
+        return $this->hasMany(self::class, 'parent_id')
+            ->orderBy('order')
+            ->with('children');
     }
 
     public function parent()
@@ -43,6 +45,32 @@ class Category extends Model
             $category = $category->parent;
         }
         return implode(' > ', $titles);
+    }
+
+    public function getBreadcrumbWOSelfAttribute()
+    {
+        $titles = [];
+        $category = $this;
+        while ($category) {
+            array_unshift($titles, $category->title);
+            $category = $category->parent;
+        }
+        array_pop($titles);
+        return implode(' > ', $titles);
+    }
+
+    public function childrenRecursive()
+    {
+        return $this->hasMany(self::class, 'parent_id')
+            ->orderBy('order')
+            ->with('childrenRecursive');
+    }
+
+    public function getDescendantIdsAttribute()
+    {
+        return collect([$this->id])->merge(
+            $this->childrenRecursive->flatMap(fn($child) => $child->descendant_ids)
+        );
     }
 
     public function posts()

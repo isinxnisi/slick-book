@@ -51,6 +51,17 @@ header#content-header {
     margin-bottom: 20px;
     font-size: 1.5em;
 }
+.content-headding-sub {
+    position: relative;
+    scroll-margin-top: 80px;
+    padding-left: 0.5em;
+    border-left: 4px solid #26dcba;
+    /* margin-top: 2em; */
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 10px;
+    font-size: 1.25em;
+}
 .post-container {
     display: flex;
 }
