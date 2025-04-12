@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Blog;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
-use App\Services\MarkdownService;
-use Illuminate\Http\Request;
+use App\Models\Tag;
 use Illuminate\Contracts\View\View;
 
 /**
@@ -33,14 +32,14 @@ class CategoryController extends Controller
         $categoryIds = $category->descendant_ids;
 
         // 投稿一覧（このカテゴリと子孫カテゴリ）
-        $posts = \App\Models\Post::whereIn('category_id', $categoryIds)
+        $posts = Post::whereIn('category_id', $categoryIds)
             ->where('site_id', $site->id)
             ->published()
             ->latest('published_at')
             ->get();
 
         // 紐づくタグ一覧（重複なし）
-        $categoryTags = \App\Models\Tag::whereHas('posts', function ($query) use ($categoryIds) {
+        $categoryTags = Tag::whereHas('posts', function ($query) use ($categoryIds) {
             $query->whereIn('category_id', $categoryIds);
         })->distinct()->get();
 

@@ -5,7 +5,7 @@
 /* -----------------------------------
     タイトル・見出し
 ----------------------------------- */
-/* 
+/*
 article h2 {
     font-size: 16px;
     font-weight: bold;
@@ -68,13 +68,14 @@ h1 {
 
 .c-postTitle__date {
     border-right: 1px solid var(--color_border);
-    font-weight: 400;
-    line-height: 30px;
+    font-weight: 500;
+    line-height: 22px;
     margin-right: .75em;
-    padding: .5em .75em .5em 0;
-    text-align: center;
+    padding: .25em .75em .15em 0;
+    text-align: left;
     border-right: 1px solid #999;
-    max-width: 80px;
+    max-width: fit-content;
+    font-size: 14px;
     font-style: italic;
     color: #666;
 }
@@ -98,6 +99,7 @@ h1 {
 .tag-list {
     list-style: none;
     display: inline-block;
+    align-self: center !important;
 }
 
 .tag-list li {
@@ -105,10 +107,13 @@ h1 {
 }
 
 .tag-list li.tag-item {
-    font-size: 11px !important;
+    font-size: 10px !important;
     font-weight: bold !important;
-    font-style: italic !important;
-    height: 22px;
+    /* font-style: italic !important; */
+    height: 18px;
+    line-height: 18px;
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 .tag-list li.tag-item .tag {

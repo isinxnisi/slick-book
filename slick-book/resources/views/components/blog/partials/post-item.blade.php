@@ -5,18 +5,18 @@
         </div>
         <div class="post-info flex-1 px-4">
             {{-- タイトル --}}
-            <h2 class="title text-lg bold d-flex align-items-center">
+            <h2 class="title text-lg bold d-flex align-items-center border-b">
                 <a class="" href="{{ route('posts.view', $post->id) }}">{{ $post->title }}</a>
             </h2>
-            <div class="d-flex">
-                <time class="d-inline-block py-2 me-2" datetime="{{ $post->published }}" aria-hidden="true">
-                    <span class="__ymd">{{ $post->published->format('y/m/d H:i:s') }}</span>
-                </time>
-                <ul class="tag-list mt-2 px-0">
+            <div class="d-flex py-2">
+                <ul class="tag-list text-left px-0">
                     @foreach ($post->tags as $tag)
-                        @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => $purpose])
+                    @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => $purpose])
                     @endforeach
                 </ul>
+                <time class="flex-1 d-inline-block font-bold text-gray-400 py-1 text-right ms-2" datetime="{{ $post->published }}" aria-hidden="true" style="min-width:100px;">
+                    <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
+                </time>
             </div>
             <p class="pt-2">{{ Str::limit($post->body, 100) }}</p>
         </div>

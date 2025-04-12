@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * 
+ * タググループ Model
  *
  * @property int $id
  * @property string $name
@@ -92,6 +92,18 @@ class TagGroup extends Model
         return implode(' > ', $names);
     }
 
+    public function getBreadcrumbWOSelfAttribute()
+    {
+        $names = [];
+        $group = $this;
+        while ($group) {
+            array_unshift($names, $group->name);
+            $group = $group->parent;
+        }
+        array_pop($names);
+        return implode(' > ', $names);
+    }
+
     public function sites()
     {
         return $this->belongsToMany(Site::class, 'site_tag_group');
@@ -120,7 +132,7 @@ class TagGroup extends Model
                     ->from('site_tag_group')
                     ->where('site_id', $siteId);
             });
-    
+
         // 共通のタグ取得クロージャ
         $tagQuery = function ($query) use ($purpose) {
             if (!is_null($purpose)) {
@@ -128,7 +140,7 @@ class TagGroup extends Model
             }
             $query->orderBy('name');
         };
-    
+
         // 再帰的に eager load 用の配列を生成するローカル関数
         $buildChildrenWith = function ($currentDepth) use (&$buildChildrenWith, $tagQuery) {
             if ($currentDepth <= 0) {
@@ -142,7 +154,7 @@ class TagGroup extends Model
                 }
             ];
         };
-    
+
         // eager load の設定。トップレベルは別途指定
         $withRelations = [
             'parent',
@@ -151,7 +163,7 @@ class TagGroup extends Model
                 $query->with($buildChildrenWith($depth - 1));
             }
         ];
-    
+
         return $groups->with($withRelations)
             ->orderBy('order')
             ->get();

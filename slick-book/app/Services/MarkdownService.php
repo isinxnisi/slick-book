@@ -87,6 +87,10 @@ class MarkdownService
     {
         preg_match_all('/^(#{1,6})\s*(.+)$/m', $markdown, $matches, PREG_SET_ORDER);
 
+        if (empty($matches)) {
+            return '';
+        }
+
         $toc = '<div class="toc my-4 mx-auto border border-gray-200 bg-gray-100"><ul>';
         foreach ($matches as $match) {
             $level = strlen($match[1]);

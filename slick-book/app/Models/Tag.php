@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * 
+ * タグ Model
  *
  * @property int $id
  * @property string $name
@@ -80,7 +80,7 @@ class Tag extends Model
         return $this->belongsToMany(TagGroup::class)
                     ->withPivot('order')
                     ->withTimestamps()
-                    ->orderBy('pivot_order'); // 並び順
+                    ->orderBy('order'); // 並び順
     }
 
     /**
@@ -104,9 +104,14 @@ class Tag extends Model
         return $this->belongsToMany(Post::class, 'post_tag')->withTimestamps();
     }
 
+    public function scopeForPurpose($query, $purpose)
+    {
+        return $query->where('purpose', $purpose);
+    }
+
     public function scopeForSite($query, $siteId)
     {
-        return $query->whereIn('id', function ($query) use ($siteId) {
+        return $query->whereIn('tags.id', function ($query) use ($siteId) {
             $query->select('tag_id')
                 ->from('tag_tag_group')
                 ->whereIn('tag_group_id', function ($q) use ($siteId) {

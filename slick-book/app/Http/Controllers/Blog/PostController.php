@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Blog;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\TagGroup;
 use App\Services\MarkdownService;
 use Illuminate\Http\Request;
 
@@ -28,9 +29,18 @@ class PostController extends Controller
 
         $toc = $post->toc;
 
+        // 投稿一覧（このタグに紐づくもの）
+        $recommendPosts = Post::whereHas('tags', fn ($q) => $q->where('purpose', 'public')->whereIn('tags.id', $post->tags->pluck('id')))
+            ->where('site_id', $site->id)
+            ->published()
+            ->latest('published_at')
+            ->limit(10)
+            ->get();
+
         return view('blog.post-view', [
             'post' => $post,
             'toc' => $toc,
+            'recommendPosts' => $recommendPosts,
         ]);
     }
 }

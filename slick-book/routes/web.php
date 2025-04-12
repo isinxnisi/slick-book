@@ -14,6 +14,9 @@ use App\Http\Controllers\Admin\SiteTagGroupController;
 use App\Http\Controllers\Admin\TagTagGroupController;
 use App\Http\Controllers\Blog\HomeController as BlogHome;
 use App\Http\Controllers\Blog\PostController as BlogPostController;
+use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
+use App\Http\Controllers\Blog\TagController as BlogTagController;
+use App\Http\Controllers\Blog\TagGroupController as BlogTagGroupController;
 
 // 環境設定からドメインを取得
 $domains = config('multisite');
@@ -101,10 +104,12 @@ Route::middleware(['load.site'])->group(function () {
     Route::get('/', [BlogHome::class, 'index'])->name('blog.home');
     Route::get('post/{post}', [BlogPostController::class, 'view'])->name('posts.view');
 
-    Route::get('/category/{slug}', [\App\Http\Controllers\Blog\CategoryController::class, 'view'])
+    Route::get('/category/{slug}', [BlogCategoryController::class, 'view'])
         ->name('blog.category');
-    Route::get('/tag/{slug}', [\App\Http\Controllers\Blog\TagController::class, 'view'])
+    Route::get('/tag/{slug}', [BlogTagController::class, 'view'])
         ->name('blog.tag');
+    Route::get('/tagGroup/{slug}', [BlogTagGroupController::class, 'view'])
+        ->name('blog.tagGroup');
 });
 
 

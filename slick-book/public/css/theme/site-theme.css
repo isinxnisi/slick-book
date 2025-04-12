@@ -26,6 +26,7 @@ header#content-header {
 #main-layout {
     position: flex;
     max-width: 1600px;
+    width: calc(100% - 100px);
 }
 #site-side-menu {
     top: 60px;
@@ -50,6 +51,7 @@ header#content-header {
     color: #111827;
     margin-bottom: 20px;
     font-size: 1.5em;
+    line-height: 1.25em;
 }
 .content-headding-sub {
     position: relative;
@@ -61,6 +63,10 @@ header#content-header {
     color: #111827;
     margin-bottom: 10px;
     font-size: 1.25em;
+}
+.content-container {
+    max-width: 920px;
+    width: calc(100% - 600px);
 }
 .post-container {
     display: flex;
