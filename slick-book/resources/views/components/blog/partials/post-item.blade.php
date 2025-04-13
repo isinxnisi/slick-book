@@ -4,13 +4,15 @@
             @php
                 $image = $post->thumbnail_image;
             @endphp
+            <a class="" href="{{ route('posts.view', $post->id) }}">
             @if ($image)
                 <img src="{{ route('secure.media', ['path' => $image->path]) }}"
-                     alt="{{ $image->alt }}"
-                     class="rounded shadow">
+                    alt="{{ $image->alt }}"
+                    class="rounded shadow">
             @else
                 <img class="rounded shadow-sm" src="{{ asset('img/noImage.jpg') }}" alt="">
             @endif
+            </a>
         </div>
         <div class="post-info flex-1 px-4">
             {{-- タイトル --}}

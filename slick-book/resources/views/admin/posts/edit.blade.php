@@ -1,4 +1,4 @@
-@section('title', '新規投稿')
+@section('title', '記事の編集')
 
 <x-app-layout>
     <x-slot name="header">
@@ -182,7 +182,7 @@
                                     :site-id="$siteId"
                                     :post="$post"
                                     :selected-tag-ids-by-purpose="$selectedTagIdsByPurpose"
-                                    :purpose="request()->get('purpose', 'public')" 
+                                    :purpose="request()->get('purpose', 'public')"
                                 />
                             </div>
                         </div>
@@ -307,14 +307,14 @@
         $(document).on('click', '.add-m-tag-inline-btn', function () {
             const groupId = $(this).data('group-id');
             const groupName = $(this).data('group-name');
-        
+
             $('#inline-tag-id').val('');
             $('#inline-tag-group-id').val(groupId);
             $('#inline-tag-group-name').text(groupName);
             $('#inline-tag-name').val('');
             $('#inline-tag-slug').val('');
             $('#inline-tag-description').val('');
-        
+
             $('#inline-tag-form-container').hide().removeClass('hidden').slideDown(200);
         });
 
@@ -385,7 +385,7 @@
                 // 新規
                 $.post('/tags', data, function (res) {
                     $('#inline-tag-form-container').slideUp(0);
-    
+
                     // 右UIのタグ一覧を再取得
                     window.fetchTagSelector();
                 }).fail(function () {
@@ -399,12 +399,12 @@
                     data: data,
                     success: (tagData) => {
                         $('#inline-tag-form-container').slideUp(0);
-        
+
                         // 右UIのタグ一覧を再取得
                         window.fetchTagSelector();
                     }
                 });
-                
+
             }
         });
 
