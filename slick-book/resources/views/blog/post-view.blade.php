@@ -5,30 +5,45 @@
     </x-slot>
 
     @php
+        $image = $post->postEyecatchImage;
+    @endphp
+    @if ($image)
+    <div class="max-w-5xl mb-4">
+        <div class="post-image eyecatch">
+            <img src="{{ route('secure.media', [
+                    'site' => "{$image->site_id}",
+                    'path' => "{$image->type}/" . basename($image->path),
+                ]) }}"
+                alt="{{ $image->alt }}"
+                class="rounded">
+        </div>
+    </div>
+    @endif
+
+    @php
         $purposeStyles = config('tags.post_purpose_styles');
         $defaultStyle = $purposeStyles['public'];
     @endphp
     <div id="post-article" class="container justify-content-md-center rounded-md bg-gray-100 p-8">
 
         <div class="flex px-4">
-            <time class="c-postTitle__date flex-1" datetime="{{ $post->published }}" aria-hidden="true">
-                <span class="__y">{{ $post->published->format('Y') }}</span>
-                <span class="__md">{{ $post->published->format('m/d') }}</span>
-            </time>
             {{-- タイトル --}}
             <h1 class="">{{ $post->title }}</h1>
         </div>
 
-        {{-- タグ一覧 --}}
-        <ul class="tag-list mt-4 px-4">
-            @foreach ($post->tags as $tag)
-                <li class="tag-item">
-                    <a class="tag" style="background-color: {{ $defaultStyle['bg'] }}; color: {{ $defaultStyle['text'] }}; border: 1px solid {{ $defaultStyle['bg'] }}">
-                        #{{ $tag->name }}
-                    </a>
-                </li>
-            @endforeach
-        </ul>
+        <div class="flex mt-2 px-4">
+            <time class="c-postTitle__date flex-1" datetime="{{ $post->published }}" aria-hidden="true">
+                <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
+            </time>
+            {{-- タグ一覧 --}}
+            <ul class="tag-list align-self-center">
+                @foreach ($post->tags as $tag)
+                    <li class="tag-item">
+                        @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => 'public', 'link' => true])
+                    </li>
+                @endforeach
+            </ul>
+        </div>
         <article class="post mt-4 mb-4 px-4">
             {{-- 本文（HTML） --}}
             <div class="post-layout" style="gap: 2rem;">
@@ -43,42 +58,9 @@
         <div class="mt-0 px-4">
             <h2 class="content-headding">おすすめ記事</h2>
             <div class="py-0">
-                <div class="post-item-bar mt-2 border-t border-l border-gray-200 rounded-md shadow-md p-3 ms-0 text-xs bg-white">
-                    <div class="row justify-content-md-center rounded-md">
-                        <div class="thumnail d-flex px-2 w-30 border-r border-gray-200 align-items-center">
-                            <img src="{{ asset('img/noImage.jpg') }}" alt="">
-                        </div>
-                        <div class="post-info flex-1 px-4">
-                            {{-- タイトル --}}
-                            <h2 class="title text-lg bold d-flex align-items-center">
-                                <a class="" href="{{ route('posts.view', $post->id) }}">{{ $post->title }}</a>
-                            </h2>
-                            <div class="d-flex">
-                                <time class="d-inline-block py-2 me-2" datetime="{{ $post->published }}" aria-hidden="true">
-                                    <span class="__ymd">{{ $post->published->format('y/m/d H:i:s') }}</span>
-                                </time>
-                                <ul class="tag-list mt-2 px-0">
-                                    @foreach ($post->tags as $tag)
-                                        <li class="tag-item">
-                                            <a class="tag" style="background-color: {{ $defaultStyle['bg'] }}; color: {{ $defaultStyle['text'] }}; border: 1px solid {{ $defaultStyle['bg'] }}">
-                                                #{{ $tag->name }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <p class="pt-2">{{ Str::limit($post->body, 100) }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="add bg-gray-300" style="width: 100%; height: 150px; margin-top: 20px">
-                </div>
-                <div class="add bg-gray-300" style="width: 100%; height: 150px; margin-top: 20px">
-                </div>
-                <div class="add hidden bg-gray-300" style="width: 100%; height: 150px; margin-top: 20px">
-                </div>
-                <div class="add hidden bg-gray-300" style="width: 100%; height: 150px; margin-top: 20px">
-                </div>
+                @foreach ($recommendPosts as $reccomendPost)
+                @include('components.blog.partials.post-item', ['post' => $reccomendPost, 'purpose' => 'public'])
+                @endforeach
             </div>
         </div>
     </div>
@@ -92,7 +74,9 @@
         <div class="r-side-content">
             <div class="add hidden bg-gray-300" style="width: 300px; height: 250px">
             </div>
+            @if(!empty($post->toc))
             <div class="post-toc">{!! $post->toc !!}</div>
+            @endif
             <div class="add hidden bg-gray-300" style="width: 300px; height: 250px; margin-top: 20px">
             </div>
         </div>

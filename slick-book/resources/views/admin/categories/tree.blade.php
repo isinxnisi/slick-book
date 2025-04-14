@@ -35,12 +35,13 @@
             'title' => 'タイトル',
             'slug' => 'スラッグ',
             'description' => '説明',
-            'image_path' => '画像URL',
+            'thumbnail' => 'サムネイル画像',
             'icon' => 'アイコン名（例：folder）',
             'color' => 'カラーコード（例：#ff0000）',
             'is_visible' => '公開フラグ',
         ]"
-        saveButtonId="save-category-btn" />
+        saveButtonId="save-category-btn"
+    />
 </x-app-layout>
 
 <script>
@@ -110,38 +111,68 @@
             });
             return items;
         }
-        $(document).on('click', '.edit-btn', function() {
-            const fields = ['id', 'title', 'slug', 'description', 'image_path', 'icon', 'color'];
+        $(document).on('click', '.edit-btn', function () {
+            const fields = ['id', 'title', 'slug', 'description', 'icon', 'color'];
             fields.forEach(field => {
                 $(`#editCategoryModal-${field}`).val($(this).data(field));
             });
 
             $('#editCategoryModal-is_visible').prop('checked', $(this).data('is_visible') == true);
 
+            // ✅ サムネイル画像の表示処理
+            const siteId = $(this).data('site_id');
+            const categoryId = $(this).data('id');
+            const imagePath = $(this).data('image_path');
+
+            if (imagePath) {
+                const filename = imagePath.split('/').pop();
+                const type = `categories/${categoryId}/thumbnail`;
+                const imageUrl = `/media/${siteId}/${type}/${filename}`;
+
+                $('#editCategoryModal-thumbnail-preview img').attr('src', imageUrl);
+                $('#editCategoryModal-thumbnail-preview').show();
+            } else {
+                $('#editCategoryModal-thumbnail-preview').hide();
+            }
+
             const modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
             modal.show();
         });
-        $('#save-category-btn').on('click', function() {
+        $('#save-category-btn').on('click', function () {
             const id = $('#editCategoryModal-id').val();
-            const fields = ['title', 'slug', 'description', 'image_path', 'icon', 'color'];
-            const data = {};
+            const formData = new FormData();
 
+            // テキスト系フィールド
+            const fields = ['title', 'slug', 'description', 'icon', 'color'];
             fields.forEach(field => {
-                data[field] = $(`#editCategoryModal-${field}`).val();
+                const value = $(`#editCategoryModal-${field}`).val();
+                formData.append(field, value);
             });
 
-            // 保存時
-            data['is_visible'] = $('#editCategoryModal-is_visible').is(':checked') ? 1 : 0;
+            // チェックボックス
+            formData.append('is_visible', $('#editCategoryModal-is_visible').is(':checked') ? 1 : 0);
 
+            // サムネイル画像
+            const fileInput = $('input[name="images[thumbnail]"]')[0];
+            if (fileInput && fileInput.files.length > 0) {
+                formData.append('images[thumbnail]', fileInput.files[0]);
+            }
+            formData.append('_method', 'PATCH');
             $.ajax({
                 url: `/categories/${id}`,
-                method: 'PATCH',
+                method: 'POST', // LaravelでPATCH扱いにするためのmethod spoofing
+                data: formData,
+                processData: false,
+                contentType: false,
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json'
                 },
-                data,
-                success: () => location.reload()
+                success: () => location.reload(),
+                error: (xhr) => {
+                    console.error(xhr.responseJSON ?? xhr.responseText);
+                    alert('保存に失敗しました');
+                }
             });
         });
     });

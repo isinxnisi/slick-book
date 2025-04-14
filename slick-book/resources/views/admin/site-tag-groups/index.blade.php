@@ -39,7 +39,7 @@
                 <div class="panel-content p-4">
                     <!-- タグ用途切り替えタブ -->
                     <x-admin.tags.purpose-tabs :active-purpose="$purpose" />
-    
+
                     <!-- マスタ：タググループ階層ツリー -->
                     <div id="tag-selection-body" class="hierarchy-tree mt-3 p-0 text-gray-900 dark:text-gray-100">
                         <x-admin.tags.tag-selection
@@ -379,14 +379,14 @@
             $(document).on('click', '.add-m-tag-inline-btn', function () {
                 const groupId = $(this).data('group-id');
                 const groupName = $(this).data('group-name');
-            
+
                 $('#inline-tag-id').val('');
                 $('#inline-tag-group-id').val(groupId);
                 $('#inline-tag-group-name').text(groupName);
                 $('#inline-tag-name').val('');
                 $('#inline-tag-slug').val('');
                 $('#inline-tag-description').val('');
-            
+
                 $('#inline-tag-form-container').hide().removeClass('hidden').slideDown(200);
             });
 
@@ -451,12 +451,12 @@
                     description: $('#inline-tag-description').val(),
                     _token: '{{ csrf_token() }}'
                 };
-    
+
                 if (!tagId) {
                     // 新規
                     $.post('/tags', data, function (res) {
                         $('#inline-tag-form-container').slideUp(0);
-        
+
                         // 右UIのタグ一覧を再取得
                         refreshRightTagUI();
                     }).fail(function () {
@@ -470,7 +470,7 @@
                         data: data,
                         success: (tagData) => {
                             $('#inline-tag-form-container').slideUp(0);
-            
+
                             // 右UIのタグ一覧を再取得
                             refreshRightTagUI();
 
@@ -478,7 +478,7 @@
                             refreshLeftTagBtn(tagData);
                         }
                     });
-                    
+
                 }
             });
         }

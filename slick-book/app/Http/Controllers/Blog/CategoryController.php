@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Blog;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
-use App\Services\MarkdownService;
-use Illuminate\Http\Request;
+use App\Models\Tag;
 use Illuminate\Contracts\View\View;
 
 /**
@@ -24,11 +23,26 @@ class CategoryController extends Controller
     {
         $site = app('CurrentSite');
 
-        $category = Category::where('slug', $slug)->where('site_id', $site->id)->firstOrFail();
+        $category = Category::with('childrenRecursive')
+            ->where('slug', $slug)
+            ->where('site_id', $site->id)
+            ->firstOrFail();
 
-        // カテゴリの記事一覧などを取得
-        $posts = $category->posts()->where('site_id', $site->id)->published()->latest()->get();
+        // 対象カテゴリ + 子孫カテゴリすべてのID
+        $categoryIds = $category->descendant_ids;
 
-        return view('blog.category', compact('category', 'posts'));
+        // 投稿一覧（このカテゴリと子孫カテゴリ）
+        $posts = Post::whereIn('category_id', $categoryIds)
+            ->where('site_id', $site->id)
+            ->published()
+            ->latest('published_at')
+            ->get();
+
+        // 紐づくタグ一覧（重複なし）
+        $categoryTags = Tag::whereHas('posts', function ($query) use ($categoryIds) {
+            $query->whereIn('category_id', $categoryIds);
+        })->distinct()->get();
+
+        return view('blog.category', compact('category', 'posts', 'categoryTags'));
     }
 }

@@ -173,6 +173,22 @@ class PostController extends Controller
         }
         $post->tags()->sync($tagIds);
 
+        foreach ($request->file('images', []) as $type => $file) {
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs("sites/{$post->site_id}/{$type}", $filename, 'public');
+
+            $post->images()->updateOrCreate(
+                [
+                    'type' => $type,
+                    'post_id' => $post->id,
+                ],
+                [
+                    'path' => $path,
+                    'site_id' => $post->site_id,
+                ]
+            );
+        }
+
         return redirect()->route('posts.edit', $post);
     }
 
@@ -266,6 +282,22 @@ class PostController extends Controller
         }
         $post->tags()->sync($tagIds);
 
+        foreach ($request->file('images', []) as $type => $file) {
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs("sites/{$post->site_id}/{$type}", $filename, 'public');
+
+            $post->images()->updateOrCreate(
+                [
+                    'type' => $type,
+                    'post_id' => $post->id,
+                ],
+                [
+                    'path' => $path,
+                    'site_id' => $post->site_id,
+                ]
+            );
+        }
+
         return redirect()->route('posts.edit', $post);
     }
 
@@ -306,7 +338,7 @@ class PostController extends Controller
         $postId = $request->input('post');
         $purpose = $request->input('purpose', 'public');
 
-        $tagGroups = new TagGroup()->getSiteTagGroupTree($siteId, $purpose);
+        $tagGroups = (new TagGroup())->getSiteTagGroupTree($siteId, $purpose);
         $tagGroups = $this->tagGroupService->flattenGroups($tagGroups);
 
         // 選択状態

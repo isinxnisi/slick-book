@@ -45,7 +45,7 @@
                     </div>
 
                     @php
-                        $imageTypes = ['favicon' => 'ファビコン', 'logo' => 'ロゴ画像', 'nav-logo' => 'NAVロゴ画像', 'site-icon' => 'サイトアイコン画像', 'thumbnail' => 'サムネイル画像'];
+                        $imageTypes = ['favicon' => 'ファビコン', 'logo' => 'ロゴ画像', 'nav-logo' => 'NAVロゴ画像', 'site-icon' => 'サイトアイコン画像', 'thumbnail' => 'サムネイル画像', 'site_eyecatch' => 'アイキャッチ'];
                     @endphp
                     <div class="mb-6 border-t border-b border-gray-700 pt-6">
                         <h3 class="text-lg font-bold mb-4">画像のアップロード</h3>
@@ -62,8 +62,7 @@
                                     <div class="mt-2 mb-2">
                                         <img src="{{ route('admin.media', [
                                                 'site' => $site->id,
-                                                'type' => $type,
-                                                'filename' => basename($image->path)
+                                                'path' => "{$type}/" . basename($image->path)
                                             ]) }}"
                                             alt="{{ $image->alt ?? $label }}"
                                             class="h-16 rounded shadow border">

@@ -72,6 +72,22 @@ class CategoryController extends Controller
         $validated['order'] = is_null($maxOrder) ? 1 : $maxOrder + 1;
 
         $category = Category::create($validated);
+
+        // 画像保存（カテゴリ単位）
+        if ($request->hasFile('images.thumbnail')) {
+            $file = $request->file('images.thumbnail');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // 👇 secure.media でそのまま渡す path をここで決定
+            $path = "categories/{$category->id}/thumbnail/{$filename}";
+            $storagePath = "sites/{$category->site_id}/{$path}";
+
+            $file->storeAs($storagePath, '', 'public');
+
+            // 👇 secure.media で使えるように path のみ保存
+            $category->update(['image_path' => $path]);
+        }
+
         return response()->json($category, 201);
     }
 
@@ -95,6 +111,21 @@ class CategoryController extends Controller
         ]);
 
         $category->update($validated);
+
+        // 画像保存（カテゴリ単位）
+        if ($request->hasFile('images.thumbnail')) {
+            $file = $request->file('images.thumbnail');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // 👇 secure.media でそのまま渡す path をここで決定
+            $path = "categories/{$category->id}/thumbnail/{$filename}";
+            $storagePath = "sites/{$category->site_id}/{$path}";
+
+            $file->storeAs($storagePath, '', 'public');
+
+            // 👇 secure.media で使えるように path のみ保存
+            $category->update(['image_path' => $path]);
+        }
 
         return response()->json($category);
     }

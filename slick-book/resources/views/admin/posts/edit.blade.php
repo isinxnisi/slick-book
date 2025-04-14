@@ -1,4 +1,4 @@
-@section('title', '新規投稿')
+@section('title', '記事の編集')
 
 <x-app-layout>
     <x-slot name="header">
@@ -21,7 +21,7 @@
 
                 <!-- 基本設定タブ -->
                 <div id="panel-tab-markdown" class="tab-content text-sm active">
-                <form id="post-form" action="{{ route('posts.update', $post) }}" method="POST">
+                <form id="post-form" action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     @foreach(config('tags.purposes') as $purposeKey => $label)
@@ -114,8 +114,8 @@
                     <!-- タブUI -->
                     <x-admin.ui.panel-tabs :panel="'#setting-panel'" :active="'basic'" :tabs="[
                         'basic' => '基本設定',
+                        'image' => '画像設定',
                         'seo' => 'SEO設定',
-                        'preview' => 'サイトプレビュー',
                     ]" />
                 </div>
                 <div class="panel-content p-4 pt-2">
@@ -169,6 +169,94 @@
                             </div>
                         </div>
 
+                        <div class="mb-4" x-data="{ open: { siteImages: true } }">
+                            <!-- サイト画像選択UI -->
+                            <div class="border-b border-gray-600">
+                                <h4 @click="open.siteImages = !open.siteImages" class="flex justify-between items-center text-gray-300 py-3" style="cursor:pointer;">
+                                    画像設定
+                                    <svg x-bind:class="{ 'rotate-180': open.siteImages }" class="h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                                </h4>
+                            </div>
+                            <div x-show="open.siteImages" class="open-tab p-0">
+                                <div class="mb-2 ps-2 mt-3">
+                                    <!-- サムネイルフィールド -->
+                                    <div class="flex items-center space-x-4">
+                                        <label class="w-100 text-left text-xs">サムネイル:</label>
+                                    </div>
+                                    <div class="flex items-center space-x-4 mt-3">
+                                        @php
+                                            $thumbnail = $post->postThumbnailImage;
+                                        @endphp
+                                        <div class="w-20 text-left text-xs">
+                                            @if ($thumbnail)
+                                                <div class="set-image p-0">
+                                                    <button class="delete-imgage-btn hover:text-red-400"
+                                                        data-type="post_thumbnail"
+                                                        data-image-id="{{ $thumbnail->id }}">
+                                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                                    </button>
+                                                    <img src="{{ route('admin.media', [
+                                                            'site' => $post->site_id,
+                                                            'path' => "{$thumbnail->type}/" . basename($thumbnail->path)
+                                                        ]) }}"
+                                                        alt="{{ $thumbnail->alt ?? '' }}"
+                                                        class="h-16 rounded shadow border object-fit-cover">
+                                                </div>
+                                            @else
+                                                <img src="{{ asset('img/noImage.jpg') }}"
+                                                    alt="noImage"
+                                                    class="h-16 rounded shadow border object-fit-cover"
+                                                    style="opacity: 0.5">
+                                            @endif
+                                        </div>
+                                        <div class="mt-2 mb-2">
+                                            <input type="file" name="images[post_thumbnail]" form="post-form" accept="image/*"
+                                                    class="mt-1 block w-full text-sm text-gray-700 file:bg-gray-100 file:border file:rounded file:px-2 file:py-1">
+                                        </div>
+                                    </div>
+                                    <x-admin.input-error class="mt-2" :messages="$errors->get('images.post_thumbnail')" />
+                                </div>
+                                <div class="mb-2 ps-2 mt-3">
+                                    <!-- アイキャッチフィールド -->
+                                    <div class="flex items-center space-x-4">
+                                        <label class="w-100 text-left text-xs">アイキャッチ:</label>
+                                    </div>
+                                    <div class="flex items-center space-x-4 mt-3">
+                                        @php
+                                            $eyecatch = $post->postEyecatchImage;
+                                        @endphp
+                                        <div class="w-20 text-left text-xs">
+                                            @if ($eyecatch)
+                                                <div class="set-image p-0">
+                                                    <button class="delete-imgage-btn hover:text-red-400"
+                                                        data-type="post_eyecatch"
+                                                        data-image-id="{{ $eyecatch->id }}">
+                                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                                    </button>
+                                                    <img src="{{ route('admin.media', [
+                                                            'site' => $post->site_id,
+                                                            'path' => "{$eyecatch->type}/" . basename($eyecatch->path)
+                                                        ]) }}"
+                                                        alt="{{ $eyecatch->alt ?? '' }}"
+                                                        class="h-16 rounded shadow border object-fit-cover">
+                                                </div>
+                                            @else
+                                                <img src="{{ asset('img/noImage.jpg') }}"
+                                                    alt="noImage"
+                                                    class="h-16 rounded shadow border object-fit-cover"
+                                                    style="opacity: 0.5">
+                                            @endif
+                                        </div>
+                                        <div class="mt-2 mb-2">
+                                            <input type="file" name="images[post_eyecatch]" form="post-form" accept="image/*"
+                                                    class="mt-1 block w-full text-sm text-gray-700 file:bg-gray-100 file:border file:rounded file:px-2 file:py-1">
+                                        </div>
+                                    </div>
+                                    <x-admin.input-error class="mt-2" :messages="$errors->get('images.post_eyecatch')" />
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mb-4" x-data="{ open: { selectTags: false } }">
                             <!-- タグ選択UI -->
                             <div class="border-b border-gray-600">
@@ -182,7 +270,26 @@
                                     :site-id="$siteId"
                                     :post="$post"
                                     :selected-tag-ids-by-purpose="$selectedTagIdsByPurpose"
-                                    :purpose="request()->get('purpose', 'public')" 
+                                    :purpose="request()->get('purpose', 'public')"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 投稿画像設定タブ（中身は後ほど） -->
+                    <div id="panel-tab-image" class="tab-content hidden">
+                        <div class="mb-4" x-data="{ open: { siteImages: true } }">
+                            <!-- 投稿画像設定UI -->
+                            <div class="border-b border-gray-600 text-sm">
+                                <h4 @click="open.siteImages = !open.siteImages" class="flex justify-between items-center text-gray-300 py-3" style="cursor:pointer;">
+                                    投稿画像設定
+                                    <svg x-bind:class="{ 'rotate-180': open.siteImages }" class="h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                                </h4>
+                            </div>
+                            <div x-show="open.siteImages" class="open-tab p-0">
+                                <x-admin.posts.image-selector
+                                    :site-id="$siteId"
+                                    :post="$post"
                                 />
                             </div>
                         </div>
@@ -192,13 +299,6 @@
                     <div id="panel-tab-seo" class="tab-content hidden">
                         <div class="p-4">
                             <p>※SEO設定項目は今後実装予定です。</p>
-                        </div>
-                    </div>
-
-                    <!-- サイトプレビュータブ（中身は後ほど） -->
-                    <div id="panel-tab-preview" class="tab-content hidden">
-                        <div class="p-4">
-                            <p>※プレビュー機能は今後実装予定です。</p>
                         </div>
                     </div>
                 </div>
@@ -307,14 +407,14 @@
         $(document).on('click', '.add-m-tag-inline-btn', function () {
             const groupId = $(this).data('group-id');
             const groupName = $(this).data('group-name');
-        
+
             $('#inline-tag-id').val('');
             $('#inline-tag-group-id').val(groupId);
             $('#inline-tag-group-name').text(groupName);
             $('#inline-tag-name').val('');
             $('#inline-tag-slug').val('');
             $('#inline-tag-description').val('');
-        
+
             $('#inline-tag-form-container').hide().removeClass('hidden').slideDown(200);
         });
 
@@ -385,7 +485,7 @@
                 // 新規
                 $.post('/tags', data, function (res) {
                     $('#inline-tag-form-container').slideUp(0);
-    
+
                     // 右UIのタグ一覧を再取得
                     window.fetchTagSelector();
                 }).fail(function () {
@@ -399,12 +499,12 @@
                     data: data,
                     success: (tagData) => {
                         $('#inline-tag-form-container').slideUp(0);
-        
+
                         // 右UIのタグ一覧を再取得
                         window.fetchTagSelector();
                     }
                 });
-                
+
             }
         });
 

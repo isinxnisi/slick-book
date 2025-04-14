@@ -38,3 +38,20 @@ window.getStartMdCode = function(code) {
             return code;
     }
 };
+
+window.appendImgTag = function(id) {
+    const textarea = document.getElementById("post-markdown");
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    const before = textarea.value.substring(0, start);
+    const after = textarea.value.substring(end);
+
+    let startMdCode = `img id="${id}"`;
+    let newText = `${before}[${startMdCode} /]${after}`;
+
+    textarea.value = newText;
+    textarea.setSelectionRange(start + startMdCode.length, start + startMdCode.length + selectedText.length);
+};

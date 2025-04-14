@@ -13,7 +13,7 @@
 
 <div class="py-2">
     @foreach ($purposes as $key => $label)
-        <input type="hidden" name="selected_tag_ids[{{ $key }}]" id="selected-tags-{{ $key }}" 
+        <input type="hidden" name="selected_tag_ids[{{ $key }}]" id="selected-tags-{{ $key }}"
             value='@json($selectedTagIdsByPurpose[$key] ?? [])'>
     @endforeach
 

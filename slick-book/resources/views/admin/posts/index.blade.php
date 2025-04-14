@@ -25,7 +25,19 @@
                             </time>
                         </div>
                         <div class="px-2 w-20 border-r border-gray-700 d-flex align-items-center">
-                            <img src="{{ asset('img/noImage.jpg') }}" alt="">
+                            @php
+                                $thumbnail = $post->postThumbnailImage;
+                            @endphp
+                            @if ($thumbnail)
+                            <img src="{{ route('admin.media', [
+                                    'site' => $post->site_id,
+                                    'path' => "{$thumbnail->type}/" . basename($thumbnail->path)
+                                ]) }}"
+                                alt="{{ $thumbnail->alt ?? '' }}"
+                                class="h-16 rounded shadow border object-fit-cover">
+                            @else
+                                <img src="{{ asset('img/noImage.jpg') }}" alt="">
+                            @endif
                         </div>
                         <div class="flex-1 px-2">
                             {{-- タイトル --}}

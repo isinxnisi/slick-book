@@ -13,8 +13,8 @@
 
     @if ($favicon)
         <link rel="icon" type="image/png" href="{{ route('secure.media', [
-            'type' => 'favicon',
-            'filename' => basename($favicon->path),
+            'site' => $favicon->site_id,
+            'path' => 'favicon/' . basename($favicon->path),
         ]) }}">
     @endif
 
@@ -32,44 +32,47 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-200">
-    <div class="min-h-screen flex">
+    <div class="min-h-screen">
 
-        <!-- メインコンテンツ -->
-        <div class="flex-1">
-            @include('components.blog.navigation', ['pageTitle' => View::getSections()['title'] ?? ''])
+        @include('components.blog.navigation', ['pageTitle' => View::getSections()['title'] ?? ''])
 
-            <!-- Page Heading -->
-            @isset($header)
-            <header id="content-header" class="sticky top-0 border-b border-gray-100 text-gray-200 bg-gray-700 shadow-sm">
-                <div class="mx-auto">
-                    {{ $header }}
-                </div>
-            </header>
-            @endisset
+        <!-- Page Heading -->
+        @isset($header)
+        <header id="content-header" class="sticky top-0 text-gray-200 bg-gray-700 shadow-sm">
+            <div class="mx-auto">
+                {{ $header }}
+            </div>
+        </header>
+        @endisset
 
-            <!-- Page Content -->
-            <main class="pb-6 shadow-lg">
-                <div class="flex py-6">
-
-                    <div id="main-layout" class="flex mx-auto">
-                        <!-- サイドメニュー -->
-                        @include('components.blog.sidebar')
-
-                        <div class="container px-6" style="width: 920px">
-                            {{ $slot }}
-                        </div>
-                        <aside>
-                            @isset($rAside)
-                            {{ $rAside }}
-                            @endisset
-                        </aside>
-                    </div>
-                </div>
-            </main>
-            <footer class="text-gray-800 bg-gray-300" style="height: 100px">
-
-            </footer>
+        @isset($eyecatch)
+        <div class="row">
+            {{ $eyecatch }}
         </div>
+        @endisset
+
+        <!-- Page Content -->
+        <main class="pb-6 shadow-lg">
+            <div class="flex py-6">
+
+                <div id="main-layout" class="flex mx-auto">
+                    <!-- サイドメニュー -->
+                    @include('components.blog.sidebar')
+
+                    <div class="content-container container px-6">
+                        {{ $slot }}
+                    </div>
+                    <aside>
+                        @isset($rAside)
+                        {{ $rAside }}
+                        @endisset
+                    </aside>
+                </div>
+            </div>
+        </main>
+        <footer class="text-gray-800 bg-gray-300" style="height: 100px">
+
+        </footer>
     </div>
 
     <!-- jQuery & jQuery UI -->

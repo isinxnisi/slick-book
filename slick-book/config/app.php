@@ -53,6 +53,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'scheme' => env('APP_SCHEME', 'http'),
+    'port' => env('APP_PORT', '1080'),
 
     /*
     |--------------------------------------------------------------------------

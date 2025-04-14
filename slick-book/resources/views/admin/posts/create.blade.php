@@ -116,8 +116,8 @@
                     <!-- タブUI -->
                     <x-admin.ui.panel-tabs :panel="'#setting-panel'" :active="'basic'" :tabs="[
                         'basic' => '基本設定',
+                        'image' => '画像設定',
                         'seo' => 'SEO設定',
-                        'preview' => 'サイトプレビュー',
                     ]" />
                 </div>
                 <div class="panel-content p-4 pt-2">
@@ -180,11 +180,48 @@
                                 </h4>
                             </div>
                             <div x-show="open.selectTags" class="open-tab p-0">
-                                <x-admin.posts.tag-selector 
+                                <x-admin.posts.tag-selector
                                     :site-id="$siteId"
                                     :post="$post"
                                     :selected-tag-ids-by-purpose="$selectedTagIdsByPurpose"
-                                    :purpose="request()->get('purpose', 'public')" 
+                                    :purpose="request()->get('purpose', 'public')"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 画像設定タブ（中身は後ほど） -->
+                    <div id="panel-tab-image" class="tab-content hidden">
+                        <div class="mb-2 border-b border-gray-600">
+                            <h4 class="text-gray-300 py-3">投稿画像設定</h4>
+                        </div>
+
+                        <div class="mb-2 ps-2">
+                            <!-- サムネイルフィールド -->
+                            <div class="flex items-center space-x-4">
+                                <label class="w-20 text-left text-xs">サムネイル:</label>
+                                <select name="thumnail" form="post-form" class="flex-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm p-2 ms-0 text-xs">
+                                    <option value="draft" {{ old('thumnail', $post->thumnail ?? 'draft') === 'draft' ? 'selected' : '' }}>下書き</option>
+                                    <option value="published" {{ old('thumnail', $post->thumnail ?? 'draft') === 'published' ? 'selected' : '' }}>公開</option>
+                                </select>
+                            </div>
+                            <x-admin.input-error class="mt-2" :messages="$errors->get('thumnail')" />
+                        </div>
+
+                        <div class="mb-4" x-data="{ open: { selectTags: false } }">
+                            <!-- サイト画像選択UI -->
+                            <div class="border-b border-gray-600">
+                                <h4 @click="open.selectTags = !open.selectTags" class="flex justify-between items-center text-gray-300 py-3" style="cursor:pointer;">
+                                    サイト画像
+                                    <svg x-bind:class="{ 'rotate-180': open.selectTags }" class="h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                                </h4>
+                            </div>
+                            <div x-show="open.selectTags" class="open-tab p-0">
+                                <x-admin.posts.image-selector
+                                    :site-id="$siteId"
+                                    :post="$post"
+                                    :selected-tag-ids-by-purpose="$selectedTagIdsByPurpose"
+                                    :purpose="request()->get('purpose', 'public')"
                                 />
                             </div>
                         </div>
@@ -194,13 +231,6 @@
                     <div id="panel-tab-seo" class="tab-content hidden">
                         <div class="p-4">
                             <p>※SEO設定項目は今後実装予定です。</p>
-                        </div>
-                    </div>
-
-                    <!-- サイトプレビュータブ（中身は後ほど） -->
-                    <div id="panel-tab-preview" class="tab-content hidden">
-                        <div class="p-4">
-                            <p>※プレビュー機能は今後実装予定です。</p>
                         </div>
                     </div>
                 </div>
@@ -309,14 +339,14 @@
         $(document).on('click', '.add-m-tag-inline-btn', function () {
             const groupId = $(this).data('group-id');
             const groupName = $(this).data('group-name');
-        
+
             $('#inline-tag-id').val('');
             $('#inline-tag-group-id').val(groupId);
             $('#inline-tag-group-name').text(groupName);
             $('#inline-tag-name').val('');
             $('#inline-tag-slug').val('');
             $('#inline-tag-description').val('');
-        
+
             $('#inline-tag-form-container').hide().removeClass('hidden').slideDown(200);
         });
 
@@ -387,7 +417,7 @@
                 // 新規
                 $.post('/tags', data, function (res) {
                     $('#inline-tag-form-container').slideUp(0);
-    
+
                     // 右UIのタグ一覧を再取得
                     window.fetchTagSelector();
                 }).fail(function () {
@@ -401,12 +431,12 @@
                     data: data,
                     success: (tagData) => {
                         $('#inline-tag-form-container').slideUp(0);
-        
+
                         // 右UIのタグ一覧を再取得
                         window.fetchTagSelector();
                     }
                 });
-                
+
             }
         });
 

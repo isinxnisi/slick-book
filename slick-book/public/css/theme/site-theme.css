@@ -26,6 +26,7 @@ header#content-header {
 #main-layout {
     position: flex;
     max-width: 1600px;
+    width: calc(100% - 100px);
 }
 #site-side-menu {
     top: 60px;
@@ -50,16 +51,34 @@ header#content-header {
     color: #111827;
     margin-bottom: 20px;
     font-size: 1.5em;
+    line-height: 1.25em;
+}
+.content-headding-sub {
+    position: relative;
+    scroll-margin-top: 80px;
+    padding-left: 0.5em;
+    border-left: 4px solid #26dcba;
+    /* margin-top: 2em; */
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 10px;
+    font-size: 1.25em;
+}
+.content-container {
+    max-width: 920px;
+    width: calc(100% - 600px);
 }
 .post-container {
     display: flex;
 }
 .post-item-bar .thumnail {
     display: flex;
-    width: fit-content;
+    width: 150px;
 }
 .post-item-bar .thumnail img {
     height: 100px;
+    width: 150px;
+    object-fit: cover;
 }
 .post-info .title {
     height: 60px;

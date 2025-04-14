@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\SiteImage;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -51,6 +52,20 @@ class MarkdownService
             return "<pre class=\"code\"><code class=\"{$class}\">{$escaped}</code></pre>";
         }, $markdown);
 
+        // 先に [img lang="xxx"] を HTML化（Markdown変換前）
+        $markdown = preg_replace_callback('/\[img\s+id=["\']?(\d+)["\']?\s*\/?]/i', function ($matches) {
+            $fileId = $matches[1] ?? '';
+            $postImages = SiteImage::where('id', $fileId)->first();
+            if (!$postImages) {
+                return ''; // または代替画像表示
+            }
+            $scheme = config('app.scheme', 'https');
+            $port = config('app.port', '80');
+            $url = url("{$scheme}://{$postImages->site->domain}:{$port}/media/{$postImages->site_id}/{$postImages->type}/" . basename($postImages->path));
+
+            return "<div class=\"post-image\"><img src=\"{$url}\" alt=\"" . e($postImages->alt) . "\"></div>";
+        }, $markdown);
+
         // ショートコード [note]...[/note] を <div class="note">...</div> に変換
         $markdown = preg_replace_callback('/\[note](.*?)\[\/note]/s', function ($matches) {
             return '<div class="note">' . nl2br(e(trim($matches[1]))) . '</div>';
@@ -86,6 +101,10 @@ class MarkdownService
     public function generateTOC(string $markdown): string
     {
         preg_match_all('/^(#{1,6})\s*(.+)$/m', $markdown, $matches, PREG_SET_ORDER);
+
+        if (empty($matches)) {
+            return '';
+        }
 
         $toc = '<div class="toc my-4 mx-auto border border-gray-200 bg-gray-100"><ul>';
         foreach ($matches as $match) {

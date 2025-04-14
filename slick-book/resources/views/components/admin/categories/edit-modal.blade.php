@@ -3,6 +3,7 @@
     'title' => 'モーダルタイトル',
     'fields' => [], // 例: ['title' => 'タイトル', 'slug' => 'スラッグ']
     'saveButtonId' => 'save-btn',
+    'category' => null,
 ])
 
 <!-- 共通モーダル -->
@@ -22,8 +23,12 @@
                             <textarea id="{{ $id }}-{{ $field }}" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700"></textarea>
                         @elseif ($field === 'color')
                             <input type="color" id="{{ $id }}-{{ $field }}" class="form-control form-control-color w-100" title="色を選択">
-                        @elseif ($field === 'image_path')
-                            <input type="url" id="{{ $id }}-{{ $field }}" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
+                        @elseif ($field === 'thumbnail')
+                            <div class="mb-3" id="{{ $id }}-thumbnail-preview" style="display: none;">
+                                <img src="" alt="サムネイル" class="h-16 rounded shadow border">
+                            </div>
+                            <input type="file" name="images[thumbnail]" accept="image/*"
+                                class="mt-1 block w-full text-sm text-gray-700 file:bg-gray-100 file:border file:rounded file:px-2 file:py-1">
                         @elseif ($field === 'icon')
                             <input type="text" id="{{ $id }}-{{ $field }}" placeholder="例: folder" class="form-control dark:bg-gray-900 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700">
                         @elseif ($field === 'is_visible')
