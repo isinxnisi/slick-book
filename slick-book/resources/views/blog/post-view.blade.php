@@ -8,7 +8,7 @@
         $image = $post->postEyecatchImage;
     @endphp
     @if ($image)
-    <div class="max-w-5xl mb-4">
+    <div class="container px-0 mb-4">
         <div class="post-image eyecatch">
             <img src="{{ route('secure.media', [
                     'site' => "{$image->site_id}",

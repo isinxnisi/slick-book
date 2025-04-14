@@ -170,3 +170,83 @@ header#content-header {
 .post-toc .toc .toc-level-6 {
     margin-left: 4em;
 }
+
+/* -----------------------------------
+    画像
+----------------------------------- */
+
+.site-image {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 10px;
+}
+
+.site-image img {
+    height: 100%;
+    margin: 0 auto;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0px 4px 10px -5px #666;
+}
+
+
+.site-image.eyecatch {
+    margin-top: 0px;
+    background: #374151;
+}
+
+.site-image.eyecatch img {
+    height: 100%;
+    width: 100%;
+    max-height: 350px;
+    margin: 0 auto;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: inherit;
+}
+
+.site-image.eyecatch img {
+    max-height: 240px;
+}
+
+/* -----------------------------------
+    レスポンシブ
+----------------------------------- */
+@media (max-width: 1400px) {
+    aside#site-side-menu {
+        display: none;
+    }
+    .content-container {
+        width: calc(100% - 300px);
+    }
+}
+
+@media (max-width: 1114px) {
+    aside#site-r-side-menu {
+        display: none;
+    }
+    .content-container {
+        width: 100%;
+        padding: .5rem;
+    }
+    #main-layout {
+        width: 100%;
+    }
+    .content-container > .container,
+    #post-article {
+        padding: 2rem .5rem;
+    }
+    /* .content-container > .container > div, */
+    #post-article > .post,
+    #post-article > div {
+        padding-left: .5rem !important;
+        padding-right: .5rem !important;
+    }
+    .content-container > .container {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+    .content-container > .container > div {
+        padding: 0px;
+    }
+}

@@ -62,7 +62,7 @@
                     <div class="content-container container px-6">
                         {{ $slot }}
                     </div>
-                    <aside>
+                    <aside id="site-r-side-menu">
                         @isset($rAside)
                         {{ $rAside }}
                         @endisset
