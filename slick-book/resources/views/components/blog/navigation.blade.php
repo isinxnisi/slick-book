@@ -2,7 +2,7 @@
     <!-- Primary Navigation Menu -->
     <div class="mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-content-center h-16">
-            <div class="hidden sm:flex sm:items-center sm:ms-0">
+            <div class="sm:flex sm:items-center sm:ms-0">
                 <h2 class="flex h-16 font-semibold text-xl p-2 ps-2 border-b border-gray-100 leading-tight align-items-center">
                     <a href="{{ route('blog.home') }}">
                         <!-- Logo -->

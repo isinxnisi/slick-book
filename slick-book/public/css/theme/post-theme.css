@@ -277,14 +277,12 @@ pre.code code span {
     画像
 ----------------------------------- */
 
-.site-image,
 .post-image {
     width: 100%;
     min-height: 100px;
     margin-top: 10px;
 }
 
-.site-image img,
 .post-image img {
     height: 100%;
     margin: 0 auto;
@@ -294,12 +292,10 @@ pre.code code span {
 }
 
 
-.site-image.eyecatch,
 .post-image.eyecatch {
     margin-top: 0px;
 }
 
-.site-image.eyecatch img,
 .post-image.eyecatch img {
     height: 100%;
     width: 100%;
@@ -310,6 +306,3 @@ pre.code code span {
     box-shadow: inherit;
 }
 
-.site-image.eyecatch img {
-    max-height: 240px;
-}

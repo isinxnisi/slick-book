@@ -9,6 +9,7 @@
             $site = app('CurrentSite');
             $eyecatch = $site->images->firstWhere('type', 'site_eyecatch');
         @endphp
+        @isset($eyecatch)
         <div class="site-image eyecatch">
             <img src="{{ route('secure.media', [
                     'site' => "{$eyecatch->site_id}",
@@ -17,6 +18,7 @@
                 alt="{{ $eyecatch->alt }}"
                 class="rounded">
         </div>
+        @endisset
     </x-slot>
 
     @php
@@ -40,7 +42,17 @@
     <x-slot name="rAside">
         <div class="r-side-content mt-0 pb-0 sticky overflow-hidden rounded add bg-gray-300 shadow-sm" style="width: 300px;">
             <img src="{{asset('img/example-labo-img.png')}}" alt="">
-            <img src="{{asset('img/my-lab-charactor.png')}}" alt="">
+            @php
+                $site = app('CurrentSite');
+                $thumbnail = $site->images->firstWhere('type', 'thumbnail');
+            @endphp
+            @isset($thumbnail)
+            <img src="{{ route('secure.media', [
+                    'site' => "{$thumbnail->site_id}",
+                    'path' => "{$thumbnail->type}/" . basename($thumbnail->path),
+                ]) }}"
+                alt="{{ $thumbnail->alt }}">
+            @endisset
             <img src="{{asset('img/example-labo-img.png')}}" alt="">
         </div>
         <div class="overflow-hidden rounded add bg-gray-300 shadow-sm" style="width: 300px; margin-top: 20px">
