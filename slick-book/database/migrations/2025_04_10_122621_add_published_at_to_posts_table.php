@@ -20,7 +20,6 @@ return new class extends Migration
             $table->dropColumn('updated');
             $table->dropColumn('updated_at');
             $table->dropColumn('is_deleted');
-            $table->dropColumn('deleted_at');
             $table->dropColumn('deleted_user');
             $table->dropColumn('deleted');
 
