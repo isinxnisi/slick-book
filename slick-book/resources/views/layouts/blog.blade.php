@@ -46,7 +46,7 @@
         @endisset
 
         @isset($eyecatch)
-        <div class="row">
+        <div class="w-100">
             {{ $eyecatch }}
         </div>
         @endisset

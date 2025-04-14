@@ -87,6 +87,7 @@ class PostController extends Controller
             $post = Post::create([
                 'title' => '',
                 'slug' => Str::uuid(), // 仮スラッグ（後で上書き可）
+                'site_id' => $siteId,
                 'body' => '',
                 'html_body' => '',
                 'toc' => '',
