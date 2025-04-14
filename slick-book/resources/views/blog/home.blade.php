@@ -4,6 +4,21 @@
         <x-blog.header />
     </x-slot>
 
+    <x-slot name="eyecatch">
+        @php
+            $site = app('CurrentSite');
+            $eyecatch = $site->images->firstWhere('type', 'site_eyecatch');
+        @endphp
+        <div class="site-image eyecatch">
+            <img src="{{ route('secure.media', [
+                    'site' => "{$eyecatch->site_id}",
+                    'path' => "{$eyecatch->type}/" . basename($eyecatch->path),
+                ]) }}"
+                alt="{{ $eyecatch->alt }}"
+                class="rounded">
+        </div>
+    </x-slot>
+
     @php
         $purposeStyles = config('tags.post_purpose_styles');
         $defaultStyle = $purposeStyles['public'];

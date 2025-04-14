@@ -19,34 +19,32 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-200">
+    <div class="min-h-screen bg-gray-200 py-6">
         @php
             $purposeStyles = config('tags.post_purpose_styles');
             $defaultStyle = $purposeStyles['public'];
         @endphp
-        <main id="post-article" class="container py-6">
-            <div class="row justify-content-md-center rounded-md bg-gray-100 p-8">
+        <div id="post-article" class="container justify-content-md-center rounded-md bg-gray-100 p-8">
 
             <div class="flex px-4">
-                <time class="c-postTitle__date flex-1" datetime="2025-04-20" aria-hidden="true">
-                    <span class="__y">2025</span>
-                    <span class="__md">4/20</span>
-                </time>
                 {{-- タイトル --}}
                 <h1 class="">{{ $post->title }}</h1>
             </div>
 
-            {{-- タグ一覧 --}}
-            <ul class="tag-list mt-4 px-4">
-                @foreach ($post->tags as $tag)
-                    <li class="tag-item">
-                        <a class="tag" style="background-color: {{ $defaultStyle['bg'] }}; color: {{ $defaultStyle['text'] }}; border: 1px solid {{ $defaultStyle['bg'] }}">
-                            #{{ $tag->name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-            <article class="post mt-4 px-4">
+            <div class="flex mt-2 px-4">
+                <time class="c-postTitle__date flex-1" datetime="{{ $post->published }}" aria-hidden="true">
+                    <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
+                </time>
+                {{-- タグ一覧 --}}
+                <ul class="tag-list align-self-center">
+                    @foreach ($post->tags as $tag)
+                        <li class="tag-item">
+                            @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => 'public', 'link' => true])
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+            <article class="post mt-4 mb-4 px-4">
                 {{-- 本文（HTML） --}}
                 <div class="post-layout" style="gap: 2rem;">
                     <div class="post-content">
@@ -55,9 +53,7 @@
                 </div>
 
             </article>
-            </div>
-        </main>
-    </div>
+        </div>
 
     <!-- jQuery & jQuery UI -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

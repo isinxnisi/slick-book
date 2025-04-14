@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Storage;
 
 class SiteMediaController extends Controller
 {
-    public function public($path)
+    public function public(?Site $site, $path)
     {
-        $site = app('CurrentSite');
-        if (!$site) abort(404, 'Current site not set');
+        $currentSite = app('CurrentSite');
+        if (!$site || $currentSite->id != $site->id) {
+            abort(404, 'Current site not set');
+        };
 
         $fullPath = "sites/{$site->id}/{$path}";
         if (!Storage::disk('public')->exists($fullPath)) {

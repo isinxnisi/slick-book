@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property int $site_id
@@ -42,6 +42,7 @@ class SiteImage extends Model
 
     protected $fillable = [
         'site_id',
+        'post_id',
         'type',
         'path',
         'title',
@@ -55,5 +56,10 @@ class SiteImage extends Model
     public function site()
     {
         return $this->belongsTo(Site::class);
+    }
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
     }
 }

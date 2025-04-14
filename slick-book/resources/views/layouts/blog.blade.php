@@ -13,6 +13,7 @@
 
     @if ($favicon)
         <link rel="icon" type="image/png" href="{{ route('secure.media', [
+            'site' => $favicon->site_id,
             'path' => 'favicon/' . basename($favicon->path),
         ]) }}">
     @endif
@@ -37,11 +38,17 @@
 
         <!-- Page Heading -->
         @isset($header)
-        <header id="content-header" class="sticky top-0 border-b border-gray-100 text-gray-200 bg-gray-700 shadow-sm">
+        <header id="content-header" class="sticky top-0 text-gray-200 bg-gray-700 shadow-sm">
             <div class="mx-auto">
                 {{ $header }}
             </div>
         </header>
+        @endisset
+
+        @isset($eyecatch)
+        <div class="row">
+            {{ $eyecatch }}
+        </div>
         @endisset
 
         <!-- Page Content -->

@@ -5,6 +5,22 @@
     </x-slot>
 
     @php
+        $image = $post->postEyecatchImage;
+    @endphp
+    @if ($image)
+    <div class="max-w-5xl mb-4">
+        <div class="post-image eyecatch">
+            <img src="{{ route('secure.media', [
+                    'site' => "{$image->site_id}",
+                    'path' => "{$image->type}/" . basename($image->path),
+                ]) }}"
+                alt="{{ $image->alt }}"
+                class="rounded">
+        </div>
+    </div>
+    @endif
+
+    @php
         $purposeStyles = config('tags.post_purpose_styles');
         $defaultStyle = $purposeStyles['public'];
     @endphp

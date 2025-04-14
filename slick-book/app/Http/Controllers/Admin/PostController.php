@@ -173,6 +173,22 @@ class PostController extends Controller
         }
         $post->tags()->sync($tagIds);
 
+        foreach ($request->file('images', []) as $type => $file) {
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs("sites/{$post->site_id}/{$type}", $filename, 'public');
+
+            $post->images()->updateOrCreate(
+                [
+                    'type' => $type,
+                    'post_id' => $post->id,
+                ],
+                [
+                    'path' => $path,
+                    'site_id' => $post->site_id,
+                ]
+            );
+        }
+
         return redirect()->route('posts.edit', $post);
     }
 
@@ -265,6 +281,22 @@ class PostController extends Controller
             $tagIds = [...$tagIds, ...$tagList];
         }
         $post->tags()->sync($tagIds);
+
+        foreach ($request->file('images', []) as $type => $file) {
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs("sites/{$post->site_id}/{$type}", $filename, 'public');
+
+            $post->images()->updateOrCreate(
+                [
+                    'type' => $type,
+                    'post_id' => $post->id,
+                ],
+                [
+                    'path' => $path,
+                    'site_id' => $post->site_id,
+                ]
+            );
+        }
 
         return redirect()->route('posts.edit', $post);
     }

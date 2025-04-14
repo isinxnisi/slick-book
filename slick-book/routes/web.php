@@ -97,7 +97,7 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 // 公開サイト
 Route::middleware(['load.site'])->group(function () {
     // アップロード画像の参照用
-    Route::get('/media/{path}', [SiteMediaController::class, 'public'])
+    Route::get('/media/{site}/{path}', [SiteMediaController::class, 'public'])
         ->where('path', '.*')
         ->name('secure.media');
 

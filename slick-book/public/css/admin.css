@@ -119,6 +119,7 @@ main::after,
     scrollbar-color: #336981 #1a1a1a;
     /* サムとトラックの色 */
 }
+
 main {
     scrollbar-width: thin;
     /* 「thin」で細めのスクロールバー */
@@ -129,6 +130,24 @@ main {
 .tag-item {
     font-size: 11px !important;
     height: 22px;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.set-image {
+    position: relative;
+}
+
+.set-image .delete-imgage-btn {
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    float: right;
+    color: #336981;
+    background: #ffffffdb;
+    border-radius: 3px;
 }
 
 /* .open-tab .open-tab-container {
@@ -172,8 +191,7 @@ main {
     color: #cfcfcf;
 }
 
-.c-postTitle__date .__ymd
-.c-postTitle__date .__time {
+.c-postTitle__date .__ymd .c-postTitle__date .__time {
     display: block;
     font-size: 18px;
     line-height: 20px;

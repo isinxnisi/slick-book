@@ -6,7 +6,7 @@
             @endphp
             <a class="" href="{{ route('posts.view', $post->id) }}">
             @if ($image)
-                <img src="{{ route('secure.media', ['path' => $image->path]) }}"
+                <img src="{{ route('secure.media', ['site' => $image->site_id, 'path' => $image->path]) }}"
                     alt="{{ $image->alt }}"
                     class="rounded shadow">
             @else

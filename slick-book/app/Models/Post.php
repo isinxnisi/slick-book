@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -123,6 +124,29 @@ class Post extends Model
         return $this->belongsTo(Site::class);
     }
 
+    public function images()
+    {
+        return $this->hasMany(SiteImage::class, 'post_id', 'id')
+            ->where('site_id', $this->site_id)
+            ->whereNotNull('post_id');
+    }
+
+    public function postThumbnailImage()
+    {
+        return $this->hasOne(SiteImage::class, 'post_id', 'id')
+            ->where('site_id', $this->site_id)
+            ->where('type', 'post_thumbnail')
+            ->whereNotNull('post_id');
+    }
+
+    public function postEyecatchImage()
+    {
+        return $this->hasOne(SiteImage::class, 'post_id', 'id')
+            ->where('site_id', $this->site_id)
+            ->where('type', 'post_eyecatch')
+            ->whereNotNull('post_id');
+    }
+
     public function getPublishedAttribute()
     {
         if (is_null($this->published_at)) {
@@ -141,11 +165,21 @@ class Post extends Model
 
     public function getThumbnailImageAttribute()
     {
+        $thumbnail = $this->postThumbnailImage;
+        if ($thumbnail) {
+            return new \App\Models\SiteImage([
+                'site_id' => $thumbnail->site_id,
+                'path' => $thumbnail->type . '/' . basename($thumbnail->path),
+                'alt' => $thumbnail->title . 'サムネイル画像',
+            ]);
+        }
+
         // 再帰的にカテゴリ画像を取得
         $category = $this->category;
         while ($category) {
             if (!empty($category->image_path)) {
                 return new \App\Models\SiteImage([
+                    'site_id' => $category->site_id,
                     'path' => $category->image_path,
                     'alt' => $category->title . 'カテゴリの画像',
                 ]);

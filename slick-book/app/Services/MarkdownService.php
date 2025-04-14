@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\SiteImage;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -49,6 +50,20 @@ class MarkdownService
             $class = $language ? "language-{$language}" : '';
 
             return "<pre class=\"code\"><code class=\"{$class}\">{$escaped}</code></pre>";
+        }, $markdown);
+
+        // 先に [img lang="xxx"] を HTML化（Markdown変換前）
+        $markdown = preg_replace_callback('/\[img\s+id=["\']?(\d+)["\']?\s*\/?]/i', function ($matches) {
+            $fileId = $matches[1] ?? '';
+            $postImages = SiteImage::where('id', $fileId)->first();
+            if (!$postImages) {
+                return ''; // または代替画像表示
+            }
+            $scheme = config('app.scheme', 'https');
+            $port = config('app.port', '80');
+            $url = url("{$scheme}://{$postImages->site->domain}:{$port}/media/{$postImages->site_id}/{$postImages->type}/" . basename($postImages->path));
+
+            return "<div class=\"post-image\"><img src=\"{$url}\" alt=\"" . e($postImages->alt) . "\"></div>";
         }, $markdown);
 
         // ショートコード [note]...[/note] を <div class="note">...</div> に変換

@@ -13,6 +13,7 @@
 
                             @if ($naviLogo)
                                 <img src="{{ route('secure.media', [
+                                    'site' => $naviLogo->site_id,
                                     'path' => 'navi-logo/' . basename($naviLogo->path),
                                 ]) }}"
                                 alt="{{ $naviLogo->alt ?? '記事のサムネイル画像' }}"
@@ -23,6 +24,7 @@
                                 @endphp
                                 @if ($siteIcon)
                                     <img src="{{ route('secure.media', [
+                                        'site' => $siteIcon->site_id,
                                         'path' => 'site-icon/' . basename($siteIcon->path),
                                     ]) }}"
                                     alt="{{ $siteIcon->alt ?? '記事のサムネイル画像' }}"
