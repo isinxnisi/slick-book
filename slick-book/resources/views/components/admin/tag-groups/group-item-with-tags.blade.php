@@ -11,7 +11,7 @@
                 @endif
             </span>
             <button class="edit-group-btn text-sm text-yellow-400 hover:text-yellow-500"
-                data-tag-id="{{ $group->id }}"
+                data-id="{{ $group->id }}"
                 data-name="{{ $group->name }}"
                 data-slug="{{ $group->slug }}"
                 data-purpose="{{ $group->purpose }}"
