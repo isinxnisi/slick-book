@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\SiteMediaController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\HierarchyController;
@@ -103,6 +104,21 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 
 // 公開サイト
 Route::middleware(['load.site'])->group(function () {
+    Route::get('/robots.txt', function () {
+        $lines = [];
+        if (app()->environment('production')) {
+            $lines[] = 'User-agent: *';
+            $lines[] = 'Disallow: /search';
+            $lines[] = 'Disallow: /*?page=';
+            $lines[] = 'Sitemap: ' . url('/sitemap.xml');
+        } else {
+            // 本番以外は全ブロック
+            $lines[] = 'User-agent: *';
+            $lines[] = 'Disallow: /';
+        }
+        return Response::make(implode(PHP_EOL, $lines), 200)
+            ->header('Content-Type', 'text/plain');
+    });
     // サイトマップ
     Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
     // アップロード画像の参照用
