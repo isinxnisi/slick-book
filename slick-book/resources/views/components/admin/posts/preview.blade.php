@@ -21,6 +21,21 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-200 py-6">
         @php
+            $image = $post->postEyecatchImage;
+        @endphp
+        @if ($image)
+        <div class="container px-0 mb-4">
+            <div class="post-image eyecatch">
+                <img src="{{ route('secure.media', [
+                        'site' => "{$image->site_id}",
+                        'path' => "{$image->type}/" . basename($image->path),
+                    ]) }}"
+                    alt="{{ $image->alt }}"
+                    class="rounded">
+            </div>
+        </div>
+        @endif
+        @php
             $purposeStyles = config('tags.post_purpose_styles');
             $defaultStyle = $purposeStyles['public'];
         @endphp

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Services\SeoService;
 use Illuminate\Contracts\View\View;
 
 /**
@@ -36,12 +37,19 @@ class CategoryController extends Controller
             ->where('site_id', $site->id)
             ->published()
             ->latest('published_at')
-            ->get();
+            ->paginate(10);
 
         // 紐づくタグ一覧（重複なし）
         $categoryTags = Tag::whereHas('posts', function ($query) use ($categoryIds) {
             $query->whereIn('category_id', $categoryIds);
         })->distinct()->get();
+
+        // SEO設定上書き（noindex）
+        $seo = app(SeoService::class)->generateSeoForCurrentPage($site);
+        if ($posts->isEmpty()) {
+            $seo['noindex'] = true;
+        }
+        app(SeoService::class)->overrideSeo($seo);
 
         return view('blog.category', compact('category', 'posts', 'categoryTags'));
     }

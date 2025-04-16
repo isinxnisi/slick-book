@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Blog;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use App\Models\Post;
+use App\Services\SeoService;
 use Illuminate\Contracts\View\View;
 
 /**
@@ -33,7 +34,14 @@ class TagController extends Controller
             ->where('site_id', $site->id)
             ->published()
             ->latest('published_at')
-            ->get();
+            ->paginate(10);
+
+        // SEO設定上書き（noindex）
+        $seo = app(SeoService::class)->generateSeoForCurrentPage($site);
+        if ($posts->isEmpty()) {
+            $seo['noindex'] = true;
+        }
+        app(SeoService::class)->overrideSeo($seo);
 
         return view('blog.tag', compact('tag', 'tagGroups', 'posts'));
     }

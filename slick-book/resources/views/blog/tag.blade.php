@@ -1,4 +1,4 @@
-@section('title', '記事一覧')
+@section('title', "#{$tag->name}")
 <x-blog-layout>
     <x-slot name="header">
         <x-blog.header />
@@ -41,13 +41,14 @@
         <div class="max-w-5xl mb-2">
             <div class="overflow-hidden bg-gray-100 sm:rounded-lg">
                 <div class="p-6">
-                    <h2 class="content-headding">新着記事</h2>
+                    <h2 class="content-headding">関連記事</h2>
                     @foreach ($posts as $post)
                         @include('components.blog.partials.post-item', [
                             'post' => $post,
                             'purpose' => 'public',
                         ])
                     @endforeach
+                    {{ $posts->links() }}
                 </div>
             </div>
         </div>

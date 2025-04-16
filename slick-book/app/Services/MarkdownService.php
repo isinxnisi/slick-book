@@ -59,9 +59,7 @@ class MarkdownService
             if (!$postImages) {
                 return ''; // または代替画像表示
             }
-            $scheme = config('app.scheme', 'https');
-            $port = config('app.port', '80');
-            $url = url("{$scheme}://{$postImages->site->domain}:{$port}/media/{$postImages->site_id}/{$postImages->type}/" . basename($postImages->path));
+            $url = url("{$postImages->site->site_url}/media/{$postImages->site_id}/{$postImages->type}/" . basename($postImages->path));
 
             return "<div class=\"post-image\"><img src=\"{$url}\" alt=\"" . e($postImages->alt) . "\"></div>";
         }, $markdown);

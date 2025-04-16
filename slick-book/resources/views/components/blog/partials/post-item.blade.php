@@ -29,7 +29,7 @@
                     <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
                 </time>
             </div>
-            <p class="pt-2">{{ Str::limit($post->body, 100) }}</p>
+            <p class="pt-2">{{ Str::limit($post->seo_description, 100) }}</p>
         </div>
     </div>
 </div>

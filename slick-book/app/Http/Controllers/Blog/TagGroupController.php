@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TagGroup;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Services\SeoService;
 use Illuminate\Contracts\View\View;
 
 /**
@@ -34,7 +35,14 @@ class TagGroupController extends Controller
             ->where('site_id', $site->id)
             ->published()
             ->latest('published_at')
-            ->get();
+            ->paginate(10);
+
+        // SEO設定上書き（noindex）
+        $seo = app(SeoService::class)->generateSeoForCurrentPage($site);
+        if ($posts->isEmpty()) {
+            $seo['noindex'] = true;
+        }
+        app(SeoService::class)->overrideSeo($seo);
 
         return view('blog.tag-group', compact('tagGroup', 'posts', 'groupTags'));
     }

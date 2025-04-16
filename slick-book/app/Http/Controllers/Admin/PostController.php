@@ -11,6 +11,7 @@ use App\Models\PostTag;
 use App\Models\Tag;
 use App\Services\CategoryService;
 use App\Services\MarkdownService;
+use App\Services\SeoService;
 use App\Services\TagGroupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -174,6 +175,12 @@ class PostController extends Controller
         }
         $post->tags()->sync($tagIds);
 
+        // SEO
+        $post->seoSetting()->updateOrCreate(
+            ['post_id' => $post->id],
+            $request->only(['meta_title', 'meta_description', 'meta_keywords'])
+        );
+
         foreach ($request->file('images', []) as $type => $file) {
             $filename = uniqid() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs("sites/{$post->site_id}/{$type}", $filename, 'public');
@@ -283,6 +290,13 @@ class PostController extends Controller
         }
         $post->tags()->sync($tagIds);
 
+        // SEO
+        $post->seoSetting()->updateOrCreate(
+            ['post_id' => $post->id],
+            $request->only(['meta_title', 'meta_description', 'meta_keywords'])
+        );
+
+        // 画像
         foreach ($request->file('images', []) as $type => $file) {
             $filename = uniqid() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs("sites/{$post->site_id}/{$type}", $filename, 'public');
@@ -387,5 +401,30 @@ class PostController extends Controller
             'post' => $post,
             'toc' => $toc,
         ]);
+    }
+
+    /**
+     * Ajax: 記事管理｜MetaKeyword　の自動生成
+     *
+     * @param Request $request
+     * @param SeoService $seoService
+     * @return string
+     */
+    public function generateMetaKeywords(Request $request, SeoService $seoService)
+    {
+        $postId = $request->input('post_id');
+        $title = $request->input('title') ?? '';
+        $body = $request->input('body') ?? '';
+        $selectedTagIds = json_decode($request->input('selected_tags') ?? '[]');
+
+        $post = Post::where('id', $postId)->first();
+
+        $post->title = htmlspecialchars($title);
+        $post->body = $body;
+        $post->tags = Tag::whereIn('id', $selectedTagIds)->get();
+
+        $keywords = implode("\n", $seoService->generateMetaKeywordsArr($post));
+
+        return $keywords;
     }
 }

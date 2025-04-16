@@ -124,6 +124,19 @@ class Post extends Model
         return $this->belongsTo(Site::class);
     }
 
+    public function seoSetting()
+    {
+        return $this->hasOne(PostSeoSetting::class);
+    }
+
+    public function getSeoDescriptionAttribute()
+    {
+        if (!empty($this->seoSetting->meta_description)) {
+            return $this->seoSetting->meta_description;
+        }
+        return \Str::limit(preg_replace('/\\s+/u', ' ', strip_tags($this->html_body)), 150);
+    }
+
     public function images()
     {
         return $this->hasMany(SiteImage::class, 'post_id', 'id')

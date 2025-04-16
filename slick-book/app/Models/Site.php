@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * 
+ * サイト
  *
  * @property int $id
  * @property string $name
@@ -56,5 +56,23 @@ class Site extends Model
     public function categories()
     {
         return $this->hasMany(Category::class, 'site_id')->with('children');
+    }
+
+    public function seoSetting()
+    {
+        return $this->hasOne(SiteSeoSetting::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'site_id');
+    }
+
+    public function getSiteUrlAttribute()
+    {
+        $scheme = config('app.scheme', 'https');
+        $port = config('app.port', '80');
+
+        return "{$scheme}://{$this->domain}:{$port}";
     }
 }

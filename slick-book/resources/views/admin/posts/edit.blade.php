@@ -181,7 +181,7 @@
                                 <div class="mb-2 ps-2 mt-3">
                                     <!-- サムネイルフィールド -->
                                     <div class="flex items-center space-x-4">
-                                        <label class="w-100 text-left text-xs">サムネイル:</label>
+                                        <label class="w-100 text-left text-xs">サムネイル（post_thumbnail）:</label>
                                     </div>
                                     <div class="flex items-center space-x-4 mt-3">
                                         @php
@@ -219,7 +219,7 @@
                                 <div class="mb-2 ps-2 mt-3">
                                     <!-- アイキャッチフィールド -->
                                     <div class="flex items-center space-x-4">
-                                        <label class="w-100 text-left text-xs">アイキャッチ:</label>
+                                        <label class="w-100 text-left text-xs">アイキャッチ（post_eyecatch）:</label>
                                     </div>
                                     <div class="flex items-center space-x-4 mt-3">
                                         @php
@@ -297,8 +297,45 @@
 
                     <!-- SEO設定タブ（中身は後ほど） -->
                     <div id="panel-tab-seo" class="tab-content hidden">
-                        <div class="p-4">
-                            <p>※SEO設定項目は今後実装予定です。</p>
+                        <div class="mb-4">
+                            <div class="mb-2 border-b border-gray-600">
+                                <h4 class="text-gray-300 py-3">SEO設定</h4>
+                            </div>
+                            <!-- Meta Title フィールド -->
+                            <div class="mb-2 ps-2">
+                                <div class="flex items-center space-x-4">
+                                    <label class="w-20 text-left text-xs">Meta Title:</label>
+                                    <input type="text" name="meta_title" form="post-form"
+                                        class="flex-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm p-2 ms-0 text-xs"
+                                        value="{{ $post->seoSetting->meta_title ?? '' }}">
+                                </div>
+                                <x-admin.input-error class="mt-2" :messages="$errors->get('meta_title')" />
+                            </div>
+
+                            <!-- Meta Description フィールド -->
+                            <div class="mb-2 ps-2">
+                                <div class="flex items-center space-x-4">
+                                    <label class="w-20 text-left text-xs">Meta Description:</label>
+                                    <textarea label="Meta Description:" name="meta_description" form="post-form" rows="3"
+                                        class="flex-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm p-2 ms-0 text-xs"
+                                        >{{ $post->seoSetting->meta_description ?? '' }}</textarea>
+                                </div>
+                                <x-admin.input-error class="mt-2" :messages="$errors->get('meta_description')" />
+                            </div>
+
+                            <!-- Meta Keywords フィールド -->
+                            <div class="mb-2 ps-2">
+                                <div class="flex items-center space-x-4">
+                                    <label class="w-20 text-left text-xs">
+                                        Meta Keywords:
+                                        <button id="gen-meta-keywords" class="md-code-btn" type="button">自動生成</button>
+                                    </label>
+                                    <textarea label="Meta Keywords:" name="meta_keywords" form="post-form" rows="3"
+                                        class="flex-1 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm p-2 ms-0 text-xs"
+                                        >{{ $post->seoSetting->meta_keywords ?? '' }}</textarea>
+                                </div>
+                                <x-admin.input-error class="mt-2" :messages="$errors->get('meta_keywords')" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -525,6 +562,27 @@
             selectedTagIds = JSON.stringify(selectedTagIds);
             $('[name="selected_tag_ids[' + purpose + ']"]').val(selectedTagIds);
         }
+
+        // meta keywords 自動生成
+        $(document).on('click', '#gen-meta-keywords', function (e) {
+            const postId = $('#panel-tab-markdown').find('input[type="hidden"][name="id"]').val();
+            const selectedTagIds = $('#panel-tab-markdown').find('input[type="hidden"][name="selected_tag_ids[public]"]').val();
+            const title = $('#panel-tab-markdown').find('input[name="title"]').val();
+            $.ajax({
+                url: '/posts/generateMetaKeywords',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    post_id: postId,
+                    selected_tags: selectedTagIds,
+                    title: title,
+                    body: $('#panel-tab-markdown').find('textarea').val(),
+                },
+                success: function (text) {
+                    $('textarea[name="meta_keywords"]').val(text);
+                }
+            });
+        });
     </script>
     @endpush
 </x-app-layout>

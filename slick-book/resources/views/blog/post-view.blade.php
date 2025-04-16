@@ -1,4 +1,50 @@
-@section('title', '記事一覧')
+@section('title', $post->title)
+@section('structured_data')
+    <script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BlogPosting',
+    'mainEntityOfPage' => [
+        '@type' => 'WebPage',
+        '@id' => url()->current(),
+    ],
+    'headline' => $post->seoSetting->meta_title ?? $post->title,
+    'description' => $post->seo_description,
+    'image' => $post->thumbnail_image?->url ?? null,
+    'author' => [
+        '@type' => 'Person',
+        'name' => $post->creator->name ?? 'Unknown',
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => $currentSite->name,
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => route('secure.media', [
+                'site' => $currentSite->id,
+                'path' => 'favicon/' . basename($currentSite->images->firstWhere('type', 'favicon')->path ?? 'default.png')
+            ]),
+        ],
+    ],
+    'datePublished' => optional($post->published_at)->toIso8601String(),
+    'dateModified' => optional($post->updated_at)->toIso8601String(),
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+    <script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => collect($breadcrumbs)->values()->map(function ($item, $i) {
+        return [
+            '@type' => 'ListItem',
+            'position' => $i + 1,
+            'name' => $item['name'],
+            'item' => $item['url'],
+        ];
+    })->toArray()
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+@endsection
 <x-blog-layout>
     <x-slot name="header">
         <x-blog.header />

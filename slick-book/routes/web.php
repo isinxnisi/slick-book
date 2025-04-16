@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\SiteMediaController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Admin\SiteController;
+use App\Http\Controllers\Admin\SiteSeoSettingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostTagController;
 use App\Http\Controllers\Admin\TagGroupController;
@@ -17,6 +19,7 @@ use App\Http\Controllers\Blog\PostController as BlogPostController;
 use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
 use App\Http\Controllers\Blog\TagController as BlogTagController;
 use App\Http\Controllers\Blog\TagGroupController as BlogTagGroupController;
+use App\Http\Controllers\SitemapController;
 
 // 環境設定からドメインを取得
 $domains = config('multisite');
@@ -50,12 +53,17 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::get('posts/tags', [PostController::class, 'tags'])->name('posts.tags');
         Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
         Route::patch('posts/{post}', [PostController::class, 'update'])->name('posts.update');
+        Route::post('posts/generateMetaKeywords', [PostController::class, 'generateMetaKeywords'])->name('posts.generateMetaKeywords');
 
         Route::resource('hierarchies', HierarchyController::class);
         Route::post('/hierarchies/reorder', [HierarchyController::class, 'reorder'])->name('hierarchies.reorder');
 
         // サイト管理
         Route::resource('sites', SiteController::class);
+        Route::prefix('seo-settings')->name('site-seo-settings.')->group(function () {
+            Route::get('/', [SiteSeoSettingController::class, 'edit'])->name('edit');
+            Route::put('/', [SiteSeoSettingController::class, 'update'])->name('update');
+        });
 
         // カテゴリ階層UIの表示
         Route::get('categories/tree', [CategoryController::class, 'tree'])->name('categories.tree');
@@ -96,6 +104,23 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 
 // 公開サイト
 Route::middleware(['load.site'])->group(function () {
+    Route::get('/robots.txt', function () {
+        $lines = [];
+        if (app()->environment('production')) {
+            $lines[] = 'User-agent: *';
+            $lines[] = 'Disallow: /search';
+            $lines[] = 'Disallow: /*?page=';
+            $lines[] = 'Sitemap: ' . url('/sitemap.xml');
+        } else {
+            // 本番以外は全ブロック
+            $lines[] = 'User-agent: *';
+            $lines[] = 'Disallow: /';
+        }
+        return Response::make(implode(PHP_EOL, $lines), 200)
+            ->header('Content-Type', 'text/plain');
+    });
+    // サイトマップ
+    Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
     // アップロード画像の参照用
     Route::get('/media/{site}/{path}', [SiteMediaController::class, 'public'])
         ->where('path', '.*')
