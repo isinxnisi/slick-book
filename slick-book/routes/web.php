@@ -18,6 +18,7 @@ use App\Http\Controllers\Blog\PostController as BlogPostController;
 use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
 use App\Http\Controllers\Blog\TagController as BlogTagController;
 use App\Http\Controllers\Blog\TagGroupController as BlogTagGroupController;
+use App\Http\Controllers\SitemapController;
 
 // 環境設定からドメインを取得
 $domains = config('multisite');
@@ -102,6 +103,8 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 
 // 公開サイト
 Route::middleware(['load.site'])->group(function () {
+    // サイトマップ
+    Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
     // アップロード画像の参照用
     Route::get('/media/{site}/{path}', [SiteMediaController::class, 'public'])
         ->where('path', '.*')

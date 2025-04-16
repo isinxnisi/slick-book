@@ -63,6 +63,11 @@ class Site extends Model
         return $this->hasOne(SiteSeoSetting::class);
     }
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'site_id');
+    }
+
     public function getSiteUrlAttribute()
     {
         $scheme = config('app.scheme', 'https');
