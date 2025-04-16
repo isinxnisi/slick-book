@@ -3,16 +3,17 @@
 namespace App\Services;
 
 use App\Models\SiteImage;
-use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\MarkdownConverter;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkRenderer;
 use Illuminate\Support\Str;
+use League\CommonMark\Extension\Table\TableExtension;
 
 class MarkdownService
 {
-    protected CommonMarkConverter $converter;
+    protected MarkdownConverter $converter;
 
     public function __construct()
     {
@@ -27,15 +28,27 @@ class MarkdownService
             'commonmark' => [
                 'enable_em' => true,
                 'enable_strong' => true,
-                'enable_lax_line_breaks' => true, // ← ここが自動改行の有効化
+            ],
+            'table' => [
+                'wrap' => [
+                    'enabled' => true,
+                    'tag' => 'div',
+                    'attributes' => ['class' => 'table-responsive'],
+                ],
+                'alignment_attributes' => [
+                    'left' => ['class' => 'text-start'],
+                    'center' => ['class' => 'text-center'],
+                    'right' => ['class' => 'text-end'],
+                ],
             ],
         ];
 
         $environment = new Environment($config);
         $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension(new HeadingPermalinkExtension());
+        $environment->addExtension(new TableExtension());
 
-        $this->converter = new CommonMarkConverter([], $environment);
+        $this->converter = new MarkdownConverter($environment);
     }
 
     public function convertToHtml(string $markdown): string
