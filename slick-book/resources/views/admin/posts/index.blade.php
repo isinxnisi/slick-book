@@ -44,7 +44,7 @@
                             <h2 class="text-lg bold">
                                 <a class="hover:text-white hover:border-b hover:border-gray-200" href="{{ route('posts.edit', $post->id) }}">{{ $post->title }}</a>
                             </h2>
-                            <p class="pt-2">{{ Str::limit($post->body, 100) }}</p>
+                            <p class="pt-2">{{ Str::limit($post->seo_description, 100) }}</p>
                         </div>
                     </div>
                 </div>

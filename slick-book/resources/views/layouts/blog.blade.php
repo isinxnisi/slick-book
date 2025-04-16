@@ -5,15 +5,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @php
-        $title = trim($__env->yieldContent('title'));
-    @endphp
+@php
+    $title = trim($__env->yieldContent('title'));
+@endphp
     <title>{{ $title ? $title . '｜' : '' }}{{ $seo['meta_title'] ?? $currentSite->name }}</title>
     <x-blog.meta-head :seo="$seo" :site="$currentSite" />
+@if(!empty($seo['noindex']) && $seo['noindex'] === true)
+    <meta name="robots" content="noindex, follow">
+@endif
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- App -->
     @vite(['resources/css/app.css'])
+
     <link rel="stylesheet" href="{{ asset('css/theme/site-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme/post-theme.css') }}">
     <link rel="stylesheet" href="{{ asset('css/prism-themes/prism-dracula.css') }}">

@@ -51,6 +51,7 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::get('posts/tags', [PostController::class, 'tags'])->name('posts.tags');
         Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
         Route::patch('posts/{post}', [PostController::class, 'update'])->name('posts.update');
+        Route::post('posts/generateMetaKeywords', [PostController::class, 'generateMetaKeywords'])->name('posts.generateMetaKeywords');
 
         Route::resource('hierarchies', HierarchyController::class);
         Route::post('/hierarchies/reorder', [HierarchyController::class, 'reorder'])->name('hierarchies.reorder');
