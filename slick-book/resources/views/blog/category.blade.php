@@ -1,4 +1,4 @@
-@section('title', '記事一覧')
+@section('title', $category->title)
 <x-blog-layout>
     <x-slot name="header">
         <x-blog.header />
