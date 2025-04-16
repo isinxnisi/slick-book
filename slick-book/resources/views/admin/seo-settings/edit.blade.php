@@ -13,7 +13,9 @@
                     @method('PUT')
 
                     <x-admin.input label="Meta Title" name="meta_title" :value="$seo->meta_title" :placeholder="$site->name" />
-                    <x-admin.textarea label="Meta Description" name="meta_description" :value="$seo->meta_description" :placeholder="$site->description" />
+                    <x-admin.textarea label="Meta Description" name="meta_description" :placeholder="$site->description">
+                        {{ old('meta_description', $seo->meta_description ?? '') }}
+                    </x-admin.textarea>
                     <x-admin.input label="Meta Keywords" name="meta_keywords" :value="$seo->meta_keywords" />
                     <x-admin.input label="Canonical Base URL" name="canonical_base" :value="$seo->canonical_base" :placeholder="$site->site_url"/>
                     @php
@@ -38,7 +40,9 @@
                             class="mt-1 block w-full text-sm text-gray-700 file:bg-gray-100 file:border file:rounded file:px-2 file:py-1">
                     </div>
                     <x-admin.select label="Twitterカード種別" name="twitter_card_type" :options="['summary' => 'summary', 'summary_large_image' => 'summary_large_image']" :value="$seo->twitter_card_type" />
-                    <x-admin.textarea label="追加headタグ" name="custom_head_tags" :value="$seo->custom_head_tags" rows="5" />
+                    <x-admin.textarea label="追加headタグ" name="custom_head_tags" rows="5">
+                        {{ old('custom_head_tags', $seo->custom_head_tags ?? '') }}
+                    </x-admin.textarea>
 
                     <x-admin.button type="submit" class="mt-4">保存</x-admin.button>
                 </form>

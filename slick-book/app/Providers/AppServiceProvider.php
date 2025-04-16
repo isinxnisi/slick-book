@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\SeoService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
@@ -32,10 +33,16 @@ class AppServiceProvider extends ServiceProvider
 
         Blade::component('layouts.blog', 'blog-layout');
 
-        View::composer('components.blog.sidebar', function ($view) {
-            $site = app('CurrentSite');
+        // 公開レイアウトにだけ SEO 変数を注入
+        View::composer('layouts.blog', function ($view) {
+            $site = app('CurrentSite'); // 管理済み
             $site->load('categories.children'); // eager load
-            $view->with('currentSite', $site);
+            $seo = app(SeoService::class)->generateSeoForCurrentPage($site);
+
+            $view->with([
+                'currentSite' => $site,
+                'seo' => $seo,
+            ]);
         });
     }
 }
