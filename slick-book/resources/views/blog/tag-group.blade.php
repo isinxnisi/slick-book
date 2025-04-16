@@ -60,19 +60,25 @@
     @endif
 
     <x-slot name="rAside">
-        <div class="r-side-content mt-0 pb-0 sticky overflow-hidden rounded add bg-gray-300 shadow-sm" style="width: 300px;">
-            <img src="{{asset('img/example-labo-img.png')}}" alt="">
-            <img src="{{asset('img/my-lab-charactor.png')}}" alt="">
-            <img src="{{asset('img/example-labo-img.png')}}" alt="">
-        </div>
-        <div class="overflow-hidden rounded add bg-gray-300 shadow-sm" style="width: 300px; margin-top: 20px">
-        </div>
-        <div class="add hidden bg-gray-300" style="width: 300px; height: 250px; margin-top: 20px">
-        </div>
-        <div class="r-side-content">
-            <div class="add hidden bg-gray-300" style="width: 300px; height: 250px">
+        <div class="r-side-content mt-0 pb-0 sticky overflow-hidden add" style="width: 300px;">
+            <div class="add bg-gray-300 shadow-sm" style="width: 300px; height: 250px;">
+                @include('components.blog.ad.adm-shinobi')
             </div>
-            <div class="add hidden bg-gray-300" style="width: 300px; height: 250px; margin-top: 20px">
+            <div class="overflow-hidden rounded add bg-gray-300 shadow-sm" style="width: 300px; margin-top: 20px">
+                @php
+                    $site = app('CurrentSite');
+                    $thumbnail = $site->images->firstWhere('type', 'thumbnail');
+                @endphp
+                @isset($thumbnail)
+                <img src="{{ route('secure.media', [
+                        'site' => "{$thumbnail->site_id}",
+                        'path' => "{$thumbnail->type}/" . basename($thumbnail->path),
+                    ]) }}"
+                    alt="{{ $thumbnail->alt }}">
+                @endisset
+            </div>
+            <div class="add bg-gray-300 shadow-sm" style="width: 300px; height: 250px; margin-top: 20px">
+                @include('components.blog.ad.adm-shinobi')
             </div>
         </div>
     </x-slot>

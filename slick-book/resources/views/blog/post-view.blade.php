@@ -112,18 +112,19 @@
     </div>
 
     <x-slot name="rAside">
-        <div class="add bg-gray-300 overflow-hidden rounded shadow-sm" style="width: 300px;">
-            <img src="{{asset('img/example-labo-img.png')}}" alt="">
+        <div class="add bg-gray-300 overflow-hidden shadow-sm" style="width: 300px;">
+            @include('components.blog.ad.adm-shinobi')
         </div>
-        <div class="add hidden bg-gray-300" style="width: 300px; height: 250px; margin-top: 20px">
+        <div class="add hidden bg-gray-300 overflow-hidden shadow-sm" style="width: 300px; height: 250px; margin-top: 20px">
         </div>
         <div class="r-side-content">
-            <div class="add hidden bg-gray-300" style="width: 300px; height: 250px">
+            <div class="add bg-gray-300 overflow-hidden shadow-sm" style="width: 300px; height: 250px">
+                @include('components.blog.ad.adm-shinobi')
             </div>
             @if(!empty($post->toc))
             <div class="post-toc">{!! $post->toc !!}</div>
             @endif
-            <div class="add hidden bg-gray-300" style="width: 300px; height: 250px; margin-top: 20px">
+            <div class="add hidden bg-gray-300 overflow-hidden shadow-sm" style="width: 300px; height: 250px; margin-top: 20px">
             </div>
         </div>
     </x-slot>
