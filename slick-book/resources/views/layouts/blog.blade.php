@@ -27,6 +27,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     @vite(['resources/js/blog.js'])
 
+@yield('structured_data') {{-- JSON-LD埋め込み --}}
 </head>
 
 <body class="font-sans antialiased bg-gray-200">

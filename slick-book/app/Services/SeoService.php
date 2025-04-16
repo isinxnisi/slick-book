@@ -13,11 +13,14 @@ class SeoService
     {
         if (!$site) return [];
 
+        $currentUrl = url()->current();
+        $canonicalUrl = $this->cleanCanonicalUrl($currentUrl);
+
         $seo = [
             'meta_title' => $site->seoSetting?->meta_title ?? $site->name,
             'meta_description' => $site->seoSetting?->meta_description ?? '',
             'meta_keywords' => $this->normalizeKeywordStringAsString($site->seoSetting?->meta_keywords ?? ''),
-            'canonical_url' => $site->seoSetting?->canonical_url ?? url()->current(),
+            'canonical_url' => $canonicalUrl,
             'twitter_card_type' => $site->seoSetting?->twitter_card_type ?? 'summary',
             'noindex' => false,
         ];
@@ -37,7 +40,7 @@ class SeoService
                 'meta_title' => $postSeo?->meta_title ?? $post->title,
                 'meta_description' => Str::limit($post->seo_description ?? '', 100),
                 'meta_keywords' => implode(', ', $keywords),
-                'canonical_url' => $postSeo?->canonical_url ?? url()->current(),
+                'canonical_url' => $postSeo?->canonical_url ?? route('posts.view', $post),
                 'twitter_card_type' => 'summary_large_image',
                 'noindex' => $post->is_draft ?? false,
             ];
@@ -46,19 +49,26 @@ class SeoService
         // 検索ページ
         if (Route::is('search.*')) {
             $seo['noindex'] = true;
+            $seo['canonical_url'] = null; // 検索結果はcanonical不要
         }
 
         // ページネーション付きの一覧ページ
         if (request()->has('page') && request('page') > 1) {
             $seo['noindex'] = true;
+            $seo['canonical_url'] = strtok($canonicalUrl, '?'); // pageクエリ除外
         }
 
         return $seo;
     }
 
+    protected function cleanCanonicalUrl(string $url): string
+    {
+        // ?page= やその他クエリがついていたら削除
+        return strtok($url, '?');
+    }
+
     protected function normalizeKeywordString(string $keywords): array
     {
-        // 改行・カンマ両方に対応して分解し、トリム＆空除去
         return array_filter(array_map('trim', preg_split('/[\n,]+/', $keywords)));
     }
 
@@ -71,13 +81,11 @@ class SeoService
     {
         $keywords = [];
 
-        // タグ名
         foreach ($post->tags as $tag) {
             $keywords[] = $tag->name;
         }
 
-        // [mark]...[/mark] 抽出
-        preg_match_all('/\\[mark\\](.*?)\\[\\/mark\\]/', $post->body, $matches);
+        preg_match_all('/\[mark\](.*?)\[\/mark\]/', $post->body, $matches);
         if (!empty($matches[1])) {
             foreach ($matches[1] as $word) {
                 $keywords[] = trim($word);
@@ -85,5 +93,11 @@ class SeoService
         }
 
         return array_unique($keywords);
+    }
+
+    public function overrideSeo(array $seo): void {
+        \Illuminate\Support\Facades\View::composer('layouts.blog', function ($view) use ($seo) {
+            $view->with(['seo' => $seo]);
+        });
     }
 }

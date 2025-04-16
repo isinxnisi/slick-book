@@ -134,8 +134,7 @@ class Post extends Model
         if (!empty($this->seoSetting->meta_description)) {
             return $this->seoSetting->meta_description;
         }
-
-        return \Str::limit(preg_replace('/\\s+/u', ' ', strip_tags($this->html_body)), 500);
+        return \Str::limit(preg_replace('/\\s+/u', ' ', strip_tags($this->html_body)), 150);
     }
 
     public function images()

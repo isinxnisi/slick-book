@@ -37,10 +37,26 @@ class PostController extends Controller
             ->limit(10)
             ->get();
 
+        // パンくずデータ
+        $breadcrumbs = [
+            ['name' => 'ホーム', 'url' => url('/')],
+        ];
+        if ($post->category) {
+            $breadcrumbs = array_merge(
+                $breadcrumbs,
+                $post->category->breadcrumb_list
+            );
+        }
+        $breadcrumbs[] = [
+            'name' => $post->title,
+            'url' => route('posts.view', $post),
+        ];
+
         return view('blog.post-view', [
             'post' => $post,
             'toc' => $toc,
             'recommendPosts' => $recommendPosts,
+            'breadcrumbs' => $breadcrumbs,
         ]);
     }
 }

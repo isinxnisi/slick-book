@@ -105,6 +105,20 @@ class Category extends Model
         return implode(' > ', $titles);
     }
 
+    public function getBreadcrumbListAttribute(): array
+    {
+        $breadcrumbs = [];
+        $category = $this;
+        while ($category) {
+            array_unshift($breadcrumbs, [
+                'name' => $category->title,
+                'url' => route('blog.category', $category->slug),
+            ]);
+            $category = $category->parent;
+        }
+        return $breadcrumbs;
+    }
+
     public function childrenRecursive()
     {
         return $this->hasMany(self::class, 'parent_id')
