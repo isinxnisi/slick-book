@@ -80,6 +80,13 @@
 
             <ul x-show="open.sites" class="mt-2 space-y-1">
                 <li class="">
+                    <a href="{{ route('site-seo-settings.edit', [], false) }}"
+                        class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
+                               {{ request()->routeIs('site-seo-settings.edit') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
+                         SEO設定（サイト別）
+                     </a>
+                </li>
+                <li class="">
                     <a href="{{ route('categories.tree') }}"
                        class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
                               {{ request()->routeIs('categories.tree') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">

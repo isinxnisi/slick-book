@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Admin\SiteController;
+use App\Http\Controllers\Admin\SiteSeoSettingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostTagController;
 use App\Http\Controllers\Admin\TagGroupController;
@@ -56,6 +57,10 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 
         // サイト管理
         Route::resource('sites', SiteController::class);
+        Route::prefix('seo-settings')->name('site-seo-settings.')->group(function () {
+            Route::get('/', [SiteSeoSettingController::class, 'edit'])->name('edit');
+            Route::put('/', [SiteSeoSettingController::class, 'update'])->name('update');
+        });
 
         // カテゴリ階層UIの表示
         Route::get('categories/tree', [CategoryController::class, 'tree'])->name('categories.tree');

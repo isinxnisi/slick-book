@@ -5,18 +5,41 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{$currentSite->name}}｜@yield('title')</title>
+    @php
+        $title = trim($__env->yieldContent('title'));
+    @endphp
+    <title>{{ $title ? $title . '｜' : '' }}{{ $seo['meta_title'] ?? $currentSite->name }}</title>
     @php
         $favicon = $currentSite->images->firstWhere('type', 'favicon');
     @endphp
-
     @if ($favicon)
-        <link rel="icon" type="image/png" href="{{ route('secure.media', [
-            'site' => $favicon->site_id,
-            'path' => 'favicon/' . basename($favicon->path),
-        ]) }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ route('secure.media', [
+        'site' => $favicon->site_id,
+        'path' => 'favicon/' . basename($favicon->path),
+    ]) }}">
     @endif
+    <meta name="description" content="{{ $seo['meta_description'] ?? $currentSite->description }}">
+    <meta name="keywords" content="{{ $seo['meta_keywords'] ?? '' }}">
+    <link rel="canonical" href="{{ $seo['canonical_url'] ?? $currentSite->site_url }}">
+    <!-- OGP -->
+    <meta property="og:title" content="{{ $seo['meta_title'] ?? $currentSite->name }}">
+    <meta property="og:description" content="{{ $seo['meta_description'] ?? $currentSite->description }}">
+    @php
+        $ogpImage = $currentSite->images->firstWhere('type', 'ogp');
+    @endphp
+    @if ($ogpImage)
+    <meta property="og:image" content="{{ route('secure.media', [
+        'site' => $currentSite->id,
+        'path' => 'ogp/' . basename($ogpImage->path),
+    ]) }}">
+    @endif
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="{{ $seo['twitter_card_type'] ?? 'summary' }}">
+
+    {!! $seo['custom_head_tags'] ?? '' !!}
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
