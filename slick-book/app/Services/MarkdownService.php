@@ -22,7 +22,7 @@ class MarkdownService
                 'html_class' => 'heading-permalink',
                 'id_prefix' => '', // 例: 'heading-'
                 'insert' => 'before', // 'before' or 'after'
-                'symbol' => '¶', // 任意
+                'symbol' => '', // 任意
                 'title' => 'Link to this heading',
             ],
             'commonmark' => [
