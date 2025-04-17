@@ -50,6 +50,11 @@
         <x-blog.header />
     </x-slot>
 
+    {{-- SP広告 --}}
+    <div class="container justify-content-md-center mb-4 p-0 d-md-none">
+        @include('components.blog.ad.sp-320x50')
+    </div>
+
     @php
         $image = $post->postEyecatchImage;
     @endphp
@@ -72,12 +77,12 @@
     @endphp
     <div id="post-article" class="container justify-content-md-center rounded-md bg-gray-100 p-8">
 
-        <div class="flex px-4">
+        <div class="flex">
             {{-- タイトル --}}
             <h1 class="">{{ $post->title }}</h1>
         </div>
 
-        <div class="flex mt-2 px-4">
+        <div class="flex mt-2">
             <time class="c-postTitle__date flex-1" datetime="{{ $post->published }}" aria-hidden="true">
                 <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
             </time>
@@ -90,7 +95,7 @@
                 @endforeach
             </ul>
         </div>
-        <article class="post mt-4 mb-4 px-4">
+        <article class="post mt-4 mb-4">
             {{-- 本文（HTML） --}}
             <div class="post-layout" style="gap: 2rem;">
                 <div class="post-content">
@@ -100,15 +105,34 @@
 
         </article>
     </div>
-    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 mt-4">
-        <div class="mt-0 px-4">
+
+    {{-- SP広告 --}}
+    <div class="container justify-content-md-center mt-4 p-0 d-md-none">
+        @include('components.blog.ad.sp-320x100')
+    </div>
+
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
+        <div class="mt-0 pt-4">
             <h2 class="content-headding">おすすめ記事</h2>
             <div class="py-0">
+                @php $cnt = 0; @endphp
                 @foreach ($recommendPosts as $reccomendPost)
+                @php $cnt++; @endphp
                 @include('components.blog.partials.post-item', ['post' => $reccomendPost, 'purpose' => 'public'])
+                @if ($cnt % 4 == 0)
+                {{-- SP広告 --}}
+                <div class="container justify-content-md-center my-2 p-0 d-md-none">
+                    @include('components.blog.ad.sp-320x100')
+                </div>
+                @endif
                 @endforeach
             </div>
         </div>
+    </div>
+
+    {{-- SP広告 --}}
+    <div class="container justify-content-md-center mt-4 p-0 d-md-none">
+        @include('components.blog.ad.sp-320x100')
     </div>
 
     <x-slot name="rAside">

@@ -21,22 +21,40 @@
         @endisset
     </x-slot>
 
+    {{-- SP広告 --}}
+    <div class="container justify-content-md-center mb-4 p-0 d-md-none">
+        @include('components.blog.ad.sp-320x50')
+    </div>
+
     @php
         $purposeStyles = config('tags.post_purpose_styles');
         $defaultStyle = $purposeStyles['public'];
+        $cnt = 0;
     @endphp
-    <div class="max-w-5xl">
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
         <div class="overflow-hidden bg-gray-100 sm:rounded-lg">
-            <div class="p-6">
+            <div class="py-6 px-0">
                 <h2 class="content-headding">新着記事</h2>
 
                 @foreach ($posts as $post)
+                    @php $cnt++; @endphp
                     @include('components.blog.partials.post-item', ['post' => $post, 'purpose' => 'public'])
+                    @if ($cnt % 4 == 0)
+                    {{-- SP広告 --}}
+                    <div class="container justify-content-md-center my-2 p-0 d-md-none">
+                        @include('components.blog.ad.sp-320x100')
+                    </div>
+                    @endif
                 @endforeach
 
                 {{ $posts->links() }}
             </div>
         </div>
+    </div>
+
+    {{-- SP広告 --}}
+    <div class="container justify-content-md-center mb-4 p-0 d-md-none">
+        @include('components.blog.ad.sp-320x100')
     </div>
 
     <x-slot name="rAside">

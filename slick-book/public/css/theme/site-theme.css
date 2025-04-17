@@ -81,10 +81,17 @@ header#content-header {
     object-fit: cover;
 }
 .post-info .title {
-    height: 60px;
+    height: fit-content;
     line-height: 30px;
+    max-height: 60px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
-
+.post-info .title a {
+    overflow: hidden;          /* はみ出した部分を非表示 */
+    text-overflow: ellipsis;   /* はみ出した部分を「…」に */
+    max-height: 60px;
+}
 /* -----------------------------------
     目次
 ----------------------------------- */
@@ -154,9 +161,15 @@ header#content-header {
     font-weight: 500;
     margin-left: 0em;
 }
+.post-toc .toc .toc-level-2 a {
+    border-color: #97beff;
+}
 
 .post-toc .toc .toc-level-3 {
     margin-left: 1em;
+}
+.post-toc .toc .toc-level-3 a {
+    border-color: #26dcba;
 }
 
 .post-toc .toc .toc-level-4 {
@@ -169,6 +182,11 @@ header#content-header {
 
 .post-toc .toc .toc-level-6 {
     margin-left: 4em;
+}
+.post-toc .toc .toc-level-4 a,
+.post-toc .toc .toc-level-5 a,
+.post-toc .toc .toc-level-6 a {
+    border-color: #cfcfcf;
 }
 
 /* -----------------------------------
@@ -210,6 +228,47 @@ header#content-header {
 }
 
 /* -----------------------------------
+    記事ITEMスタイル
+----------------------------------- */
+.post-info .tag-list li.tag-item {
+    height: 15px;
+    line-height: 15px;
+    margin-top: 2px;
+    margin-bottom: 0px;
+}
+.post-info .tag-list li.tag-item .tag {
+    padding: 2px 4px;
+    background-color: #26dcba69 !important;
+    border: none !important;
+    color: #495057 !important;
+    margin-right: 0;
+    padding: 0 2px;
+    margin-right: 4px;
+    font-weight: bold;
+}
+.post-info .post-tag-cat .cat {
+    font-size: 10px;
+}
+.post-info .desc {
+    word-break: break-all;
+    line-height: 16px;
+    font-size: 11px;
+}
+.post-info time {
+    font-size: 11px;
+}
+
+/* -----------------------------------
+    ページコンテンツタイトル
+----------------------------------- */
+.content-headding {
+    word-break: break-word;
+}
+.content-headding span {
+    padding-top: 1px;
+}
+
+/* -----------------------------------
     レスポンシブ
 ----------------------------------- */
 @media (max-width: 1400px) {
@@ -248,5 +307,38 @@ header#content-header {
     }
     .content-container > .container > div {
         padding: 0px;
+    }
+    .post-item-bar .thumnail {
+        width: 100px;
+    }
+    .post-item-bar .thumnail img {
+        height: 80px;
+        width: 100px;
+    }
+    .post-info .title a {
+        font-size: 14px;
+        line-height: 18px;
+    }
+    .post-info .tag-list li.tag-item {
+        height: 15px;
+        line-height: 15px;
+        margin-top: 2px;
+        margin-bottom: 0px;
+    }
+    .post-info .tag-list li.tag-item .tag {
+        font-size: 10px !important;
+        font-weight: bold !important;
+        height: 15px;
+        line-height: 15px;
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+    .content-headding code {
+        margin-bottom: 2px;
+        display: inline-block;
+    }
+
+    main > div {
+        padding-top: 5px !important;
     }
 }
