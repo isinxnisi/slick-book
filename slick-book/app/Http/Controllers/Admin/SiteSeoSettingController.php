@@ -29,6 +29,7 @@ class SiteSeoSettingController extends Controller
             'canonical_base' => 'nullable|url',
             'twitter_card_type' => 'required|in:summary,summary_large_image',
             'custom_head_tags' => 'nullable|string',
+            'google_analytics_tags' => 'nullable|string',
         ]);
 
         $siteId = $request->input('site', Site::orderBy('id')->first()?->id);

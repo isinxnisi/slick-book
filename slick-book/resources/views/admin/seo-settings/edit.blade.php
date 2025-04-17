@@ -44,6 +44,9 @@
                         {{ old('custom_head_tags', $seo->custom_head_tags ?? '') }}
                     </x-admin.textarea>
 
+                    <x-admin.textarea label="Analytics" name="google_analytics_tags" rows="5">
+                        {{ old('google_analytics_tags', $seo->google_analytics_tags ?? '') }}
+                    </x-admin.textarea>
                     <x-admin.button type="submit" class="mt-4">保存</x-admin.button>
                 </form>
             </div>
