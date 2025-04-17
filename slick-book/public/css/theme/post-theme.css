@@ -50,7 +50,7 @@ h1 {
 
 .post-body h3 {
     font-size: 1.25rem;
-    /* border-color: #3b82f6; */
+    border-color: #26dcba;
 }
 
 .post-body h4 {
@@ -117,7 +117,7 @@ h1 {
     height: 18px;
     line-height: 18px;
     margin-top: 2px;
-    margin-bottom: 2px;
+    margin-bottom: 8px;
 }
 
 .tag-list li.tag-item .tag {
@@ -201,22 +201,27 @@ article hr {
 /* 階層ごとのインデント */
 .toc-level-2 {
     margin-left: 1em;
+    border-color: #3b82f6;
 }
 
 .toc-level-3 {
     margin-left: 2em;
+    border-color: #26dcba;
 }
 
 .toc-level-4 {
     margin-left: 3em;
+    border-color: #cfcfcf;
 }
 
 .toc-level-5 {
     margin-left: 4em;
+    border-color: #cfcfcf;
 }
 
 .toc-level-6 {
     margin-left: 5em;
+    border-color: #cfcfcf;
 }
 
 /* -----------------------------------

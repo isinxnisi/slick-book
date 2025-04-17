@@ -14,22 +14,27 @@
             @endif
             </a>
         </div>
-        <div class="post-info flex-1 px-4">
+        <div class="post-info flex-1 lg:px-4">
             {{-- タイトル --}}
             <h2 class="title text-lg bold d-flex align-items-center border-b">
                 <a class="" href="{{ route('posts.view', $post->id) }}">{{ $post->title }}</a>
             </h2>
-            <div class="d-flex py-2">
-                <ul class="tag-list text-left px-0">
-                    @foreach ($post->tags as $tag)
-                    @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => $purpose])
-                    @endforeach
-                </ul>
-                <time class="flex-1 d-inline-block font-bold text-gray-400 py-1 text-right ms-2" datetime="{{ $post->published }}" aria-hidden="true" style="min-width:100px;">
-                    <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
-                </time>
+            <div class="d-inline-block w-100 pt-2">
+                <div class="post-tag-cat w-100 float-start">
+                    <p class="cat">{{ $post->category->breadcrumb }}</p>
+                    <ul class="tag-list text-left px-0">
+                        @foreach ($post->tags as $tag)
+                        @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => $purpose])
+                        @endforeach
+                    </ul>
+                </div>
             </div>
-            <p class="pt-2">{{ Str::limit($post->seo_description, 100) }}</p>
+            <p class="desc pt-0">
+                {{ Str::limit($post->seo_description, 100) }}
+            </p>
+            <time class="d-inline-block font-bold text-gray-400 mt-1 py-0 text-right mx-1 float-end" datetime="{{ $post->published }}" aria-hidden="true" style="min-width:100px;">
+                <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
+            </time>
         </div>
     </div>
 </div>

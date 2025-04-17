@@ -4,13 +4,18 @@
         <x-blog.header />
     </x-slot>
 
-    <div class="max-w-5xl mb-2">
+    {{-- SP広告 --}}
+    <div class="container justify-content-md-center mb-4 p-0 d-md-none">
+        @include('components.blog.ad.sp-320x50')
+    </div>
+
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
         <div class="overflow-hidden bg-gray-100 sm:rounded-lg">
-            <div class="p-6">
+            <div class="py-6 px-0">
                 <p class="text-sm font-bold text-gray-400 mb-2">{{ $tagGroup->breadcrumbWOSelf }}</p>
                 <h2 class="content-headding flex align-item-center mb-2">
                     <code class="text-xs px-2 py-2 me-2 rounded bg-gray-200">タグ・グループ</code>
-                    {{ $tagGroup->name }}
+                    <span>#{{ $tagGroup->name }}</span>
                 </h2>
                  {{-- 子タグ・グループ --}}
                 @if (!$tagGroup->children->isEmpty())
@@ -45,12 +50,20 @@
     </div>
 
     @if (!$posts->isEmpty())
-    <div class="max-w-5xl mb-2">
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
         <div class="overflow-hidden bg-gray-100 sm:rounded-lg">
-            <div class="p-6">
+            <div class="py-6 px-0">
                 <h2 class="content-headding">関連記事</h2>
+                @php $cnt = 0; @endphp
                 @foreach ($posts as $post)
+                    @php $cnt++; @endphp
                     @include('components.blog.partials.post-item', ['post' => $post, 'purpose' => 'public'])
+                    @if ($cnt % 4 == 0)
+                    {{-- SP広告 --}}
+                    <div class="container justify-content-md-center my-2 p-0 d-md-none">
+                        @include('components.blog.ad.sp-320x100')
+                    </div>
+                    @endif
                 @endforeach
 
                 {{ $posts->links() }}
@@ -58,6 +71,11 @@
         </div>
     </div>
     @endif
+
+    {{-- SP広告 --}}
+    <div class="container justify-content-md-center mt-4 p-0 d-md-none">
+        @include('components.blog.ad.sp-320x100')
+    </div>
 
     <x-slot name="rAside">
         <div class="r-side-content mt-0 pb-0 sticky overflow-hidden add" style="width: 300px;">
