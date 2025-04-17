@@ -15,7 +15,7 @@
                 <p class="text-sm font-bold text-gray-400 mb-2">{{ $tagGroup->breadcrumbWOSelf }}</p>
                 <h2 class="content-headding flex align-item-center mb-2">
                     <code class="text-xs px-2 py-2 me-2 rounded bg-gray-200">タグ・グループ</code>
-                    <span>#{{ $tagGroup->name }}</span>
+                    <span>{{ $tagGroup->name }}</span>
                 </h2>
                  {{-- 子タグ・グループ --}}
                 @if (!$tagGroup->children->isEmpty())

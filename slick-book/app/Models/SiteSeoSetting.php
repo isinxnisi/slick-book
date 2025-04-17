@@ -14,6 +14,7 @@ class SiteSeoSetting extends Model
         'canonical_base',
         'twitter_card_type',
         'custom_head_tags',
+        'google_analytics_tags',
     ];
 
     public function site()

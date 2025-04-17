@@ -29,7 +29,7 @@
 
 @yield('structured_data') {{-- JSON-LD埋め込み --}}
 </head>
-
+{!! $seo['google_analytics_tags'] ?? '' !!}
 <body class="font-sans antialiased bg-gray-200">
     <div class="min-h-screen">
 

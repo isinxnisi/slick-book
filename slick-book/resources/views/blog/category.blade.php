@@ -15,7 +15,7 @@
                 <p class="text-sm font-bold text-gray-400 mb-2">{{ $category->breadcrumbWOSelf }}</p>
                 <h2 class="content-headding flex align-item-center mb-2">
                     <code class="text-xs px-2 py-2 me-2 rounded bg-gray-200">カテゴリ</code>
-                    <span>#{{ $category->title }}</span>
+                    <span>{{ $category->title }}</span>
                 </h2>
                 <div class="ps-2">
                     <p class="text-sm font-bold text-gray-600">{{ $category->description }}</p>

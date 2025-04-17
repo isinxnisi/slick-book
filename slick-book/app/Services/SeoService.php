@@ -22,6 +22,8 @@ class SeoService
             'meta_keywords' => $this->normalizeKeywordStringAsString($site->seoSetting?->meta_keywords ?? ''),
             'canonical_url' => $canonicalUrl,
             'twitter_card_type' => $site->seoSetting?->twitter_card_type ?? 'summary',
+            'custom_head_tags' => $site->seoSetting?->custom_head_tags ?? '',
+            'google_analytics_tags' => $site->seoSetting?->google_analytics_tags ?? '',
             'noindex' => false,
         ];
 
@@ -42,6 +44,8 @@ class SeoService
                 'meta_keywords' => implode(', ', $keywords),
                 'canonical_url' => $postSeo?->canonical_url ?? route('posts.view', $post),
                 'twitter_card_type' => 'summary_large_image',
+                'custom_head_tags' => $site->seoSetting?->custom_head_tags ?? '',
+                'google_analytics_tags' => $site->seoSetting?->google_analytics_tags ?? '',
                 'noindex' => $post->is_draft ?? false,
             ];
         }
