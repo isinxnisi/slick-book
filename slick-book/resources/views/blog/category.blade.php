@@ -23,16 +23,16 @@
                 {{-- 子カテゴリ --}}
                 @if (!$category->children->isEmpty())
                     <h3 class="content-headding-sub mt-4">子カテゴリ</h3>
-                    <ul class="ps-2">
+                    <ul class="content-item-list ps-2">
                         @foreach ($category->children as $child)
                             <li class="border-1 border-gray-300 rounded mt-1">
                                 <a href="{{ route('blog.category', ['slug' => $child->slug]) }}"
-                                    class="flex align-items-center text-sm font-bold ps-2 py-2 text-gray-600 hover:bg-gray-200
+                                    class="flex align-items-center text-sm font-bold px-2 py-2 text-gray-600 hover:bg-gray-200
                                 {{ request()->routeIs('blog.category') && request()->slug === $child->slug ? 'bg-indigo-100 font-semibold border-r-4 border-indigo-300' : '' }}">
-                                    <span>{{ $child->title }}</span>
+                                    <span class="item-name">{{ $child->title }}</span>
                                     @if (!empty($child->description))
-                                        <span class="text-gray-400"><span
-                                                class="px-4">・・・</span>{{ $child->description }}</span>
+                                    <span class="item-sep text-gray-400 px-4">・・・</span>
+                                    <span class="item-desc text-gray-400">{{ $child->description }}</span>
                                     @endif
                                 </a>
                             </li>
@@ -41,7 +41,7 @@
                 @endif
                 {{-- タグ --}}
                 @if (!$categoryTags->isEmpty())
-                    <h3 class="content-headding-sub mt-4">このカテゴリに含まれるタグ</h3>
+                    <h3 class="content-headding-sub mt-4">このカテゴリ内記事に含まれるタグ</h3>
                     <ul class="tag-list mt-2 px-0 ps-2">
                         @foreach ($categoryTags as $tag)
                             @include('components.blog.partials.tag-item', [

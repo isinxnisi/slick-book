@@ -259,13 +259,16 @@ header#content-header {
 }
 
 /* -----------------------------------
-    ページコンテンツタイトル
+    ページコンテンツ
 ----------------------------------- */
 .content-headding {
     word-break: break-word;
 }
 .content-headding span {
     padding-top: 1px;
+}
+.content-item-list .item-name {
+    min-width: fit-content;
 }
 
 /* -----------------------------------
@@ -340,5 +343,24 @@ header#content-header {
 
     main > div {
         padding-top: 5px !important;
+    }
+
+    /* -----------------------------------
+        ページコンテンツ
+    ----------------------------------- */
+    .content-item-list li a {
+        display: inline-block;
+    }
+    .content-item-list .item-name {
+        width: 100%;
+        display: inline-block;
+    }
+    .content-item-list .item-sep {
+        display: none;
+    }
+    .content-item-list .item-desc {
+        width: 100%;
+        display: inline-block;
+        font-size: 11px;
     }
 }
