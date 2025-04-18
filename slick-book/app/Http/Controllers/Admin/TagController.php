@@ -109,6 +109,19 @@ class TagController extends Controller
         $groupId = $request->input('tag_group_id');
         $tagIds = $request->input('tags', []);
 
+        // 未分類グループ
+        if (empty($groupId)) {
+            // 現在属しているグループから削除
+            DB::table('tag_tag_group')
+                ->whereIn('tag_id', $tagIds)
+                ->whereNotIn('tag_group_id', function($query) {
+                    // サイトタググループからはタグを消さない
+                    $query->select('tag_group_id')->from('site_tag_group');
+                })
+                ->delete();
+            return response()->json(['message' => '並び順・所属を更新しました']);
+        }
+
         // 現在そのグループに属しているtag_id一覧
         $currentTagIds = DB::table('tag_tag_group')
             ->where('tag_group_id', $groupId)

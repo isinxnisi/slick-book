@@ -6,6 +6,7 @@ use App\Services\TagGroupService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTagGroupRequest;
 use App\Http\Requests\UpdateTagGroupRequest;
+use App\Models\Tag;
 use App\Models\TagGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -42,9 +43,15 @@ class TagGroupController extends Controller
             ->orderBy('order')
             ->get();
 
+        // 未分類タグ
+        $ungroupingTags = Tag::whereNotIn('id', function($query) {
+                $query->select('tag_id')->from('tag_tag_group');
+            })
+            ->get();
+
         $this->tagGroupService->injectPurposeIntoTags($groups);
 
-        return view('admin.tag-groups.index', compact('groups', 'purpose'));
+        return view('admin.tag-groups.index', compact('groups', 'ungroupingTags', 'purpose'));
     }
 
     /* ////////////////////////////////

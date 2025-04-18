@@ -15,6 +15,57 @@
             <div class="dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="hierarchy-tree p-4 text-gray-900 dark:text-gray-100">
                     <ul class="tree sortable" id="tag-group-list">
+                        {{-- 未分類タグ --}}
+                        <li id="tag-group-ungrouping" class="group-item cursor-pointer pl-2 py-1 rounded" data-id="">
+                            <div class="flex items-center justify-between">
+                                <div class="space-x-1">
+                                    <span>
+                                        <span class="inline-block w-4 h-3 me-0 px-0"><i class="ms-0" data-lucide="folder"></i></span>
+                                        <span class="title ms-1">未分類</span>
+                                        <span class="inline-block ms-1 w-3 h-3 rounded-full" style="background-color: gray"></span>
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-between w-auto">
+                                    <!-- タグ追加ボタン -->
+                                    <button class="add-tag-btn text-sm text-green-400 hover:text-green-500 mt-2 ml-4" data-group-id="">
+                                        <i class="inline-block text-green-400 me-2" data-lucide="square-plus"></i><span>タグ追加</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <ul class="sortable-tags dark:bg-gray-900 flex flex-wrap gap-2 ml-2 mt-2 ps-2 rounded" data-group-id="">
+                                @if ($ungroupingTags->isNotEmpty())
+                                @foreach ($ungroupingTags as $tag)
+                                @php
+                                    $purpose = $tag->purpose ?? 'public';
+                                    $styleSet = config('tags.purpose_styles')[$purpose] ?? [
+                                        'bg' => '#4f46e5',
+                                        'text' => '#fff',
+                                        'border' => '#4f46e5',
+                                    ];
+                                @endphp
+
+                                <li class="flex items-center space-x-1 tag-item active ps-2 pe-2 py-1 rounded-full text-sm ui-sortable-handle"
+                                    data-id="{{ $tag->id }}"
+                                    style="background-color: {{ $styleSet['bg'] }}; color: {{ $styleSet['text'] }}; border: 1px solid {{ $styleSet['border'] }};">
+                                    <span>{{ $tag->name }}</span>
+                                    <button class="edit-tag-btn hover:text-yellow-400"
+                                        data-id="{{ $tag->id }}"
+                                        data-name="{{ $tag->name }}"
+                                        data-slug="{{ $tag->slug }}"
+                                        data-description="{{ $tag->description }}">
+                                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                                    </button>
+                                    <button class="delete-tag-btn hover:text-red-400"
+                                        data-id="{{ $tag->id }}">
+                                        <i data-lucide="trash" class="w-4 h-4"></i>
+                                    </button>
+                                </li>
+                                @endforeach
+                                @endif
+                            </ul>
+                        </li>
+                        {{-- タググループ --}}
                         @foreach($groups as $group)
                         <x-admin.tag-groups.group-item-with-tags :group="$group" />
                         @endforeach
