@@ -43,9 +43,13 @@ class TagGroupController extends Controller
             ->orderBy('order')
             ->get();
 
-        // 未分類タグ
+        // 未分類タグ（マスタ・タググループに属していないタグ）
         $ungroupingTags = Tag::whereNotIn('id', function($query) {
-                $query->select('tag_id')->from('tag_tag_group');
+                $query->select('tag_id')->from('tag_tag_group')
+                    ->whereNotIn('tag_group_id', function($q) {
+                        // サイトタググループ以外 = マスタタググループ
+                        $q->select('tag_group_id')->from('site_tag_group');
+                    });
             })
             ->get();
 
