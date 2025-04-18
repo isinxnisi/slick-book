@@ -22,16 +22,16 @@
                 {{-- 子カテゴリ --}}
                 @if (!$tagGroups->isEmpty())
                     <h3 class="content-headding-sub mt-4">このタグが属するグループ</h3>
-                    <ul class="ps-2">
+                    <ul class="content-item-list ps-2">
                         @foreach ($tagGroups as $tagGrp)
                             <li class="border-1 border-gray-300 rounded mt-1">
                                 <a href="{{ route('blog.tagGroup', ['slug' => $tagGrp->slug]) }}"
-                                    class="flex align-items-center text-sm font-bold ps-2 py-2 text-gray-600 hover:bg-gray-200
+                                    class="flex align-items-center text-sm font-bold px-2 py-2 text-gray-600 hover:bg-gray-200
                                 {{ request()->routeIs('blog.tagGroup') && request()->slug === $tagGrp->slug ? 'bg-indigo-100 font-semibold border-r-4 border-indigo-300' : '' }}">
                                     <span>{{ $tagGrp->breadcrumb }}</span>
                                     @if (!empty($tagGrp->description))
-                                        <span class="text-gray-400"><span
-                                                class="px-4">・・・</span>{{ $tagGrp->description }}</span>
+                                    <span class="item-sep text-gray-400 px-4">・・・</span>
+                                    <span class="item-desc text-gray-400">{{ $tagGrp->description }}</span>
                                     @endif
                                 </a>
                             </li>
