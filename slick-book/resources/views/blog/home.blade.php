@@ -31,7 +31,7 @@
         $defaultStyle = $purposeStyles['public'];
         $cnt = 0;
     @endphp
-    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0">
         <div class="overflow-hidden bg-gray-100 sm:rounded-lg">
             <div class="py-6 px-0">
                 <h2 class="content-headding">新着記事</h2>

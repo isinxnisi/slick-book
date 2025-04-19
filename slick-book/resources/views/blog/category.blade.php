@@ -9,7 +9,7 @@
         @include('components.blog.ad.sp-320x50')
     </div>
 
-    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0">
         <div class="overflow-hidden bg-gray-100 sm:rounded-lg">
             <div class="py-6 px-0">
                 <p class="text-sm font-bold text-gray-400 mb-2">{{ $category->breadcrumbWOSelf }}</p>
