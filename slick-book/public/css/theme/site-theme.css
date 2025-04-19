@@ -188,7 +188,10 @@ header#content-header {
 .post-toc .toc .toc-level-6 a {
     border-color: #cfcfcf;
 }
-
+.r-side-content .post-toc .toc {
+    max-height: calc(100vh - 350px);
+    overflow-y: auto;
+}
 /* -----------------------------------
     画像
 ----------------------------------- */
@@ -269,6 +272,14 @@ header#content-header {
 }
 .content-item-list .item-name {
     min-width: fit-content;
+}
+
+.pc-tab-banner-slot {
+    display: grid;
+    overflow: hidden;
+}
+.mb-banner-slot {
+    display: none;
 }
 
 /* -----------------------------------
@@ -362,5 +373,19 @@ header#content-header {
         width: 100%;
         display: inline-block;
         font-size: 11px;
+    }
+    .pc-tab-banner-slot {
+        display: block;
+    }
+    .mb-banner-slot {
+        display: none;
+    }
+}
+@media (max-width: 648px) {
+    .pc-tab-banner-slot {
+        display: none;
+    }
+    .mb-banner-slot {
+        display: block;
     }
 }

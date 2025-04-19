@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\SeoService;
+use App\Services\BannerComponent;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
@@ -16,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(BannerComponent::class, function ($app) {
+            return new BannerComponent();
+        });
     }
 
     /**
@@ -44,5 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 'seo' => $seo,
             ]);
         });
+
+        View::share('bannerComponent', app(BannerComponent::class));
     }
 }
