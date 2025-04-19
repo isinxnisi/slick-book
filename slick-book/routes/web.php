@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\SiteSeoSettingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostTagController;
+use App\Http\Controllers\Admin\SiteBannerController;
 use App\Http\Controllers\Admin\TagGroupController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\SiteTagGroupController;
@@ -99,6 +100,13 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
 
         Route::post('/post-tags/toggle', [PostTagController::class, 'toggle']);
         Route::post('/post-tags/unlink', [PostTagController::class, 'unlink']);
+
+        Route::prefix('site-banners')->name('site-banners.')->middleware('auth')->group(function () {
+            Route::get('/', [SiteBannerController::class, 'index'])->name('index');
+            Route::post('/', [SiteBannerController::class, 'store'])->name('store');
+            Route::put('/{siteBanner}', [SiteBannerController::class, 'update'])->name('update');
+            Route::delete('/{siteBanner}', [SiteBannerController::class, 'destroy'])->name('destroy');
+        });
     });
 });
 

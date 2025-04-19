@@ -87,6 +87,13 @@
                      </a>
                 </li>
                 <li class="">
+                    <a href="{{ route('site-banners.index') }}"
+                       class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
+                              {{ request()->routeIs('site-banners.index') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
+                        バナー設定
+                    </a>
+                </li>
+                <li class="">
                     <a href="{{ route('categories.tree') }}"
                        class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
                               {{ request()->routeIs('categories.tree') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">

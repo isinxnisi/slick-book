@@ -4,12 +4,10 @@
         <x-blog.header />
     </x-slot>
 
-    {{-- SP広告 --}}
-    <div class="container justify-content-md-center mb-4 p-0 d-md-none">
-        @include('components.blog.ad.sp-320x50')
-    </div>
+    {{-- バナー: センター 位置: スロット 1 --}}
+    <x-blog.ad.banner-slot section="center" :slot-no="1" />
 
-    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
+    <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0">
         <div class="overflow-hidden bg-gray-100 sm:rounded-lg">
             <div class="py-6 px-0">
                 <h2 class="content-headding flex align-item-center mb-2">
@@ -55,10 +53,8 @@
                             'purpose' => 'public',
                         ])
                         @if ($cnt % 4 == 0)
-                        {{-- SP広告 --}}
-                        <div class="container justify-content-md-center my-2 p-0 d-md-none">
-                            @include('components.blog.ad.sp-320x100')
-                        </div>
+                        {{-- バナー: センター 位置: スロット 3 --}}
+                        <x-blog.ad.banner-slot section="center" :slot-no="3" marginClass="mt-2" />
                         @endif
                     @endforeach
                     {{ $posts->links() }}
@@ -67,32 +63,29 @@
         </div>
     @endif
 
-    {{-- SP広告 --}}
-    <div class="container justify-content-md-center mt-4 p-0 d-md-none">
-        @include('components.blog.ad.sp-320x100')
-    </div>
+    {{-- バナー: センター 位置: スロット 2 --}}
+    <x-blog.ad.banner-slot section="center" :slot-no="2" marginClass="mt-4" />
 
     <x-slot name="rAside">
         <div class="r-side-content mt-0 pb-0 sticky overflow-hidden add" style="width: 300px;">
+            {{-- バナー: 右サイド 位置: スロット 1 --}}
+            @if ($bannerComponent->hasBanner('rside', 1))
             <div class="add bg-gray-300 shadow-sm" style="width: 300px; height: 250px;">
-                @include('components.blog.ad.adm-shinobi')
+                <x-blog.ad.banner-slot section="rside" :slot-no="1" marginClass="" />
             </div>
+            @endif
+            {{-- バナー: 右サイド 位置: スロット 2 --}}
+            @if ($bannerComponent->hasBanner('rside', 2))
             <div class="overflow-hidden rounded add bg-gray-300 shadow-sm" style="width: 300px; margin-top: 20px">
-                @php
-                    $site = app('CurrentSite');
-                    $thumbnail = $site->images->firstWhere('type', 'thumbnail');
-                @endphp
-                @isset($thumbnail)
-                <img src="{{ route('secure.media', [
-                        'site' => "{$thumbnail->site_id}",
-                        'path' => "{$thumbnail->type}/" . basename($thumbnail->path),
-                    ]) }}"
-                    alt="{{ $thumbnail->alt }}">
-                @endisset
+                <x-blog.ad.banner-slot section="rside" :slot-no="2" marginClass="" />
             </div>
+            @endif
+            {{-- バナー: 右サイド 位置: スロット 3 --}}
+            @if ($bannerComponent->hasBanner('rside', 3))
             <div class="add bg-gray-300 shadow-sm" style="width: 300px; height: 250px; margin-top: 20px">
-                @include('components.blog.ad.adm-shinobi')
+                <x-blog.ad.banner-slot section="rside" :slot-no="3" marginClass="" />
             </div>
+            @endif
         </div>
     </x-slot>
 

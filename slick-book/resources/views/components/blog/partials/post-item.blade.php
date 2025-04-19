@@ -21,7 +21,7 @@
             </h2>
             <div class="d-inline-block w-100 pt-2">
                 <div class="post-tag-cat w-100 float-start">
-                    <p class="cat">{{ $post->category->breadcrumb }}</p>
+                    <p class="cat">{{ $post->category?->breadcrumb }}</p>
                     <ul class="tag-list text-left px-0">
                         @foreach ($post->tags as $tag)
                         @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => $purpose])

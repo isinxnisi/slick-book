@@ -50,10 +50,8 @@
         <x-blog.header />
     </x-slot>
 
-    {{-- SP広告 --}}
-    <div class="container justify-content-md-center mb-4 p-0 d-md-none">
-        @include('components.blog.ad.sp-320x50')
-    </div>
+    {{-- バナー: センター 位置: スロット 1 --}}
+    <x-blog.ad.banner-slot section="center" :slot-no="1" />
 
     @php
         $image = $post->postEyecatchImage;
@@ -106,10 +104,8 @@
         </article>
     </div>
 
-    {{-- SP広告 --}}
-    <div class="container justify-content-md-center mt-4 p-0 d-md-none">
-        @include('components.blog.ad.sp-320x100')
-    </div>
+    {{-- バナー: センター 位置: スロット 2 --}}
+    <x-blog.ad.banner-slot section="center" :slot-no="2" marginClass="mt-4" />
 
     <div class="container justify-content-md-center rounded-md bg-gray-100 p-8 pt-0 mt-4">
         <div class="mt-0 pt-4">
@@ -120,31 +116,31 @@
                 @php $cnt++; @endphp
                 @include('components.blog.partials.post-item', ['post' => $reccomendPost, 'purpose' => 'public'])
                 @if ($cnt % 4 == 0)
-                {{-- SP広告 --}}
-                <div class="container justify-content-md-center my-2 p-0 d-md-none">
-                    @include('components.blog.ad.sp-320x100')
-                </div>
+                {{-- バナー: センター 位置: スロット 3 --}}
+                <x-blog.ad.banner-slot section="center" :slot-no="3" marginClass="mt-2" />
                 @endif
                 @endforeach
             </div>
         </div>
     </div>
 
-    {{-- SP広告 --}}
-    <div class="container justify-content-md-center mt-4 p-0 d-md-none">
-        @include('components.blog.ad.sp-320x100')
-    </div>
+    {{-- バナー: センター 位置: スロット 2 --}}
+    <x-blog.ad.banner-slot section="center" :slot-no="2" marginClass="mt-4" />
 
     <x-slot name="rAside">
-        <div class="add bg-gray-300 overflow-hidden shadow-sm" style="width: 300px;">
-            @include('components.blog.ad.adm-shinobi')
+        {{-- バナー: 右サイド 位置: スロット 1 --}}
+        @if ($bannerComponent->hasBanner('rside', 1))
+        <div class="add bg-gray-300 shadow-sm" style="width: 300px;">
+            <x-blog.ad.banner-slot section="rside" :slot-no="1" marginClass="" />
         </div>
-        <div class="add hidden bg-gray-300 overflow-hidden shadow-sm" style="width: 300px; height: 250px; margin-top: 20px">
-        </div>
+        @endif
         <div class="r-side-content">
-            <div class="add bg-gray-300 overflow-hidden shadow-sm" style="width: 300px; height: 250px">
-                @include('components.blog.ad.adm-shinobi')
+            {{-- バナー: 右サイド 位置: スロット 3 --}}
+            @if ($bannerComponent->hasBanner('rside', 3))
+            <div class="add bg-gray-300 shadow-sm" style="width: 300px; height: 250px;">
+                <x-blog.ad.banner-slot section="rside" :slot-no="3" marginClass="" />
             </div>
+            @endif
             @if(!empty($post->toc))
             <div class="post-toc">{!! $post->toc !!}</div>
             @endif
