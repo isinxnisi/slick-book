@@ -265,6 +265,7 @@ article code {
     margin-right: 5px;
     top: -1px;
     position: relative;
+    word-break: break-all;
 }
 
 /* -----------------------------------
