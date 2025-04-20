@@ -382,7 +382,7 @@ body.scrolled header#content-header nav#nav-header {
     aside#site-side-menu {
         position: fixed;
         width: 300px;
-        height: 100%;
+        height: 100vh;
         background: white;
         top: 98px;
         left: 0;
@@ -564,5 +564,6 @@ body.scrolled header#content-header nav#nav-header {
         padding-bottom: .2rem !important;
         padding-right: .25rem !important;
         padding-left: .25rem !important;
+        width: 100%;
     }
 }

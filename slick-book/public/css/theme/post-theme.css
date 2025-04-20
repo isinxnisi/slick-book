@@ -406,11 +406,20 @@ pre.code code span {
         padding: 1em 0.5em;
     }
 
-    pre code {
+    #post-article .post-body p {
+        line-height: 1.65rem;
+    }
+
+    #post-article article code {
+        padding: 0 5px;
+        line-height: 1.2rem;
+    }
+
+    #post-article pre code {
         font-size: small;
     }
 
-    pre[class*="language-"] {
+    #post-article pre[class*="language-"] {
         padding: .5em !important;
     }
 
