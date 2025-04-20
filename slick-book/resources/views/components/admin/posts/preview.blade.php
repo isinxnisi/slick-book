@@ -19,7 +19,7 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-200 py-6">
+    <div class="min-h-screen bg-gray-200 py-6 px-2">
         @php
             $image = $post->postEyecatchImage;
         @endphp
@@ -39,14 +39,14 @@
             $purposeStyles = config('tags.post_purpose_styles');
             $defaultStyle = $purposeStyles['public'];
         @endphp
-        <div id="post-article" class="container justify-content-md-center rounded-md bg-gray-100 p-8">
+        <div id="post-article" class="container justify-content-md-center rounded-md bg-gray-100 sm:p-8">
 
-            <div class="flex px-4">
+            <div class="flex sm:px-4">
                 {{-- タイトル --}}
                 <h1 class="">{{ $post->title }}</h1>
             </div>
 
-            <div class="flex mt-2 px-4">
+            <div class="flex mt-2 sm:px-4">
                 <time class="c-postTitle__date flex-1" datetime="{{ $post->published }}" aria-hidden="true">
                     <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
                 </time>
@@ -59,7 +59,7 @@
                     @endforeach
                 </ul>
             </div>
-            <article class="post mt-4 mb-4 px-4">
+            <article class="post mt-4 mb-4 sm:px-4">
                 {{-- 本文（HTML） --}}
                 <div class="post-layout" style="gap: 2rem;">
                     <div class="post-content">
