@@ -18,13 +18,7 @@
                 @foreach ($posts as $post)
                 <div class="mt-2 border-t border-l border-gray-700 rounded-md shadow-md p-3 ms-0 text-xs">
                     <div class="row justify-content-md-center rounded-md">
-                        <div class="px-2 w-20 border-r border-gray-700 d-flex align-items-center">
-                            <time class="c-postTitle__date d-inline-block" datetime="{{ $post->published }}" aria-hidden="true">
-                                <span class="__ymd">{{ $post->published->format('y/m/d') }}</span>
-                                <span class="__time">{{ $post->published->format('H:i:s') }}</span>
-                            </time>
-                        </div>
-                        <div class="px-2 w-20 border-r border-gray-700 d-flex align-items-center">
+                        <div class="flex-1 px-2 w-20 border-r border-gray-700 d-flex align-items-center" style="width:100px;max-width:100px">
                             @php
                                 $thumbnail = $post->postThumbnailImage;
                             @endphp
@@ -40,11 +34,22 @@
                             @endif
                         </div>
                         <div class="flex-1 px-2">
+                            <div class="d-inline-block w-100 text-gray-500">
+                                <p class="pt-0 float-start">{{ Str::limit($post->category?->breadcrumb, 100) }}</p>
+                                <div class="px-0 border-none border-gray-700 float-end">
+                                    <time class="c-postTitle__date d-inline-block text-gray-500" datetime="{{ $post->published }}" aria-hidden="true">
+                                        <span class="__ymd">{{ $post->published->format('y/m/d') }}</span>
+                                        <span class="__time">{{ $post->published->format('H:i:s') }}</span>
+                                    </time>
+                                </div>
+                            </div>
                             {{-- タイトル --}}
                             <h2 class="text-lg bold">
-                                <a class="hover:text-white hover:border-b hover:border-gray-200" href="{{ route('posts.edit', $post->id) }}">{{ $post->title }}</a>
+                                <a class="hover:text-white hover:border-b hover:border-gray-200" href="{{ route('posts.edit', $post->id) }}" style="word-break: break-all;">
+                                    {{ $post->title }}
+                                </a>
                             </h2>
-                            <p class="pt-2">{{ Str::limit($post->seo_description, 100) }}</p>
+                            <p class="pt-2 text-gray-400" style="word-break: break-all;">{{ Str::limit($post->seo_description, 100) }}</p>
                         </div>
                     </div>
                 </div>
