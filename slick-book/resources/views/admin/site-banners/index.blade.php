@@ -8,7 +8,8 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h3 class="text-gray-300 bold py-2 ps-4">{{ $sites->firstWhere('id', $siteId)->name ?? '' }}</h3>
+        <!-- サイト切替タブ -->
+        <x-admin.ui.site-tabs :sites="$sites" :active-id="$siteId" />
     </x-slot>
 
     <div class="grid grid-cols-1 gap-6 text-sm text-gray-900 dark:text-gray-100" style="max-width: 1040px">
