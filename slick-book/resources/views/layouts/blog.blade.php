@@ -52,9 +52,9 @@
 
         <!-- Page Content -->
         <main class="pb-6 shadow-lg">
-            <div class="flex py-6">
+            <div class="flex py-6" style="min-height: 100vh;">
 
-                <div id="main-layout" class="flex mx-auto">
+                <div id="main-layout" class="flex mx-auto" style="opacity: 0">
                     <!-- サイドメニュー -->
                     @include('components.blog.sidebar')
 
@@ -95,6 +95,7 @@
                     }
                 });
             });
+            $('#main-layout').animate({opacity: 1}, 250);
         });
     </script>
 

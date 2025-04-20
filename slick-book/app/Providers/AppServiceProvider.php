@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\SeoService;
 use App\Services\BannerComponent;
+use App\Services\CurrentSiteDataProvider;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
@@ -36,16 +37,11 @@ class AppServiceProvider extends ServiceProvider
 
         Blade::component('layouts.blog', 'blog-layout');
 
-        // 公開レイアウトにだけ SEO 変数を注入
-        View::composer('layouts.blog', function ($view) {
-            $site = app('CurrentSite'); // 管理済み
-            $site->load('categories.children'); // eager load
-            $seo = app(SeoService::class)->generateSeoForCurrentPage($site);
-
-            $view->with([
-                'currentSite' => $site,
-                'seo' => $seo,
-            ]);
+        // 公開レイアウト
+        View::composer(['layouts.blog'], function ($view) {
+            $data = app(CurrentSiteDataProvider::class)->get();
+            $seo = app(SeoService::class)->generateSeoForCurrentPage($data['currentSite']);
+            $view->with(array_merge($data, ['seo' => $seo]));
         });
 
         View::share('bannerComponent', app(BannerComponent::class));

@@ -123,7 +123,7 @@ class TagGroup extends Model
         });
     }
 
-    public function getSiteTagGroupTree($siteId, $purpose = null, $depth = 2)
+    public static function getSiteTagGroupTree($siteId, $purpose = null, $depth = 2)
     {
         // サイトに紐づくトップレベルのタググループを取得
         $groups = self::whereNull('parent_id')
@@ -167,5 +167,28 @@ class TagGroup extends Model
         return $groups->with($withRelations)
             ->orderBy('order')
             ->get();
+    }
+
+    public static function setPostCountsForTree($groups, int $siteId, string $purpose = 'public'): void
+    {
+        foreach ($groups as $group) {
+            // eager loaded タグコレクションから purpose をフィルタ
+            $tagIds = $group->tags
+                ->where('purpose', $purpose)
+                ->pluck('id');
+
+            // 投稿件数を取得
+            $group->post_count = $tagIds->isEmpty()
+                ? 0
+                : Post::whereHas('tags', fn ($q) => $q->whereIn('tags.id', $tagIds))
+                    ->where('site_id', $siteId)
+                    ->published()
+                    ->count();
+
+            // 子にも再帰適用
+            if ($group->relationLoaded('children') && $group->children->isNotEmpty()) {
+                self::setPostCountsForTree($group->children, $siteId, $purpose);
+            }
+        }
     }
 }
