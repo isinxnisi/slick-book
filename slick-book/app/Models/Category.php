@@ -137,4 +137,23 @@ class Category extends Model
     {
         return $this->hasMany(Post::class, 'category_id');
     }
+
+    public static function setPostCountsForTree($categories, int $siteId): void
+    {
+        foreach ($categories as $category) {
+            // 自分 + 子孫の ID を取得
+            $categoryIds = $category->descendant_ids;
+
+            // 投稿件数を取得
+            $category->post_count = Post::whereIn('category_id', $categoryIds)
+                ->where('site_id', $siteId)
+                ->published()
+                ->count();
+
+            // 子カテゴリがあれば再帰
+            if ($category->relationLoaded('children') && $category->children->isNotEmpty()) {
+                self::setPostCountsForTree($category->children, $siteId);
+            }
+        }
+    }
 }

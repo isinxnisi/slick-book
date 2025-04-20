@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Category;
 use App\Models\TagGroup;
 
 class CurrentSiteDataProvider
@@ -14,9 +15,11 @@ class CurrentSiteDataProvider
             'categories' => fn ($q) => $q
                 ->whereNull('parent_id')
                 ->where('is_visible', true)
-                ->with(['children' => fn ($q2) => $q2->with('children')])
-                ->withCount('posts'),
+                ->with(['children' => fn ($q2) => $q2->with('childrenRecursive')]),
         ]);
+
+        // 投稿件数を設定
+        Category::setPostCountsForTree($site->categories, $site->id);
 
         // タググループ取得（depth:1階層）
         $tagGroups = TagGroup::getSiteTagGroupTree($site->id, 'public', 1);
