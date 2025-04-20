@@ -33,25 +33,28 @@
 <body class="font-sans antialiased bg-gray-200">
     <div class="min-h-screen">
 
-        @include('components.blog.navigation', ['pageTitle' => View::getSections()['title'] ?? ''])
-
         <!-- Page Heading -->
-        @isset($header)
-        <header id="content-header" class="sticky top-0 text-gray-200 bg-gray-700 shadow-sm">
-            <div class="mx-auto">
+        <header id="content-header" class="sticky top-0 bg-gray-700 shadow-sm">
+            @include('components.blog.navigation', ['pageTitle' => View::getSections()['title'] ?? ''])
+            <div class="mx-auto text-gray-200">
+                <button id="menu-toggle-btn" class="text-gray-300" aria-label="メニューを開く">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                @isset($header)
                 {{ $header }}
+                @endisset
             </div>
         </header>
-        @endisset
-
-        @isset($eyecatch)
-        <div class="w-100">
-            {{ $eyecatch }}
-        </div>
-        @endisset
 
         <!-- Page Content -->
         <main class="pb-6 shadow-lg">
+
+            @isset($eyecatch)
+            <div class="w-100">
+                {{ $eyecatch }}
+            </div>
+            @endisset
+
             <div class="flex py-6" style="min-height: 100vh;">
 
                 <div id="main-layout" class="flex mx-auto" style="opacity: 0">
@@ -96,6 +99,27 @@
                 });
             });
             $('#main-layout').animate({opacity: 1}, 250);
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+
+                if (scrollTop > 100) { // ← ここが基準高さ
+                    document.body.classList.add('scrolled');
+                } else {
+                    document.body.classList.remove('scrolled');
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('menu-toggle-btn');
+            const sideMenu = document.getElementById('site-side-menu');
+
+            toggleBtn?.addEventListener('click', () => {
+                sideMenu.style.display = null;
+                sideMenu.classList.toggle('rp-hidden');
+            });
         });
     </script>
 

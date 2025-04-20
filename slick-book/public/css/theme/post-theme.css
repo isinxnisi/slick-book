@@ -67,6 +67,32 @@ h1 {
 }
 
 /* -----------------------------------
+    カテゴリ
+----------------------------------- */
+
+#post-article .post-info-block {
+    display: block;
+}
+
+#post-article .post-info-block .c-postTitle__date {
+    float: right;
+    text-align: right;
+    width: 135px;
+}
+
+.cat-tag .cat {
+    font-size: small;
+    font-weight: bold;
+    font-style: italic;
+    width: calc(100% - 135px);
+    padding: .25em .75em .15em 0;
+    margin-bottom: 5px;
+    margin-right: .75em;
+    line-height: 22px;
+    float: left;
+}
+
+/* -----------------------------------
     タイトル日付
 ----------------------------------- */
 
@@ -74,10 +100,10 @@ h1 {
     border-right: 1px solid var(--color_border);
     font-weight: 500;
     line-height: 22px;
-    margin-right: .75em;
+    /* margin-right: .75em; */
     padding: .25em .75em .15em 0;
     text-align: left;
-    border-right: 1px solid #999;
+    /* border-right: 1px solid #999; */
     max-width: fit-content;
     font-size: 14px;
     font-style: italic;
@@ -200,27 +226,27 @@ article hr {
 
 /* 階層ごとのインデント */
 .toc-level-2 {
-    margin-left: 1em;
+    margin-left: 0em;
     border-color: #3b82f6;
 }
 
 .toc-level-3 {
-    margin-left: 2em;
+    margin-left: 1em;
     border-color: #26dcba;
 }
 
 .toc-level-4 {
-    margin-left: 3em;
+    margin-left: 2em;
     border-color: #cfcfcf;
 }
 
 .toc-level-5 {
-    margin-left: 4em;
+    margin-left: 3em;
     border-color: #cfcfcf;
 }
 
 .toc-level-6 {
-    margin-left: 5em;
+    margin-left: 4em;
     border-color: #cfcfcf;
 }
 
@@ -315,3 +341,77 @@ pre.code code span {
     box-shadow: inherit;
 }
 
+@media (max-width: 648px) {
+    #post-article {
+        font-size: small;
+    }
+
+    #post-article h1 {
+        font-size: x-large;
+        font-weight: bold;
+        word-break: break-word;
+    }
+
+    #post-article h2 {
+        font-size: large;
+    }
+
+    #post-article h3 {
+        font-size: medium;
+    }
+
+    #post-article h4 {
+        font-size: medium;
+    }
+
+    #post-article .post-info-block .c-postTitle__date {
+        font-size: x-small;
+        font-style: normal;
+        width: 95px;
+        margin-right: 5px;
+        padding: 0;
+        display: block;
+    }
+
+    #post-article .post-info-block .cat-tag .cat {
+        font-size: x-small;
+        font-style: normal;
+        line-height: 1.25rem;
+    }
+
+    #post-article .post-info-block .tag-list {
+        width: 100%;
+    }
+
+    #post-article .post-info-block .tag-list li.tag-item {
+        font-size: x-small !important;
+        font-weight: bold !important;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    #post-article .post-info-block .tag-list li.tag-item .tag {
+        padding: 2px 4px;
+        margin-right: 3px;
+        border-radius: 3px;
+    }
+
+    .post-item-bar {
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+    }
+
+    .toc {
+        font-size: small;
+        padding: 1em 0.5em;
+    }
+
+    pre code {
+        font-size: small;
+    }
+
+    pre[class*="language-"] {
+        padding: .5em !important;
+    }
+
+}

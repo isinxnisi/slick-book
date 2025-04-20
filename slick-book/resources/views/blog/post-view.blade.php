@@ -80,18 +80,22 @@
             <h1 class="">{{ $post->title }}</h1>
         </div>
 
-        <div class="flex mt-2">
-            <time class="c-postTitle__date flex-1" datetime="{{ $post->published }}" aria-hidden="true">
+        <div class="post-info-block mt-2">
+            <time class="c-postTitle__date" datetime="{{ $post->published }}" aria-hidden="true">
                 <span class="__ymd">{{ $post->published->format('Y/m/d H:i') }}</span>
             </time>
-            {{-- タグ一覧 --}}
-            <ul class="tag-list align-self-center">
-                @foreach ($post->tags as $tag)
-                    <li class="tag-item">
-                        @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => 'public', 'link' => true])
-                    </li>
-                @endforeach
-            </ul>
+            <div class="cat-tag">
+                {{-- カテゴリ --}}
+                <p class="cat text-gray-700">{{ $post->category?->breadcrumb }}</p>
+                {{-- タグ一覧 --}}
+                <ul class="tag-list align-self-center">
+                    @foreach ($post->tags as $tag)
+                        <li class="tag-item">
+                            @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => 'public', 'link' => true])
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
         <article class="post mt-4 mb-4">
             {{-- 本文（HTML） --}}

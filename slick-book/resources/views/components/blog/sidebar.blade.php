@@ -1,4 +1,4 @@
-<aside id="site-side-menu" class="sticky"
+<aside id="site-side-menu" class="sticky rp-hidden"
     x-data="{ open: {
         tagGroup: {{ request()->routeIs('blog.tagGroup') || request()->routeIs('blog.tag') ? 'true' : 'false' }},
         categories: {{ (request()->routeIs('blog.tagGroup') || request()->routeIs('blog.tag')) ? 'false' : 'true' }}

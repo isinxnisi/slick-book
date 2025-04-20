@@ -1,7 +1,7 @@
 
 html {
     /* overflow: hidden; */
-    background-color: #282828;
+    background-color: #2c313b;
     scroll-behavior: smooth;
 }
 nav#nav-header {
@@ -16,8 +16,8 @@ header#content-header {
     top: 0px;
     height: 39px;
     z-index: 999;
+    height: 98px;
 }
-
 
 header#content-header {
     z-index: 100;
@@ -327,15 +327,85 @@ header#content-header {
     top: 0;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 1), transparent);
 }
+header#content-header {
+    transition-duration: 0.5s;
+}
+header#content-header nav#nav-header {
+    transition-duration: 0.5s;
+    overflow: hidden;
+    opacity: 1;
+}
+body.scrolled header#content-header {
+    height: 32px;
+    transition-duration: 0.5s;
+}
+body.scrolled header#content-header nav#nav-header {
+    height: 0px;
+    opacity: 0;
+}
+#menu-toggle-btn {
+    display: none;
+}
 /* -----------------------------------
     レスポンシブ
 ----------------------------------- */
 @media (max-width: 1400px) {
-    aside#site-side-menu {
-        display: none;
+    /* -----------------------------------
+        ヘッダ・メイン
+    ----------------------------------- */
+    header#content-header {
+        z-index: 100;
+        position: fixed;
+        width: 100%;
+    }
+    nav#nav-header {
+        width: 100%;
+        height: 64px;
+        z-index: 1000;
+        top: 0;
+    }
+    #menu-toggle-btn {
+        display: inline-block;
+    }
+    main {
+        margin-top: 98px;
     }
     .content-container {
         width: calc(100% - 300px);
+    }
+    /* -----------------------------------
+        サイドメニュー
+    ----------------------------------- */
+    aside#site-side-menu.rp-hidden {
+        display: none;
+    }
+    aside#site-side-menu {
+        position: fixed;
+        width: 300px;
+        height: 100%;
+        background: white;
+        top: 98px;
+        left: 0;
+        z-index: 100;
+        transition-duration: 0.5s;
+        animation-duration: 0.15s;
+        animation-name: openSidebar;
+    }
+    body.scrolled aside#site-side-menu {
+        top: 32px;
+    }
+    @keyframes openSidebar {
+        from {
+            left: -300px;
+            opacity: 0;
+        }
+        to {
+            left: 0px;
+            opacity: 1;
+        }
+    }
+    #menu-toggle-btn {
+        padding: .3rem;
     }
 }
 
@@ -377,6 +447,7 @@ header#content-header {
     .post-info .title a {
         font-size: 14px;
         line-height: 18px;
+        padding: .25rem 0;
     }
     .post-info .tag-list li.tag-item {
         height: 15px;
@@ -395,10 +466,6 @@ header#content-header {
     .content-headding code {
         margin-bottom: 2px;
         display: inline-block;
-    }
-
-    main > div {
-        padding-top: 5px !important;
     }
 
     /* -----------------------------------
@@ -427,10 +494,75 @@ header#content-header {
     }
 }
 @media (max-width: 648px) {
+    /* -----------------------------------
+        ヘッダ・メイン
+    ----------------------------------- */
+    nav#nav-header {
+        height: 42px;
+    }
+    #nav-header .mx-auto div h2 {
+        height: 42px;
+        padding: 0 !important;
+        transform: scale(0.8);
+    }
+    header#content-header {
+        height: 75px;
+    }
+    main {
+        margin-top: 75px;
+    }
+    /* -----------------------------------
+        サイドメニュー
+    ----------------------------------- */
+    aside#site-side-menu {
+        top: 75px;
+        width: 100% !important;
+        animation-duration: 0.15s;
+        animation-name: openSidebar;
+    }
+    body.scrolled aside#site-side-menu {
+        top: 32px;
+    }
+    aside#site-side-menu .side-menu .inner-wrap {
+        max-height: calc(100vh - 250px);
+    }
+    @keyframes openSidebar {
+        from {
+            left: -100vh;
+            opacity: 0;
+        }
+        to {
+            left: 0vh;
+            opacity: 1;
+        }
+    }
+    /* -----------------------------------
+        バナー
+    ----------------------------------- */
     .pc-tab-banner-slot {
         display: none;
     }
     .mb-banner-slot {
         display: block;
+    }
+    /* -----------------------------------
+        カテゴリ・タグ・グループ
+    ----------------------------------- */
+    .content-headding {
+        font-size: large;
+    }
+    .content-headding code {
+        padding-left: .25rem;
+        padding-right: .25rem;
+    }
+    .content-headding-sub {
+        font-size: medium;
+    }
+    .content-item-list li a {
+        font-size: small;
+        padding-top: .2rem !important;
+        padding-bottom: .2rem !important;
+        padding-right: .25rem !important;
+        padding-left: .25rem !important;
     }
 }
