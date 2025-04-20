@@ -1,8 +1,11 @@
 <li>
     <a href="{{ route('blog.category', ['slug' => $category->slug]) }}"
-       class="block ps-4 py-2 text-gray-600 hover:bg-gray-200
+        class="flex items-center ps-4 py-2 text-gray-600 hover:bg-gray-200
               {{ request()->routeIs('blog.category') && request()->slug === $category->slug ? 'bg-indigo-100 font-semibold border-r-4 border-indigo-300' : '' }}">
-        {{ mb_strimwidth($category->title, 0, 20, '…', 'UTF-8') }} <span class="text-xs text-gray-500">({{ $category->post_count }})</span>
+        <span class="lh-base me-2" style="max-width: calc(100% - 50px); text-overflow: ellipsis; overflow: hidden;">
+            {{ $category->title }}
+        </span>
+        <span class="lh-base text-xs text-gray-400">({{ $category->post_count }})</span>
     </a>
 
     @if ($category->children && $category->children->count())

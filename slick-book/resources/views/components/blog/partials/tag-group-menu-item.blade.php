@@ -1,8 +1,11 @@
 <li>
     <a href="{{ route('blog.tagGroup', ['slug' => $group->slug]) }}"
-       class="block ps-4 py-2 text-gray-600 hover:bg-gray-200
+        class="flex items-center ps-4 py-2 text-gray-600 hover:bg-gray-200
               {{ request()->routeIs('blog.tagGroup') && request()->slug === $group->slug ? 'bg-indigo-100 font-semibold border-r-4 border-indigo-300' : '' }}">
-        {{ mb_strimwidth($group->name, 0, 20, '…', 'UTF-8') }} <span class="text-xs text-gray-500">({{ $group->post_count }})</span>
+        <span class="lh-base me-2" style="max-width: calc(100% - 50px); text-overflow: ellipsis; overflow: hidden;">
+            {{ $group->name }}
+        </span>
+        <span class="lh-base text-xs text-gray-500">({{ $group->post_count }})</span>
     </a>
 
     @if ($group->children && $group->children->count())
