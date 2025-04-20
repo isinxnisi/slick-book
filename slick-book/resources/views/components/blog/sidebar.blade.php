@@ -1,5 +1,8 @@
 <aside id="site-side-menu" class="sticky"
-    x-data="{ open: { dashboard: true, sites: true, tags: true, categories: true, hierarchies: true, posts: true, settings: true } }"
+    x-data="{ open: {
+        tagGroup: {{ request()->routeIs('blog.tagGroup') || request()->routeIs('blog.tag') ? 'true' : 'false' }},
+        categories: {{ (request()->routeIs('blog.tagGroup') || request()->routeIs('blog.tag')) ? 'false' : 'true' }}
+    } }"
     style="width: 300px">
     <div>
         <div class="flex font-semibold px-2 py-2 ps-2 border-b border-gray-300 justify-content-center text-gray-600">
@@ -26,25 +29,35 @@
         </div>
 
         <!-- 記事メニュー -->
-        <div class="text-sm py-4 rounded bg-white shadow-sm">
+        <div class="side-menu rounded bg-white shadow-sm">
+            <div class="inner-wrap text-sm py-4">
             <a href="{{ route('blog.home') }}"
-               class="block p-2 ps-2 text-gray-600 hover:bg-gray-200
+               class="block font-bold p-2 ps-2 text-gray-600 hover:bg-gray-200
                       {{ request()->routeIs('blog.home') ? 'border-r-4 border-indigo-100 bg-indigo-100 dark:bg-gray-200 font-semibold' : '' }}">
                 HOME
             </a>
-            <button @click="open.posts = !open.posts" class="w-full text-left mt-1 px-2 py-2 hover:bg-gray-200 flex justify-between items-center">
+            <button @click="open.categories = !open.categories"
+                    class="w-full font-bold text-left mt-1 px-2 py-2 hover:bg-gray-200 flex justify-between items-center border-t">
                 記事カテゴリ
-                <svg x-bind:class="{ 'rotate-180': open.posts }" class="h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                <svg x-bind:class="{ 'rotate-180': open.categories }" class="h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
             </button>
-            @php
-                // rootカテゴリ（親なし）だけを対象に表示
-                $categories = $currentSite->categories->where('parent_id', null)->sortBy('order');
-            @endphp
-            <ul x-show="open.posts" class="mt-2 space-y-1">
+            <ul x-show="open.categories" class="mt-2 space-y-1">
                 @foreach ($categories as $category)
                     @include('components.blog.partials.category-menu-item', ['category' => $category])
                 @endforeach
             </ul>
+            <!-- タググループ -->
+            <button @click="open.tagGroup = !open.tagGroup"
+                    class="w-full font-bold text-left mt-1 px-2 py-2 hover:bg-gray-200 flex justify-between items-center border-t">
+                タググループ
+                <svg x-bind:class="{ 'rotate-180': open.tagGroup }" class="h-4 w-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <ul x-show="open.tagGroup" class="mt-2 space-y-1">
+                @foreach ($tagGroups as $group)
+                    @include('components.blog.partials.tag-group-menu-item', ['group' => $group])
+                @endforeach
+            </ul>
+            </div>
         </div>
 
     </div>

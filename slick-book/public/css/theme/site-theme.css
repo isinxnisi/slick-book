@@ -283,6 +283,51 @@ header#content-header {
 }
 
 /* -----------------------------------
+    サイドメニュー
+----------------------------------- */
+.side-menu {
+    position: relative;
+}
+.side-menu .inner-wrap {
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Chrome, Safari, Opera 用 */
+.side-menu .inner-wrap::-webkit-scrollbar {
+    width: 0;
+}
+
+.side-menu .inner-wrap::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.side-menu::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30px;
+    /* ユーザー操作をブロックしない */
+    pointer-events: none;
+    z-index: 10;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1), transparent);
+}
+.side-menu::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30px;
+    /* ユーザー操作をブロックしない */
+    pointer-events: none;
+    z-index: 10;
+    top: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1), transparent);
+}
+/* -----------------------------------
     レスポンシブ
 ----------------------------------- */
 @media (max-width: 1400px) {

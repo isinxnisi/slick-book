@@ -10,12 +10,12 @@ use App\Services\SeoService;
 use Illuminate\Contracts\View\View;
 
 /**
- * カテゴリ Controller class
+ * タググループ Controller class
  */
 class TagGroupController extends Controller
 {
     /**
-     * カテゴリ｜プレビュー
+     * タググループ｜プレビュー
      *
      * @param string $slug
      * @return View
