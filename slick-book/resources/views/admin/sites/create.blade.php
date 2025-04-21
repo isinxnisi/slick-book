@@ -12,21 +12,37 @@
                     <div class="mb-4">
                         <label class="block text-sm">サイト名</label>
                         <x-admin.text-input name="name" type="text" class="mt-1 block w-full" :value="old('name')" required />
+                        <x-admin.input-error class="mt-2" :messages="$errors->get('name')" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm">サブタイトル</label>
+                        <x-admin.text-input name="sub_title" type="text" class="mt-1 block w-full" :value="old('sub_title', $site->sub_title)" />
+                        <x-admin.input-error class="mt-2" :messages="$errors->get('sub_title')" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm">サブメッセージ</label>
+                        <x-admin.text-input name="sub_message" type="text" class="mt-1 block w-full" :value="old('sub_message', $site->sub_message)" />
+                        <x-admin.input-error class="mt-2" :messages="$errors->get('sub_message')" />
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm">スラッグ</label>
                         <x-admin.text-input name="slug" type="text" class="mt-1 block w-full" :value="old('slug')" required />
+                        <x-admin.input-error class="mt-2" :messages="$errors->get('slug')" />
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm">ドメイン</label>
                         <x-admin.text-input name="domain" type="text" class="mt-1 block w-full" :value="old('domain')" required />
+                        <x-admin.input-error class="mt-2" :messages="$errors->get('domain')" />
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm">説明</label>
                         <x-admin.textarea name="description" class="mt-1 block w-full">{{ old('description') }}</x-admin.textarea>
+                        <x-admin.input-error class="mt-2" :messages="$errors->get('description')" />
                     </div>
 
                     @php

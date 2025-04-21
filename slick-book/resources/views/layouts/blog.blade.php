@@ -7,9 +7,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @php
     $title = trim($__env->yieldContent('title'));
+    $title = $title ? $title . ' - ' : '';
+    $title .= $seo['meta_title'] ?? $currentSite->name;
 @endphp
-    <title>{{ $title ? $title . '｜' : '' }}{{ $seo['meta_title'] ?? $currentSite->name }}</title>
-    <x-blog.meta-head :seo="$seo" :site="$currentSite" />
+    <title>{{ $title }}</title>
+    <x-blog.meta-head :seo="$seo" :site="$currentSite" :title="$title" />
 @if(!empty($seo['noindex']) && $seo['noindex'] === true)
     <meta name="robots" content="noindex, follow">
 @endif

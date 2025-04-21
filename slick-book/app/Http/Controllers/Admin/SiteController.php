@@ -43,7 +43,9 @@ class SiteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:24',
+            'sub_title' => 'nullable|string|max:100',
+            'sub_message' => 'nullable|string|max:100',
             'slug' => 'required|string|max:255|unique:sites,slug',
             'domain' => 'nullable|string|max:255|unique:sites,domain',
             'description' => 'nullable|string',
@@ -85,7 +87,9 @@ class SiteController extends Controller
     public function update(Request $request, Site $site)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:24',
+            'sub_title' => 'nullable|string|max:100',
+            'sub_message' => 'nullable|string|max:100',
             'slug' => 'required|string|max:255|unique:sites,slug,' . $site->id,
             'domain' => 'nullable|string|max:255|unique:sites,domain,' . $site->id,
             'description' => 'nullable|string',
@@ -103,7 +107,7 @@ class SiteController extends Controller
             );
         }
 
-        return redirect()->route('sites.index')->with('success', 'サイトを更新しました');
+        return redirect()->route('sites.edit', $site)->with('success', 'サイトを更新しました');
     }
 
     /**

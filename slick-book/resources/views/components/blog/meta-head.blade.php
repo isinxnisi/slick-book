@@ -1,4 +1,4 @@
-@props(['seo', 'site'])
+@props(['seo', 'site', 'title'])
 @php
     $favicon = $site->images->firstWhere('type', 'favicon');
     $ogpImage = $site->images->firstWhere('type', 'ogp');
@@ -9,7 +9,7 @@
     <meta name="description" content="{{ $seo['meta_description'] ?? $site->description }}">
     <meta name="keywords" content="{{ $seo['meta_keywords'] ?? '' }}">
     <link rel="canonical" href="{{ $seo['canonical_url'] ?? url()->current() }}">
-    <meta property="og:title" content="{{ $seo['meta_title'] ?? $site->name }}">
+    <meta property="og:title" content="{{ $title }}">
     <meta property="og:description" content="{{ $seo['meta_description'] ?? $site->description }}">
 @if ($ogpImage)
     <meta property="og:image" content="{{ route('secure.media', ['site' => $site->id, 'path' => 'ogp/' . basename($ogpImage->path)]) }}">
