@@ -42,6 +42,8 @@ class Site extends Model
 
     protected $fillable = [
         'name',
+        'sub_title',
+        'sub_message',
         'slug',
         'domain',
         'description',

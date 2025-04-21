@@ -39,7 +39,7 @@ class SeoService
             $keywords = array_unique(array_filter([...$siteKeywordsArr, ...$postKeywordsArr]));
 
             $seo = [
-                'meta_title' => $postSeo?->meta_title ?? $post->title,
+                'meta_title' => $site->seoSetting?->meta_title ?? $site->name,
                 'meta_description' => Str::limit($post->seo_description ?? '', 100),
                 'meta_keywords' => implode(', ', $keywords),
                 'canonical_url' => $postSeo?->canonical_url ?? route('posts.view', $post),
