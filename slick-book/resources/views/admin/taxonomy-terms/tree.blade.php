@@ -26,9 +26,11 @@
                         @endforeach
                     </div>
                     <div class="mt-0 mb-0 pb-2 pe-2">
+                        @isset($taxonomy)
                         <button class="edit-taxonomy-btn text-green-500 px-2 py-2 rounded hover:bg-gray-900" data-id="{{ $taxonomy->id }}">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                         </button>
+                        @endisset
                         <button id="add-taxonomy-btn" class="text-white px-2 py-2 rounded hover:bg-gray-900">
                             <i data-lucide="square-plus" class="w-4 h-4"></i>
                         </button>
@@ -52,9 +54,7 @@
 
         <!-- 右側：編集パネル -->
         <div class="ui-right-panel sm:rounded-lg" style="overflow-x: hidden;">
-            <div id="term-edit-panel"
-                class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 shadow-sm sm:rounded-lg"
-                style="display: none;">
+            <div id="term-edit-panel" class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 shadow-sm sm:rounded-lg" style="display: none;">
                 <div class="panel-header py-2 px-4 mb-0 border-b border-gray-700">
                     <h3 class="text-lg font-bold">タクソノミー項目<span class="mode-text"></span></h3>
                 </div>
@@ -94,7 +94,7 @@
             </div>
 
             <!-- タクソノミー追加・編集用パネル -->
-            <div id="taxonomy-edit-panel" class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 shadow-sm sm:rounded-lg hidden">
+            <div id="taxonomy-edit-panel" class="panel text-gray-900 dark:text-gray-100 dark:bg-gray-800 shadow-sm sm:rounded-lg" style="display: none;">
                 <div class="panel-header py-2 px-4 mb-0 border-b border-gray-700">
                     <h3 class="text-lg font-bold">タクソノミー<span class="mode-text"></span></h3>
                 </div>
