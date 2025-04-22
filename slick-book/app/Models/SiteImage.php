@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- *
+ * サイト 画像テーブル
  *
  * @property int $id
  * @property int $site_id
@@ -35,6 +35,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SiteImage whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SiteImage whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SiteImage whereVariant($value)
+ * @property int|null $post_id
+ * @property-read \App\Models\Post|null $post
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SiteImage wherePostId($value)
  * @mixin \Eloquent
  */
 class SiteImage extends Model

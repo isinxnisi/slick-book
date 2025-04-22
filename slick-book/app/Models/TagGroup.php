@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TagGroup withoutTrashed()
+ * @property-read mixed $breadcrumb_w_o_self
  * @mixin \Eloquent
  */
 class TagGroup extends Model
