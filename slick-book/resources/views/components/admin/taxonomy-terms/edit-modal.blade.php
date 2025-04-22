@@ -7,7 +7,7 @@
 ])
 
 <!-- 共通モーダル -->
-<div class="modal modal-lg fade" id="{{ $id }}" tabindex="-1" aria-labelledby="{{ $id }}Label" aria-hidden="true">
+<div class="modal fade" id="{{ $id }}" tabindex="-1" aria-labelledby="{{ $id }}Label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <div class="modal-header dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">

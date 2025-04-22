@@ -46,6 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Tag forPurpose($purpose)
  * @mixin \Eloquent
  */
 class Tag extends Model

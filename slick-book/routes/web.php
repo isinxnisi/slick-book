@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\TagGroupController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\SiteTagGroupController;
 use App\Http\Controllers\Admin\TagTagGroupController;
+use App\Http\Controllers\Admin\TaxonomyController;
+use App\Http\Controllers\Admin\TaxonomyTermsController;
 use App\Http\Controllers\Blog\HomeController as BlogHome;
 use App\Http\Controllers\Blog\PostController as BlogPostController;
 use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
@@ -74,6 +76,20 @@ Route::domain($domains['admin'])->middleware(['auth'])->group(function () {
         Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
         // 並び順の更新
         Route::post('categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder');
+
+        // タクソノミー
+        Route::resource('taxonomies', TaxonomyController::class)->except(['create', 'edit']);
+        Route::get('taxonomies/{taxonomy}', [TaxonomyController::class, 'show'])->name('taxonomies.show');
+
+        // タクソノミー・ターム
+        Route::get('taxonomy-terms/tree', [TaxonomyTermsController::class, 'tree'])->name('taxonomy-terms.tree');
+        // 静的ルートのあとに動的ルートを定義する
+        Route::get('taxonomy-terms/{taxonomyTerm}', [TaxonomyTermsController::class, 'show'])->name('taxonomy-terms.show');
+        Route::post('taxonomy-terms', [TaxonomyTermsController::class, 'store'])->name('taxonomy-terms.store');
+        Route::patch('taxonomy-terms/{taxonomyTerm}', [TaxonomyTermsController::class, 'update'])->name('taxonomy-terms.update');
+        Route::delete('taxonomy-terms/{taxonomyTerm}', [TaxonomyTermsController::class, 'destroy'])->name('taxonomy-terms.destroy');
+        Route::post('taxonomy-terms/reorder', [TaxonomyTermsController::class, 'reorder'])->name('taxonomy-terms.reorder');
+
 
         Route::get('tag-groups', [TagGroupController::class, 'index'])->name('tag-groups.index');
         Route::post('tag-groups', [TagGroupController::class, 'store'])->name('tag-groups.store');

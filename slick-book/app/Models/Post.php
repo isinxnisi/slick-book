@@ -59,6 +59,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereUpdatedUser($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post withoutTrashed()
+ * @property-read mixed $seo_description
+ * @property-read mixed $thumbnail_image
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SiteImage> $images
+ * @property-read int|null $images_count
+ * @property-read \App\Models\SiteImage|null $postEyecatchImage
+ * @property-read \App\Models\SiteImage|null $postThumbnailImage
+ * @property-read \App\Models\PostSeoSetting|null $seoSetting
+ * @property-read \App\Models\Site $site
  * @mixin \Eloquent
  */
 class Post extends Model

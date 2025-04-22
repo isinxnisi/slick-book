@@ -34,6 +34,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Site whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Site withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Site withoutTrashed()
+ * @property string|null $sub_title
+ * @property string|null $sub_message
+ * @property-read mixed $site_url
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Post> $posts
+ * @property-read int|null $posts_count
+ * @property-read \App\Models\SiteSeoSetting|null $seoSetting
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Site whereSubMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Site whereSubTitle($value)
  * @mixin \Eloquent
  */
 class Site extends Model
