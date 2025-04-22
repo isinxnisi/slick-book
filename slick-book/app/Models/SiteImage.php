@@ -46,6 +46,7 @@ class SiteImage extends Model
     protected $fillable = [
         'site_id',
         'post_id',
+        'taxonomy_term_id',
         'type',
         'path',
         'title',
@@ -64,5 +65,10 @@ class SiteImage extends Model
     public function post()
     {
         return $this->belongsTo(Post::class);
+    }
+
+    public function taxonomyTerm()
+    {
+        return $this->belongsTo(TaxonomyTerm::class);
     }
 }

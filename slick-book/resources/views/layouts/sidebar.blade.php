@@ -107,6 +107,13 @@
                         タグ設定（サイト別）
                     </a>
                 </li>
+                <li class="">
+                    <a href="{{ route('taxonomy-terms.tree') }}"
+                       class="block p-2 ps-4 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700
+                              {{ request()->routeIs('taxonomy-terms.tree') ? 'bg-gray-100 dark:bg-gray-700 font-semibold border-r-4 border-indigo-600' : '' }}">
+                        タクソノミー設定
+                    </a>
+                </li>
             </ul>
         </div>
 

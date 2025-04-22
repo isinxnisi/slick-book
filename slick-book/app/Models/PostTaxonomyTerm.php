@@ -14,9 +14,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PostTaxonomyTerm extends Model
 {
+    protected $table = 'post_taxonomy_terms';
+
     protected $fillable = [
         'post_id',
         'taxonomy_term_id',
         'order',
     ];
+
 }
