@@ -5,13 +5,20 @@
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
+    "repositories": [
+      {
+        "type": "path",
+        "url": "modules/ContentModule"
+      }
+    ],
     "require": {
         "php": "^8.2",
         "doctrine/dbal": "^4.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "league/commonmark": "^2.6",
-        "league/commonmark-ext-table": "^0.1.0"
+        "league/commonmark-ext-table": "^0.1.0",
+        "modules/content-module": "dev-develop"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
@@ -72,6 +79,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

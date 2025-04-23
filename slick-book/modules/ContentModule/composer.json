@@ -1,0 +1,12 @@
+{
+    "name": "modules/content-module",
+    "description": "ContentModule for managing diverse content types with taxonomy integration",
+    "autoload": {
+        "psr-4": {
+            "Modules\\ContentModule\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=8.0"
+    }
+}

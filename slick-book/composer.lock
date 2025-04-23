@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6254df4ab652eaafdd8d35c9bdf875f2",
+    "content-hash": "a4c7cc8ec8e0502aae0c5153702281f4",
     "packages": [
         {
             "name": "brick/math",
@@ -2214,6 +2214,28 @@
                 }
             ],
             "time": "2024-12-08T08:18:47+00:00"
+        },
+        {
+            "name": "modules/content-module",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "modules/ContentModule",
+                "reference": "b81b0f88036a8920f0d251de00bbb0897c5f35e2"
+            },
+            "require": {
+                "php": ">=8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Modules\\ContentModule\\": "src/"
+                }
+            },
+            "description": "ContentModule for managing diverse content types with taxonomy integration",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "monolog/monolog",
@@ -9574,8 +9596,10 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "modules/content-module": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
