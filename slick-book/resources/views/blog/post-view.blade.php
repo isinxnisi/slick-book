@@ -88,7 +88,7 @@
                 {{-- カテゴリ --}}
                 <p class="cat text-gray-700">{{ $post->category?->breadcrumb }}</p>
                 {{-- タグ一覧 --}}
-                <ul class="tag-list align-self-center">
+                <ul class="w-100 tag-list align-self-center">
                     @foreach ($post->tags as $tag)
                         <li class="tag-item">
                             @include('components.blog.partials.tag-item', ['tag' => $tag, 'purpose' => 'public', 'link' => true])
