@@ -45,7 +45,12 @@
                     <div class="mt-4 mb-4">
                         <button id="add-term-btn"
                             class="bg-indigo-700 text-white px-4 py-2 rounded hover:bg-indigo-800">
+                            {{-- 文言：階層構造モードのときだけ「階層を追加」 --}}
+                            @if($taxonomy->is_hierarchical)
                             ＋ 階層を追加
+                            @else
+                            ＋ 項目を追加
+                            @endif
                         </button>
                     </div>
                 </div>

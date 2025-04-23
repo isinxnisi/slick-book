@@ -6,9 +6,12 @@
             <button class="edit-term-btn text-green-500" data-id="{{ $term->id }}">
                 <i data-lucide="edit"></i>
             </button>
+            {{-- 階層構造モードのときだけ「子階層追加」 --}}
+            @if(optional($term->taxonomy)->is_hierarchical)
             <button class="add-child-term-btn text-sm text-green-400 hover:text-green-500" data-id="{{ $term->id }}">
                 <i data-lucide="square-plus"></i>
             </button>
+            @endif
         </div>
         <div class="flex items-center justify-between w-auto">
 
@@ -20,6 +23,9 @@
             </div>
         </div>
     </div>
+
+    {{-- 階層構造モードのときだけ子リストを展開 --}}
+    @if(optional($term->taxonomy)->is_hierarchical && $term->children->isNotEmpty())
     <ul class="sortable ml-4">
     @if($term->children->isNotEmpty())
         @foreach($term->children as $child)
@@ -27,4 +33,5 @@
         @endforeach
     @endif
     </ul>
+    @endif
 </li>
