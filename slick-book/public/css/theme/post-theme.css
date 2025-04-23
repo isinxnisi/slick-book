@@ -409,7 +409,10 @@ pre.code code span {
     #post-article h5 {
         font-size: medium;
     }
-
+    #post-article ul {
+        padding-left: 25px;
+        line-height: 23px;
+    }
     #post-article .post-info-block .c-postTitle__date {
         font-size: x-small;
         font-style: normal;
