@@ -16,10 +16,24 @@ class EloquentContentRepository implements ContentRepositoryInterface
         return ContentEntity::fromModel($model);
     }
 
-    public function find(int $id): ?ContentEntity
+    public function all(array $filters = []): array
     {
-        $model = ContentModel::find($id);
-        return $model ? ContentEntity::fromModel($model) : null;
+        $query = ContentModel::query();
+        if (isset($filters['type'])) {
+            $query->where('content_type', $filters['type']);
+        }
+        if (isset($filters['kind'])) {
+            $query->where('content_kind', $filters['kind']);
+        }
+        return $query->get()
+                     ->map(fn(ContentModel $m) => ContentEntity::fromModel($m))
+                     ->all();  // Collection→array<ContentEntity>
+    }
+
+    public function find(int $id): ContentEntity
+    {
+        $model = ContentModel::findOrFail($id);
+        return ContentEntity::fromModel($model);
     }
 
     public function delete(int $id): void
