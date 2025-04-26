@@ -15,7 +15,7 @@ class EloquentTaxonomySyncService implements TaxonomySyncServiceInterface
     {
         // 既存の紐付けを削除
         DB::table('content_taxonomy_term')
-            ->where('content_id', $content->id)
+            ->where('content_id', $content->getId())
             ->delete();
 
         // 新規に挿入

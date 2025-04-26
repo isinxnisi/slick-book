@@ -3,43 +3,28 @@
 namespace Modules\ContentModule\Infrastructure\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\ContentModule\Domain\Entities\ContentEntity;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 
 class ContentModel extends Model
 {
-    /**
-     * テーブル名
-     */
     protected $table = 'contents';
 
-    /**
-     * 複数代入許可カラム
-     */
     protected $fillable = [
         'site_id',
         'title',
         'slug',
         'content_type',
+        'content_kind',
+        'body',
+        'meta',
         'status',
-        'summary',
-        'thumbnail_path',
         'published_at',
         'created_by',
         'updated_by',
     ];
 
-    /**
-     * 型キャスト
-     */
     protected $casts = [
+        'meta'         => AsArrayObject::class,
         'published_at' => 'datetime',
     ];
-
-    /**
-     * Eloquent Model からドメインエンティティへ変換
-     */
-    public function toEntity(): ContentEntity
-    {
-        return ContentEntity::fromModel($this);
-    }
 }

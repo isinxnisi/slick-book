@@ -1,35 +1,38 @@
 <?php
+
 namespace App\Http\Controllers\Develop;
 
 use App\Http\Controllers\Controller;
-use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
-
-use function Psy\debug;
+use Illuminate\Http\JsonResponse;
+use Modules\ContentModule\Application\Services\ContentService;
+use Modules\ContentModule\Application\DTOs\ContentData;
 
 class ContentController extends Controller
 {
     /**
-     * Index
+     * テスト用コンテンツ作成・取得
      */
-    public function index(\Modules\ContentModule\Application\Services\ContentService $service)
+    public function index(ContentService $service): JsonResponse
     {
-        // ダミーデータ
-        $dto = \Modules\ContentModule\Application\DTOs\ContentData::fromArray([
+        // DTO を配列から生成
+        $dto = ContentData::fromArray([
             'site_id'      => 1,
             'title'        => 'テストコンテンツ',
             'slug'         => 'test-content-' . time(),
-            'content_type' => 'article',
+            'content_type' => 'slot',
+            'content_kind' => 'article',
+            'body'         => null,
+            'meta'         => [],
             'status'       => 'draft',
-            'summary'      => 'テスト用の概要',
-            'thumbnail_path' => null,
             'published_at' => null,
             'created_by'   => null,
             'updated_by'   => null,
         ]);
 
+        // ContentService で保存・取得
         $entity = $service->create($dto, []);
 
-        return response()->json($entity);
+        // エンティティを配列化して JSON レスポンス
+        return response()->json($entity->toArray());
     }
-
 }

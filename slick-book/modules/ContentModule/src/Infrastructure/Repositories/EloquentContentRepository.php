@@ -10,7 +10,7 @@ class EloquentContentRepository implements ContentRepositoryInterface
     public function save(ContentEntity $content): ContentEntity
     {
         $model = ContentModel::updateOrCreate(
-            ['id' => $content->id],
+            ['id' => $content->getId()],
             $content->toArray()
         );
         return ContentEntity::fromModel($model);

@@ -2,80 +2,118 @@
 
 namespace Modules\ContentModule\Domain\Entities;
 
+use Modules\ContentModule\Application\DTOs\ContentData;
 use Modules\ContentModule\Infrastructure\Eloquent\Models\ContentModel;
+use DateTimeImmutable;
 
 class ContentEntity
 {
-    public function __construct(
-        public int    $id,
-        public int    $site_id,
-        public string $title,
-        public string $slug,
-        public string $content_type,
-        public string $status,
-        public ?string $summary,
-        public ?string $thumbnail_path,
-        public ?\DateTime $published_at,
-        public ?int   $created_by,
-        public ?int   $updated_by,
-    ) {}
+    private ContentData $data;
 
-    /**
-     * DTO から生成
-     */
-    public static function fromData(object $data): self
+    public function __construct(ContentData $data)
     {
-        return new self(
-            0,
-            $data->site_id,
-            $data->title,
-            $data->slug,
-            $data->content_type,
-            $data->status ?? 'draft',
-            $data->summary  ?? null,
-            $data->thumbnail_path ?? null,
-            isset($data->published_at) ? new \DateTime($data->published_at) : null,
-            $data->created_by  ?? null,
-            $data->updated_by  ?? null,
-        );
+        $this->data = $data;
     }
 
     /**
-     * Eloquent モデルから生成
+     * DTO から直接エンティティを生成する
+     */
+    public static function fromData(ContentData $data): self
+    {
+        return new self($data);
+    }
+
+    /**
+     * 配列データからエンティティを生成する
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self(ContentData::fromArray($data));
+    }
+
+    /**
+     * Eloquent モデルからエンティティを生成する
      */
     public static function fromModel(ContentModel $model): self
     {
-        return new self(
-            $model->id,
-            $model->site_id,
-            $model->title,
-            $model->slug,
-            $model->content_type,
-            $model->status,
-            $model->summary,
-            $model->thumbnail_path,
-            $model->published_at?->toDateTime() ?? null,
-            $model->created_by,
-            $model->updated_by,
-        );
+        return new self(ContentData::fromArray($model->toArray()));
     }
 
     /**
-     * 配列化（リポジトリで updateOrCreate 用）
+     * エンティティを配列化する
      */
     public function toArray(): array
     {
-        return [
-            'site_id'        => $this->site_id,
-            'title'          => $this->title,
-            'slug'           => $this->slug,
-            'content_type'   => $this->content_type,
-            'status'         => $this->status,
-            'summary'        => $this->summary,
-            'thumbnail_path' => $this->thumbnail_path,
-            'published_at'   => $this->published_at?->format('Y-m-d H:i:s'),
-            'created_by'     => $this->created_by,
-            'updated_by'     => $this->updated_by,
-        ];
+        return $this->data->toArray();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->data->id;
+    }
+
+    public function getSiteId(): int
+    {
+        return $this->data->site_id;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->data->title;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->data->slug;
+    }
+
+    public function getContentType(): string
+    {
+        return $this->data->content_type;
+    }
+
+    public function getContentKind(): string
+    {
+        return $this->data->content_kind;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->data->body;
+    }
+
+    public function getMeta(): array
+    {
+        return $this->data->meta;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->data->status;
+    }
+
+    public function getPublishedAt(): ?DateTimeImmutable
+    {
+        return $this->data->published_at;
+    }
+
+    public function getCreatedBy(): ?int
+    {
+        return $this->data->created_by;
+    }
+
+    public function getUpdatedBy(): ?int
+    {
+        return $this->data->updated_by;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->data->created_at;
+    }
+
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->data->updated_at;
     }
 }
