@@ -2,31 +2,40 @@
 namespace Modules\ContentModule\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Modules\ContentModule\Application\Services\ContentService;
+use Modules\ContentModule\Application\Strategies\SlotArticleStrategy;
+use Modules\ContentModule\Application\Strategies\LayoutSeriesStrategy;
 use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
 use Modules\ContentModule\Infrastructure\Repositories\EloquentContentRepository;
-use Modules\ContentModule\Domain\Repositories\TaxonomySyncServiceInterface;
-use Modules\ContentModule\Infrastructure\Repositories\EloquentTaxonomySyncService;
 
 class ContentModuleServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // コンテンツ永続化リポジトリ
+        // Repository インターフェース → Eloquent 実装のバインド
         $this->app->bind(
             ContentRepositoryInterface::class,
             EloquentContentRepository::class
         );
 
-        // タクソノミー同期サービス
-        $this->app->bind(
-            TaxonomySyncServiceInterface::class,
-            EloquentTaxonomySyncService::class
-        );
+        // Strategy のバインドとタグ付け
+        $this->app->bind(SlotArticleStrategy::class);
+        $this->app->bind(LayoutSeriesStrategy::class);
+
+        $this->app->tag([
+            SlotArticleStrategy::class,
+            LayoutSeriesStrategy::class,
+        ], 'content.strategies');
     }
 
     public function boot(): void
     {
-        // マイグレーションロード
-        $this->loadMigrationsFrom(__DIR__ . '/../Migrations');
+        // ビューの読み込み
+        $this->loadViewsFrom(__DIR__ . '/../Resources/views', 'content-module');
+
+        // ContentService への戦略注入
+        $this->app->resolving(ContentService::class, function (ContentService $service, $app) {
+            $service->setStrategies($app->tagged('content.strategies'));
+        });
     }
 }
