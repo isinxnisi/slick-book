@@ -12,7 +12,9 @@ class CreateContentsTable extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('site_id');
+
+            $table->unsignedBigInteger('scope_key')->nullable();
+
             $table->string('title');
             $table->string('slug')->unique();
 
@@ -43,10 +45,6 @@ class CreateContentsTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign('site_id')
-                  ->references('id')
-                  ->on('sites')
-                  ->onDelete('cascade');
         });
     }
 

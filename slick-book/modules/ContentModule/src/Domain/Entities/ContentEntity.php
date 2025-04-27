@@ -52,9 +52,9 @@ class ContentEntity
         return $this->data->id;
     }
 
-    public function getSiteId(): int
+    public function getScopeKey(): ?string
     {
-        return $this->data->site_id;
+        return $this->data->scope_key;
     }
 
     public function getTitle(): string

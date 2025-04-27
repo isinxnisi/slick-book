@@ -10,7 +10,7 @@ class ContentModel extends Model
     protected $table = 'contents';
 
     protected $fillable = [
-        'site_id',
+        'scope_key',
         'title',
         'slug',
         'content_type',

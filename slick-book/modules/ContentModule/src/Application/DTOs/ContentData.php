@@ -8,7 +8,7 @@ class ContentData
 {
     public function __construct(
         public ?int $id,
-        public int $site_id,
+        public ?string $scope_key,
         public string $title,
         public string $slug,
         public string $content_type,
@@ -27,7 +27,7 @@ class ContentData
     {
         return new self(
             $data['id'] ?? null,
-            $data['site_id'],
+            $data['scope_key'] ?? null,
             $data['title'],
             $data['slug'],
             $data['content_type'],
@@ -48,20 +48,20 @@ class ContentData
     public function toArray(): array
     {
         return [
-            'id'              => $this->id,
-            'site_id'         => $this->site_id,
-            'title'           => $this->title,
-            'slug'            => $this->slug,
-            'content_type'    => $this->content_type,
-            'content_kind'    => $this->content_kind,
-            'body'            => $this->body,
-            'meta'            => $this->meta,
-            'status'          => $this->status,
-            'published_at'    => $this->published_at?->format('Y-m-d H:i:s'),
-            'created_by'      => $this->created_by,
-            'updated_by'      => $this->updated_by,
-            'created_at'      => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at'      => $this->updated_at->format('Y-m-d H:i:s'),
+            'id'           => $this->id,
+            'scope_key'    => $this->scope_key,
+            'title'        => $this->title,
+            'slug'         => $this->slug,
+            'content_type' => $this->content_type,
+            'content_kind' => $this->content_kind,
+            'body'         => $this->body,
+            'meta'         => $this->meta,
+            'status'       => $this->status,
+            'published_at' => $this->published_at?->format('Y-m-d H:i:s'),
+            'created_by'   => $this->created_by,
+            'updated_by'   => $this->updated_by,
+            'created_at'   => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at'   => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }

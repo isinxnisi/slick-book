@@ -22,6 +22,24 @@ class ContentService
         $this->strategies = $strategies;
     }
 
+    /**
+     * Ajax 用にフォーム描画で直接戦略を取り出す
+     *
+     * @param string $type
+     * @param string $kind
+     * @return ContentStrategyInterface
+     */
+    public function resolveStrategy(string $type, string $kind): ContentStrategyInterface
+    {
+        // protected な getStrategy() を呼び出して返却
+        return $this->getStrategy($type, $kind);
+    }
+
+    /**
+     * TYPE×KIND に合致するストラテジーを探す内部メソッド
+     *
+     * @throws \RuntimeException
+     */
     protected function getStrategy(string $type, string $kind): ContentStrategyInterface
     {
         foreach ($this->strategies as $s) {
@@ -33,13 +51,37 @@ class ContentService
     }
 
     /** 新規作成・更新 */
-    public function create(ContentData $data, array $taxonomyIds): ContentEntity
+    public function create(ContentData $data, array $taxonomyIds = []): ContentEntity
+    {
+        $data = $this->prepareData($data);
+        $entity = ContentEntity::fromData($data);
+        return $this->getStrategy($data->content_type, $data->content_kind)
+                    ->save($entity);
+    }
+
+    /**
+     * 更新用メソッド
+     */
+    public function update(int $id, ContentData $data, array $taxonomyIds = []): ContentEntity
+    {
+        // ID をセット
+        $data->id = $id;
+
+        // バリデーション〜永続化
+        $data = $this->prepareData($data);
+        $entity = ContentEntity::fromData($data);
+        return $this->getStrategy($data->content_type, $data->content_kind)
+                    ->save($entity);
+    }
+
+    /**
+     * validate → DTO 再生成 の共通処理
+     */
+    protected function prepareData(ContentData $data): ContentData
     {
         $strategy  = $this->getStrategy($data->content_type, $data->content_kind);
         $validated = $strategy->validate($data->toArray());
-        $dto       = ContentData::fromArray($validated);
-        $entity    = ContentEntity::fromData($dto);
-        return $strategy->save($entity);
+        return ContentData::fromArray($validated);
     }
 
     /**
@@ -69,5 +111,16 @@ class ContentService
     public function get(int $id): ContentEntity
     {
         return $this->repository->find($id);
+    }
+
+    /**
+     * 削除
+     *
+     * @param int $id
+     * @return ContentEntity
+     */
+    public function delete(int $id): void
+    {
+        $this->repository->delete($id);
     }
 }

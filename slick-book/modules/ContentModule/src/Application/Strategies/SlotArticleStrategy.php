@@ -25,7 +25,8 @@ class SlotArticleStrategy implements ContentStrategyInterface
     public function validate(array $data): array
     {
         return validator($data, [
-            'site_id'       => 'required|integer',
+            'id'            => 'nullable|integer|exists:contents,id',
+            'scope_key'     => 'nullable|string|max:64',
             'title'         => 'required|string|max:255',
             'slug'          => 'required|string|max:255|unique:contents,slug,' . ($data['id'] ?? 'NULL'),
             'body'          => 'nullable|string',
