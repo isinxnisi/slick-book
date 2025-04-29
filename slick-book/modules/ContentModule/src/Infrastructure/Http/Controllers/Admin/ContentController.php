@@ -26,7 +26,7 @@ class ContentController extends Controller
      */
     public function index(Request $request): Response
     {
-        $type  = $request->query('type', config('content.types')[0]);
+        $type  = $request->query('type', array_key_first(config('content.types')));
         $kind  = $request->query('kind');
 
         $items = $this->service->list($type, $kind);
@@ -38,35 +38,41 @@ class ContentController extends Controller
             compact('items','types','kinds','type','kind')
         );
     }
-
     /**
      * フォーム描画（Ajax 用）
      */
     public function formFields(Request $request): Response
     {
-        $data = $request->only(['type', 'kind']);
-        $dto  = ContentData::fromArray(array_merge(
-            [
-                'scope_key'    => null,
-                'title'        => '',
-                'slug'         => '',
-                'content_type' => $data['type'],
-                'content_kind' => $data['kind'],
-                'body'         => null,
-                'meta'         => [],
-                'status'       => 'draft',
-                'published_at' => null,
-                'created_by'   => null,
-                'updated_by'   => null,
-                'created_at'   => now()->format('Y-m-d H:i:s'),
-                'updated_at'   => now()->format('Y-m-d H:i:s'),
-            ],
-            $data
-        ));
+        $type = $request->query('type', '');
+        $kind = $request->query('kind', '');
 
-        $entity   = ContentEntity::fromData($dto);
-        $strategy = $this->service->resolveStrategy($data['type'], $data['kind']);
-        $html     = $strategy->renderFormFields($entity);
+        // DTO の生成（デフォルト値 + パラメータ）
+        $dto = ContentData::fromArray(array_merge([
+            'scope_key'    => null,
+            'title'        => '',
+            'slug'         => '',
+            'content_type' => $type,
+            'content_kind' => $kind,
+            'body'         => null,
+            'meta'         => [],
+            'status'       => 'draft',
+            'published_at' => null,
+            'created_by'   => null,
+            'updated_by'   => null,
+            'created_at'   => now()->format('Y-m-d H:i:s'),
+            'updated_at'   => now()->format('Y-m-d H:i:s'),
+        ], $request->only(['type','kind'])));
+
+        $entity = ContentEntity::fromData($dto);
+
+        try {
+            // Strategy がなければ例外を投げる
+            $strategy = $this->service->resolveStrategy($type, $kind);
+            $html = $strategy->renderFormFields($entity);
+        } catch (\RuntimeException $e) {
+            // フォールバック：空文字 or 汎用フォーム
+            $html = '';
+        }
 
         return response($html);
     }
@@ -80,8 +86,8 @@ class ContentController extends Controller
         $kinds = config('content.kinds');
 
         // デフォルト TYPE/KIND
-        $type = $request->query('type', $types[0]);
-        $kind = $request->query('kind', $kinds[0]);
+        $type = $request->query('type', array_key_first($types));
+        $kind = $request->query('kind', array_key_first($kinds));
 
         // Strategy の取得
         $strategy = $this->service->resolveStrategy($type, $kind);

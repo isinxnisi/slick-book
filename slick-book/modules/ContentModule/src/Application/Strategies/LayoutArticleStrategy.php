@@ -4,10 +4,10 @@ namespace Modules\ContentModule\Application\Strategies;
 
 use Modules\ContentModule\Domain\Entities\ContentEntity;
 
-class LayoutSeriesStrategy extends AbstractContentStrategy
+class LayoutArticleStrategy extends AbstractContentStrategy
 {
     public const TYPE = 'layout';
-    public const KIND = 'series';
+    public const KIND = 'article';
 
     public function validate(array $data): array
     {
@@ -18,7 +18,8 @@ class LayoutSeriesStrategy extends AbstractContentStrategy
 
     public function renderFormFields(?ContentEntity $entity = null): string
     {
-        return view('content-module::admin.contents.forms.layout_series', [
+        // Blade パーシャルをレンダー
+        return view('content-module::admin.contents.forms.layout_article', [
             'entity' => $entity,
         ])->render();
     }

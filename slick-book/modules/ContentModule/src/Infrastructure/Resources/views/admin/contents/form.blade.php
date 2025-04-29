@@ -14,7 +14,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700">TYPE</label>
                 <select id="form-type" name="content_type" class="mt-1 block w-full rounded-md border-gray-300">
-                    @foreach($types as $t)
+                    @foreach($types as $t => $label)
                         <option value="{{ $t }}" @if(old('content_type', $entity?->getContentType() ?? '') === $t) selected @endif>{{ $t }}</option>
                     @endforeach
                 </select>
@@ -23,7 +23,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700">KIND</label>
                 <select id="form-kind" name="content_kind" class="mt-1 block w-full rounded-md border-gray-300">
-                    @foreach($kinds as $k)
+                    @foreach($kinds as $k => $label)
                         <option value="{{ $k }}" @if(old('content_kind', $entity?->getContentKind() ?? '') === $k) selected @endif>{{ $k }}</option>
                     @endforeach
                 </select>
