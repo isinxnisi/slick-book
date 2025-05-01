@@ -8,8 +8,8 @@
         <div>
             <label>TYPE:</label>
             <select id="filter-type" class="border rounded p-1">
-                @foreach($types as $t)
-                    <option value="{{ $t }}" @if($t === $type) selected @endif>{{ $t }}</option>
+                @foreach($types as $t => $label)
+                    <option value="{{ $t }}" @if($t === $type) selected @endif>{{ $label }}</option>
                 @endforeach
             </select>
         </div>
@@ -17,8 +17,8 @@
             <label>KIND:</label>
             <select id="filter-kind" class="border rounded p-1">
                 <option value="">全て</option>
-                @foreach($kinds as $k)
-                    <option value="{{ $k }}" @if($k === $kind) selected @endif>{{ $k }}</option>
+                @foreach($kinds as $k => $label)
+                    <option value="{{ $k }}" @if($k === $kind) selected @endif>{{ $label }}</option>
                 @endforeach
             </select>
         </div>

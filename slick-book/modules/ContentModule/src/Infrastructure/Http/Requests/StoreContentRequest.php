@@ -4,6 +4,7 @@
 namespace Modules\ContentModule\Infrastructure\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreContentRequest extends FormRequest
 {
@@ -15,35 +16,55 @@ class StoreContentRequest extends FormRequest
 
     public function rules(): array
     {
-        // ① 既存のバリドルール（title, slug, body など）
+        // 事前準備
+        $types    = array_keys(config('content.types'));
+        $setsAll  = array_keys(config('meta_schema.sets'));
+        $mapping  = config('meta_schema.mapping');
+
+        $type     = $this->input('content_type', '');
+        $kind     = $this->input('content_kind', '');
+
+        // ベースルール
         $rules = [
             'title'         => 'required|string|max:255',
             'slug'          => 'required|string|max:255|unique:contents,slug',
-            'content_type'  => 'required|string',
-            'content_kind'  => 'required|string',
+            'content_type'  => ['required','string', Rule::in($types)],
+            'content_kind'  => [
+                'required','string',
+                // TYPE×KIND の組み合わせチェック
+                function($attr, $value, $fail) use ($mapping) {
+                    $type = request('content_type','');
+                    $key  = "{$type}.{$value}";
+                    if (! isset($mapping[$key]) && $key !== 'default') {
+                        $fail('この種別は選択できません。');
+                    }
+                },
+            ],
             'body'          => 'nullable|string',
+            'schema_set'    => [
+                'nullable','string', Rule::in($setsAll),
+                // スキーマセットがその TYPE×KIND に許可されているか
+                function($attr, $value, $fail) use ($mapping, $type, $kind) {
+                    $key     = "{$type}.{$kind}";
+                    $allowed = $mapping[$key] ?? $mapping['default'];
+                    if ($value !== null && ! in_array($value, $allowed, true)) {
+                        $fail('このスキーマセットは利用できません。');
+                    }
+                },
+            ],
             'meta'          => 'array',
-            'status'        => 'nullable|in:draft,published,scheduled',
+            'status'        => ['nullable', Rule::in(['draft','published','scheduled'])],
             'published_at'  => 'nullable|date_format:Y-m-d H:i:s',
         ];
 
-        // ② メタスキーマから該当フィールドのバリデーションを取得
-        $type   = $this->input('content_type', '');
-        $kind   = $this->input('content_kind', '');
-        $mapping = config('meta_schema.mapping');
-        $schemas = config('meta_schema.schemas');
-
-        // TYPE.KIND キー or default
+        // メタスキーマからフィールドごとのルールをマージ
         $key  = "{$type}.{$kind}";
         $sets = $mapping[$key] ?? $mapping['default'];
+        $schemas = config('meta_schema.schemas');
 
-        // 各セットのフィールド定義をマージ
         foreach ($sets as $set) {
-            if (! empty($schemas[$set]['fields'])) {
-                foreach ($schemas[$set]['fields'] as $field) {
-                    // meta.<name> => validation
-                    $rules["meta.{$field['name']}"] = $field['validation'];
-                }
+            foreach ($schemas[$set]['fields'] as $field) {
+                $rules["meta.{$field['name']}"] = $field['validation'];
             }
         }
 

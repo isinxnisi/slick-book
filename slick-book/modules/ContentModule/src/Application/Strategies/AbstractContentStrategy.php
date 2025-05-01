@@ -12,6 +12,9 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
     public const TYPE = '';
     public const KIND = '';
 
+    /** @var iterable<ContentStrategyInterface> */
+    protected iterable $strategies;
+
     public function __construct(
         protected ContentRepositoryInterface $repository
     ){}
@@ -24,6 +27,11 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
     public function supportsKind(): string
     {
         return static::KIND;
+    }
+
+    public function setStrategies(iterable $strategies): void
+    {
+        $this->strategies = $strategies;
     }
 
     public function save(ContentEntity $entity): ContentEntity
@@ -52,20 +60,35 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
         return validator($data, $this->baseRules($data))->validate();
     }
 
+    protected function getStrategy(string $type, string $kind): ContentStrategyInterface
+    {
+        foreach ($this->strategies as $s) {
+            if ($s->supportsType() === $type && $s->supportsKind() === $kind) {
+                return $s;
+            }
+        }
+        throw new \RuntimeException("No strategy for type={$type}, kind={$kind}");
+    }
+
     /**
      * TYPE×KINDに応じたスキーマセットからフィールド定義を取得
      *
      * @return array フィールド定義の配列（order 昇順ソート済み）
      */
-    protected function getMetaFields(string $type, string $kind): array
+    protected function getMetaFields(string $type, string $kind, ?string $overrideSet = null): array
     {
         // mapping と schemas を取得
         $mapping = config('meta_schema.mapping');
         $schemas = config('meta_schema.schemas');
 
-        // 対象キー
-        $key  = "{$type}.{$kind}";
-        $sets = $mapping[$key] ?? $mapping['default'];
+        // 各セット
+        if ($overrideSet && isset($schemas[$overrideSet])) {
+            $sets = [$overrideSet];
+        } else {
+            // 対象キー
+            $key  = "{$type}.{$kind}";
+            $sets = $mapping[$key] ?? $mapping['default'];
+        }
 
         // 各セットの fields をマージ
         $fields = [];
@@ -83,20 +106,20 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
     /**
      * フォーム部品をレンダリング
      */
-    public function renderFormFields(?ContentEntity $entity = null): string
+    public function renderFormFields(?ContentEntity $entity = null, ?string $schemaSet = null): string
     {
         $type   = $entity?->getContentType() ?? '';
         $kind   = $entity?->getContentKind() ?? '';
-        $fields = $this->getMetaFields($type, $kind);
+        $fields = $this->getMetaFields($type, $kind, $schemaSet);
 
         // ベースパスとビュー名の組み立て
         $viewBase   = 'content-module::admin.contents.forms.';
-        $customView = $type && $kind
+        $customView = ($type && $kind)
             ? "{$viewBase}{$type}_{$kind}"
             : "{$viewBase}_base";
 
         // カスタムビューが存在しなければ _base にフォールバック
-        $viewName = view()->exists($customView)
+        $viewName   = view()->exists($customView)
             ? $customView
             : "{$viewBase}_base";
 

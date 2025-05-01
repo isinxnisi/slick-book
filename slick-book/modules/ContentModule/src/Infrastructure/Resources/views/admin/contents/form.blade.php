@@ -1,18 +1,23 @@
-{{-- resources/views/admin/contents/form.blade.php --}}
+{{-- modules/ContentModule/resources/views/admin/contents/form.blade.php --}}
 @extends('content-module::layouts.admin')
 
 @section('content')
+@php
+    $isEdit       = isset($entity) && $entity->getId();
+    $initialType  = old('content_type', $entity?->getContentType() ?? array_key_first(config('content.types')));
+    $initialKind  = old('content_kind', $entity?->getContentKind() ?? null);
+    $initialSet   = old('schema_set', 'basic');
+    $mapping      = config('meta_schema.mapping');
+    $kindsAll     = config('content.kinds');
+    $sets         = config('meta_schema.sets');
+@endphp
+
 <div class="p-4">
     <h1 class="text-2xl font-bold mb-4">
-        コンテンツ{{ $entity && $entity->getId() ? '編集' : '作成' }}
+        コンテンツ{{ $isEdit ? '編集' : '作成' }}
     </h1>
 
-    @php
-        // 編集モードかどうか
-        $isEdit = $entity && $entity->getId();
-    @endphp
-
-    <form method="POST"
+    <form id="content-form" method="POST"
           action="{{ $isEdit
               ? route('admin.contents.update', $entity->getId())
               : route('admin.contents.store')
@@ -22,39 +27,43 @@
             @method('PUT')
         @endif
 
-        <div class="mb-4 grid grid-cols-2 gap-4">
+        <div class="mb-4 grid grid-cols-3 gap-4">
             {{-- TYPE --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">TYPE</label>
                 <select id="form-type" name="content_type" class="mt-1 block w-full rounded-md border-gray-300">
-                    @foreach($types as $t => $label)
-                        <option value="{{ $t }}"
-                            {{ old('content_type', $entity?->getContentType() ?? '') === $t ? 'selected' : '' }}>
+                    @foreach(config('content.types') as $t => $label)
+                        <option value="{{ $t }}" {{ $initialType === $t ? 'selected' : '' }}>
                             {{ $label }}
                         </option>
                     @endforeach
                 </select>
-                <x-content-module::input-error :messages="$errors->get('content_type')" class="mt-2"/>
             </div>
 
             {{-- KIND --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700">KIND</label>
                 <select id="form-kind" name="content_kind" class="mt-1 block w-full rounded-md border-gray-300">
-                    @foreach($kinds as $k => $label)
-                        <option value="{{ $k }}"
-                            {{ old('content_kind', $entity?->getContentKind() ?? '') === $k ? 'selected' : '' }}>
-                            {{ $label }}
+                    {{-- JS で初期化 --}}
+                </select>
+            </div>
+
+            {{-- スキーマセット --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">スキーマセット</label>
+                <select id="schema-set" name="schema_set" class="mt-1 block w-full rounded-md border-gray-300">
+                    @foreach($sets as $setKey => $setLabel)
+                        <option value="{{ $setKey }}" {{ $initialSet === $setKey ? 'selected' : '' }}>
+                            {{ $setLabel }}
                         </option>
                     @endforeach
                 </select>
-                <x-content-module::input-error :messages="$errors->get('content_kind')" class="mt-2"/>
             </div>
         </div>
 
-        {{-- 動的フォームフィールド --}}
+        {{-- フォームフィールド描画エリア --}}
         <div id="form-fields">
-            {!! $strategy->renderFormFields($entity) !!}
+            {!! $strategy->renderFormFields($entity ?? null, $initialSet) !!}
         </div>
 
         <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">
@@ -64,17 +73,70 @@
 </div>
 
 <script>
-    function loadFormFields() {
-        const type = document.getElementById('form-type').value;
-        const kind = document.getElementById('form-kind').value;
-        fetch(`{{ route('admin.contents.form-fields') }}?type=${type}&kind=${kind}`)
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('form-fields').innerHTML = html;
-            });
+(() => {
+    const mapping = @json($mapping);
+    const kindsAll = @json($kindsAll);
+    const typeEl = document.getElementById('form-type');
+    const kindEl = document.getElementById('form-kind');
+    const setEl = document.getElementById('schema-set');
+
+    // Type選択に応じてKindを絞り込む
+    function populateKinds(selectedType, selectedKind = null) {
+        const keys = Object.keys(mapping)
+            .filter(k => k.split('.')[0] === selectedType)
+            .map(k => k.split('.')[1]);
+        const unique = [...new Set(keys)];
+        kindEl.innerHTML = '';
+        unique.forEach(k => {
+            const opt = document.createElement('option');
+            opt.value = k;
+            opt.textContent = kindsAll[k] || k;
+            if (k === selectedKind) opt.selected = true;
+            kindEl.appendChild(opt);
+        });
     }
 
-    document.getElementById('form-type').addEventListener('change', loadFormFields);
-    document.getElementById('form-kind').addEventListener('change', loadFormFields);
+    // フォームフィールド再描画
+    function loadFormFields() {
+        const type = typeEl.value;
+        const kind = kindEl.value;
+        const schemaSet = setEl.value;
+
+        fetch(`{{ route('admin.contents.form-fields') }}?type=${type}&kind=${kind}&set=${schemaSet}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => {
+            if (res.status === 404) {
+                document.getElementById('form-fields').innerHTML =
+                    '<p class="text-red-500">この組み合わせのフォームは存在しません。</p>';
+                return Promise.reject();
+            }
+            if (!res.ok) {
+                document.getElementById('form-fields').innerHTML =
+                    '<p class="text-red-500">フォームの読み込みに失敗しました。</p>';
+                return Promise.reject();
+            }
+            return res.text();
+        })
+        .then(html => {
+            document.getElementById('form-fields').innerHTML = html;
+        })
+        .catch(() => {
+            // エラー時は既にメッセージ表示済み
+        });
+    }
+
+    // 初期描画
+    populateKinds("{{ $initialType }}", "{{ $initialKind }}");
+
+    // イベント登録
+    typeEl.addEventListener('change', () => {
+        populateKinds(typeEl.value);
+        loadFormFields();
+    });
+    kindEl.addEventListener('change', loadFormFields);
+    setEl.addEventListener('change', loadFormFields);
+})();
 </script>
 @endsection
+

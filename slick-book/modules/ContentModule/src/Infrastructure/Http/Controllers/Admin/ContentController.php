@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Modules\ContentModule\Application\Services\ContentService;
 use Modules\ContentModule\Application\DTOs\ContentData;
 use Modules\ContentModule\Domain\Entities\ContentEntity;
@@ -44,38 +46,57 @@ class ContentController extends Controller
      */
     public function formFields(Request $request): Response
     {
-        $type = $request->query('type', '');
-        $kind = $request->query('kind', '');
+        // 基本バリデーション
+        $data = $request->validate([
+            'type' => ['required','string', Rule::in(array_keys(config('content.types')))],
+            'kind' => ['required','string', function($attr,$value,$fail){
+                $mapping = config('meta_schema.mapping');
+                $type = request('type','');
+                if (! isset($mapping["{$type}.{$value}"])) {
+                    $fail('無効な種別です。');
+                }
+            }],
+            'set'  => ['nullable','string', Rule::in(array_keys(config('meta_schema.sets'))), function($attr,$value,$fail){
+                $mapping = config('meta_schema.mapping');
+                $type = request('type','');
+                $kind = request('kind','');
+                $allowed = $mapping["{$type}.{$kind}"] ?? $mapping['default'];
+                if ($value !== null && ! in_array($value, $allowed, true)) {
+                    $fail('このスキーマセットは利用できません。');
+                }
+            }],
+        ]);
 
-        // DTO の生成（デフォルト値 + パラメータ）
-        $dto = ContentData::fromArray(array_merge([
-            'scope_key'    => null,
+        // TYPE×KIND の組み合わせチェック
+        $mapping = config('meta_schema.mapping');
+        $key     = "{$data['type']}.{$data['kind']}";
+        if (! isset($mapping[$key])) {
+            abort(404, '該当するフォーム定義が見つかりません。');
+        }
+
+        // スキーマセットチェック
+        $allowed = $mapping[$key] ?? $mapping['default'];
+        if (isset($data['set']) && ! in_array($data['set'], $allowed, true)) {
+            abort(404, '該当するスキーマセットが見つかりません。');
+        }
+
+        // DTO／Entity 化
+        $dto      = ContentData::fromArray([
+            'content_type' => $data['type'],
+            'content_kind' => $data['kind'],
             'title'        => '',
             'slug'         => '',
-            'content_type' => $type,
-            'content_kind' => $kind,
             'body'         => null,
             'meta'         => [],
             'status'       => 'draft',
-            'published_at' => null,
-            'created_by'   => null,
-            'updated_by'   => null,
-            'created_at'   => now()->format('Y-m-d H:i:s'),
-            'updated_at'   => now()->format('Y-m-d H:i:s'),
-        ], $request->only(['type','kind'])));
+        ]);
+        $entity   = ContentEntity::fromData($dto);
 
-        $entity = ContentEntity::fromData($dto);
+        // フォーム生成
+        $strategy = $this->service->resolveStrategy($data['type'], $data['kind']);
+        $html     = $strategy->renderFormFields($entity, $data['set'] ?? null);
 
-        try {
-            // Strategy がなければ例外を投げる
-            $strategy = $this->service->resolveStrategy($type, $kind);
-            $html = $strategy->renderFormFields($entity);
-        } catch (\RuntimeException $e) {
-            // フォールバック：空文字 or 汎用フォーム
-            $html = '';
-        }
-
-        return response($html);
+        return response($html, 200);
     }
 
     /**
@@ -148,8 +169,16 @@ class ContentController extends Controller
     {
         $data = $request->validated();
         $dto  = ContentData::fromArray($data);
-        $this->service->create($dto, []);
-        return redirect()->route('admin.contents.index');
+
+        try {
+            $this->service->create($dto, []);
+            return redirect()->route('admin.contents.index');
+        } catch (ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        }
     }
 
     /**
@@ -160,8 +189,16 @@ class ContentController extends Controller
         $data = $request->validated();
         $data['id'] = $id;
         $dto = ContentData::fromArray($data);
-        $this->service->update($id, $dto);
-        return redirect()->route('admin.contents.index');
+
+        try {
+            $this->service->update($id, $dto, []);
+            return redirect()->route('admin.contents.index');
+        } catch (ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        }
     }
 
     /**
