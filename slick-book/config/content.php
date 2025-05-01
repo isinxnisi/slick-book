@@ -1,10 +1,9 @@
 <?php
 // config/content.php
 
-use Modules\ContentModule\Enums\ContentType;
-use Modules\ContentModule\Enums\ContentKind;
 use Modules\ContentModule\Application\Strategies\{
     SlotArticleStrategy,
+    LayoutArticleStrategy,
     LayoutSeriesStrategy,
     LayoutCollectionStrategy,
     LayoutGuidebookStrategy,
@@ -44,6 +43,7 @@ return [
      */
     'strategies' => [
         SlotArticleStrategy::class,
+        LayoutArticleStrategy::class,
         LayoutSeriesStrategy::class,
         LayoutCollectionStrategy::class,
         LayoutGuidebookStrategy::class,

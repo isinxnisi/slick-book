@@ -12,14 +12,6 @@ class LayoutSeriesStrategy extends AbstractContentStrategy
     public function validate(array $data): array
     {
         $rules = $this->baseRules($data);
-        $rules['meta.items'] = 'required|array';
         return validator($data, $rules)->validate();
-    }
-
-    public function renderFormFields(?ContentEntity $entity = null): string
-    {
-        return view('content-module::admin.contents.forms.layout_series', [
-            'entity' => $entity,
-        ])->render();
     }
 }

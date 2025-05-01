@@ -28,10 +28,10 @@ class ContentData
         return new self(
             $data['id'] ?? null,
             $data['scope_key'] ?? null,
-            $data['title'],
-            $data['slug'],
-            $data['content_type'],
-            $data['content_kind'],
+            $data['title'] ?? '',
+            $data['slug'] ?? '',
+            $data['content_type'] ?? '',
+            $data['content_kind'] ?? '',
             $data['body']  ?? null,
             $data['meta']  ?? [],
             $data['status'] ?? 'draft',
@@ -63,5 +63,13 @@ class ContentData
             'created_at'   => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at'   => $this->updated_at->format('Y-m-d H:i:s'),
         ];
+    }
+
+    /**
+     * メタ値取得
+     */
+    public function getMetaValue(string $key): mixed
+    {
+        return $this->meta[$key] ?? null;
     }
 }

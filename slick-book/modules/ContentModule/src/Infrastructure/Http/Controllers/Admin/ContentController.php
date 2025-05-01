@@ -38,6 +38,7 @@ class ContentController extends Controller
             compact('items','types','kinds','type','kind')
         );
     }
+
     /**
      * フォーム描画（Ajax 用）
      */
@@ -89,24 +90,47 @@ class ContentController extends Controller
         $type = $request->query('type', array_key_first($types));
         $kind = $request->query('kind', array_key_first($kinds));
 
+        // old() とデフォルト値をマージして DTO → Entity 化
+        $defaults = [
+            'content_type' => $type,
+            'content_kind' => $kind,
+            'title'        => '',
+            'slug'         => '',
+            'body'         => '',
+            'meta'         => [],
+            // 必要なら status, published_at なども…
+        ];
+        $input  = array_merge($defaults, $request->old() ?: []);
+        $dto    = ContentData::fromArray($input);
+        $entity = ContentEntity::fromData($dto);
+
         // Strategy の取得
         $strategy = $this->service->resolveStrategy($type, $kind);
 
         return response()->view(
             'content-module::admin.contents.form',
-            compact('types','kinds','type','kind','strategy')
+            compact('types','kinds','entity','strategy')
         );
     }
+
 
     /**
      * 編集画面
      */
-    public function edit(int $id): Response
+    public function edit(int $id, Request $request): Response
     {
-        $types  = config('content.types');
-        $kinds  = config('content.kinds');
+        $types = config('content.types');
+        $kinds = config('content.kinds');
 
-        $entity   = $this->service->get($id);
+        // 永続化済みデータを取得
+        $originalEntity = $this->service->get($id);
+        $original      = $originalEntity->toArray();
+
+        // old() があればマージ
+        $input  = array_merge($original, $request->old() ?: []);
+        $dto    = ContentData::fromArray($input);
+        $entity = ContentEntity::fromData($dto);
+
         $type     = $entity->getContentType();
         $kind     = $entity->getContentKind();
         $strategy = $this->service->resolveStrategy($type, $kind);

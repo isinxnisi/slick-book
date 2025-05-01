@@ -3,6 +3,7 @@
 
 use Modules\ContentModule\Application\Strategies\{
     SlotArticleStrategy,
+    LayoutArticleStrategy,
     LayoutSeriesStrategy,
     LayoutCollectionStrategy,
     LayoutGuidebookStrategy,
@@ -42,6 +43,7 @@ return [
      */
     'strategies' => [
         SlotArticleStrategy::class,
+        LayoutArticleStrategy::class,
         LayoutSeriesStrategy::class,
         LayoutCollectionStrategy::class,
         LayoutGuidebookStrategy::class,

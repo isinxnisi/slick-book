@@ -51,4 +51,55 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
     {
         return validator($data, $this->baseRules($data))->validate();
     }
+
+    /**
+     * TYPE×KINDに応じたスキーマセットからフィールド定義を取得
+     *
+     * @return array フィールド定義の配列（order 昇順ソート済み）
+     */
+    protected function getMetaFields(string $type, string $kind): array
+    {
+        // mapping と schemas を取得
+        $mapping = config('meta_schema.mapping');
+        $schemas = config('meta_schema.schemas');
+
+        // 対象キー
+        $key  = "{$type}.{$kind}";
+        $sets = $mapping[$key] ?? $mapping['default'];
+
+        // 各セットの fields をマージ
+        $fields = [];
+        foreach ($sets as $set) {
+            if (! empty($schemas[$set]['fields'])) {
+                $fields = array_merge($fields, $schemas[$set]['fields']);
+            }
+        }
+
+        // order キーでソート
+        usort($fields, fn($a, $b) => $a['order'] <=> $b['order']);
+        return $fields;
+    }
+
+    /**
+     * フォーム部品をレンダリング
+     */
+    public function renderFormFields(?ContentEntity $entity = null): string
+    {
+        $type   = $entity?->getContentType() ?? '';
+        $kind   = $entity?->getContentKind() ?? '';
+        $fields = $this->getMetaFields($type, $kind);
+
+        // ベースパスとビュー名の組み立て
+        $viewBase   = 'content-module::admin.contents.forms.';
+        $customView = $type && $kind
+            ? "{$viewBase}{$type}_{$kind}"
+            : "{$viewBase}_base";
+
+        // カスタムビューが存在しなければ _base にフォールバック
+        $viewName = view()->exists($customView)
+            ? $customView
+            : "{$viewBase}_base";
+
+        return view($viewName, compact('entity', 'fields'))->render();
+    }
 }

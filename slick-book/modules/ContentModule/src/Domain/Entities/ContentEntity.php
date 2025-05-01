@@ -82,6 +82,14 @@ class ContentEntity
         return $this->data->body;
     }
 
+    /**
+     * メタ値取得
+     */
+    public function getMetaValue(string $key): mixed
+    {
+        return $this->data->getMetaValue($key);
+    }
+
     public function getMeta(): array
     {
         return $this->data->meta;

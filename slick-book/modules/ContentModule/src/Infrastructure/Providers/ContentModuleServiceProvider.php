@@ -14,6 +14,7 @@ class ContentModuleServiceProvider extends ServiceProvider
     {
         // 1) デフォルト設定のマージ
         $this->mergeConfigFrom(__DIR__.'/../Config/content.php', 'content');
+        $this->mergeConfigFrom(__DIR__.'/../Config/meta_schema.php', 'meta_schema');
 
         // 2) リポジトリバインド
         $this->app->bind(
@@ -36,6 +37,11 @@ class ContentModuleServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../Config/content.php' => config_path('content.php'),
         ], 'content-config');
+
+        // メタスキーマ設定ファイルの公開タグ
+        $this->publishes([
+            __DIR__.'/../Config/meta_schema.php' => config_path('meta_schema.php'),
+        ], 'meta_schema-config');
 
         $this->publishes([
             __DIR__.'/../Config/routes/content_admin.php' => base_path('modules/ContentModule/src/Infrastructure/Config/routes/content_admin.php'),
