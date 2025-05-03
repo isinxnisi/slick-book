@@ -4,9 +4,13 @@
 namespace Modules\ContentModule\Application\Services;
 
 use Modules\ContentModule\Application\DTOs\ContentData;
+use Modules\ContentModule\Application\Jobs\ReviewContentJob;
+use Modules\ContentModule\Application\Jobs\PublishContentJob;
+use Modules\ContentModule\Application\Jobs\ArchiveContentJob;
 use Modules\ContentModule\Domain\Contracts\ContentStrategyInterface;
 use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
 use Modules\ContentModule\Domain\Entities\ContentEntity;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 class ContentService
 {
@@ -14,7 +18,8 @@ class ContentService
     protected iterable $strategies;
 
     public function __construct(
-        private ContentRepositoryInterface $repository
+        private ContentRepositoryInterface $repository,
+        private WorkflowInterface $content,
     ) {}
 
     public function setStrategies(iterable $strategies): void
@@ -33,21 +38,6 @@ class ContentService
     {
         // protected な getStrategy() を呼び出して返却
         return $this->getStrategy($type, $kind);
-    }
-
-    /**
-     * TYPE×KIND に合致するストラテジーを探す内部メソッド
-     *
-     * @throws \RuntimeException
-     */
-    protected function getStrategy(string $type, string $kind): ContentStrategyInterface
-    {
-        foreach ($this->strategies as $s) {
-            if ($s->supportsType() === $type && $s->supportsKind() === $kind) {
-                return $s;
-            }
-        }
-        throw new \RuntimeException("No strategy for type={$type}, kind={$kind}");
     }
 
     /** 新規作成・更新 */
@@ -72,6 +62,21 @@ class ContentService
         $entity = ContentEntity::fromData($data);
         return $this->getStrategy($data->content_type, $data->content_kind)
                     ->save($entity);
+    }
+
+    /**
+     * TYPE×KIND に合致するストラテジーを探す内部メソッド
+     *
+     * @throws \RuntimeException
+     */
+    protected function getStrategy(string $type, string $kind): ContentStrategyInterface
+    {
+        foreach ($this->strategies as $s) {
+            if ($s->supportsType() === $type && $s->supportsKind() === $kind) {
+                return $s;
+            }
+        }
+        throw new \RuntimeException("No strategy for type={$type}, kind={$kind}");
     }
 
     /**
@@ -122,5 +127,61 @@ class ContentService
     public function delete(int $id): void
     {
         $this->repository->delete($id);
+    }
+
+    /**
+     * レビュー待ちに遷移
+     */
+    public function toReview(int $id): ContentEntity
+    {
+        $entity = $this->repository->find($id);
+        if ($this->content->can($entity, 'to_review')) {
+            // 状態遷移
+            $this->content->apply($entity, 'to_review');
+            // 保存
+            $this->repository->save($entity);
+
+            // 非同期ジョブを dispatch
+            ReviewContentJob::dispatch($id);
+        }
+        return $entity;
+    }
+
+    /**
+     * 公開に遷移
+     */
+    public function publish(int $id): ContentEntity
+    {
+        $entity = $this->repository->find($id);
+
+        if ($this->content->can($entity, 'publish')) {
+            // 状態遷移
+            $this->content->apply($entity, 'publish');
+            // 保存
+            $this->repository->save($entity);
+
+            // 非同期ジョブを dispatch
+            PublishContentJob::dispatch($id);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * アーカイブに遷移
+     */
+    public function archive(int $id): ContentEntity
+    {
+        $entity = $this->repository->find($id);
+        if ($this->content->can($entity, 'archive')) {
+            // 状態遷移
+            $this->content->apply($entity, 'archive');
+            // 保存
+            $this->repository->save($entity);
+
+            // 非同期ジョブを dispatch
+            ArchiveContentJob::dispatch($id);
+        }
+        return $entity;
     }
 }

@@ -18,7 +18,9 @@
         "laravel/tinker": "^2.10.1",
         "league/commonmark": "^2.6",
         "league/commonmark-ext-table": "^0.1.0",
-        "modules/content-module": "dev-develop"
+        "modules/content-module": "dev-develop",
+        "symfony/event-dispatcher": "^6.4",
+        "symfony/workflow": "^7.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",

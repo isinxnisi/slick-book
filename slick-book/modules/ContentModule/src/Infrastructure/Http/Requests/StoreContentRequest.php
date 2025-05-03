@@ -16,6 +16,8 @@ class StoreContentRequest extends FormRequest
 
     public function rules(): array
     {
+        $scopeKey = $this->input('scope_key');
+
         // 事前準備
         $types    = array_keys(config('content.types'));
         $setsAll  = array_keys(config('meta_schema.sets'));
@@ -27,7 +29,11 @@ class StoreContentRequest extends FormRequest
         // ベースルール
         $rules = [
             'title'         => 'required|string|max:255',
-            'slug'          => 'required|string|max:255|unique:contents,slug',
+            'slug' => [
+                'required','string','max:255',
+                Rule::unique('contents')
+                    ->where(fn($q) => $q->where('scope_key', $scopeKey)),
+            ],
             'content_type'  => ['required','string', Rule::in($types)],
             'content_kind'  => [
                 'required','string',

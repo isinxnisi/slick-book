@@ -17,6 +17,7 @@ class UpdateContentRequest extends FormRequest
     {
         // {id} プレースホルダを使ってユニーク制約を更新時に除外
         $id = $this->route('id');
+        $scopeKey = $this->input('scope_key');
 
         // 事前準備
         $types    = array_keys(config('content.types'));
@@ -29,7 +30,12 @@ class UpdateContentRequest extends FormRequest
         // ベースルール
         $rules = [
             'title'         => 'required|string|max:255',
-            'slug'          => "required|string|max:255|unique:contents,slug,{$id}",
+            'slug' => [
+                'required','string','max:255',
+                Rule::unique('contents')
+                    ->ignore($id)
+                    ->where(fn($q) => $q->where('scope_key', $scopeKey)),
+            ],
             'content_type'  => ['required','string', Rule::in($types)],
             'content_kind'  => [
                 'required','string',

@@ -32,4 +32,13 @@ Route::prefix('admin/contents')->group(function() {
     // GET /admin/contents/form-fields?type=…&kind=…
     Route::get('form-fields', [AdminContentController::class, 'formFields'])
          ->name('admin.contents.form-fields');
+
+    Route::post('{id}/to-review', [AdminContentController::class, 'toReview'])
+        ->name('admin.contents.to_review');
+
+    Route::post('{id}/publish', [AdminContentController::class, 'publish'])
+        ->name('admin.contents.publish');
+
+    Route::post('{id}/archive', [AdminContentController::class, 'archive'])
+        ->name('admin.contents.archive');
 });

@@ -95,6 +95,12 @@ class ContentEntity
         return $this->data->meta;
     }
 
+    // 状態設定
+    public function setStatus(string $status): void
+    {
+        $this->data->status = $status;
+    }
+
     public function getStatus(): string
     {
         return $this->data->status;
