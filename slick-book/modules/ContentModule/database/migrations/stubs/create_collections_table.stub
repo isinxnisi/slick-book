@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('galleries', function (Blueprint $table) {
+        Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('scope_key')->nullable()->comment('サイト／スコープ識別子');
             $table->string('name')->comment('ギャラリー名');
@@ -20,6 +20,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('galleries');
+        Schema::dropIfExists('collections');
     }
 };
