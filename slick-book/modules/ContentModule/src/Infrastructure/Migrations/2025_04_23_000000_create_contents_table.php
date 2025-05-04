@@ -3,8 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Modules\ContentModule\Enums\ContentType;
-use Modules\ContentModule\Enums\ContentKind;
 
 class CreateContentsTable extends Migration
 {
@@ -16,27 +14,27 @@ class CreateContentsTable extends Migration
             $table->unsignedBigInteger('scope_key')->nullable();
 
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug', 255);
 
             // UI 表示軸
-            $table->enum(
-                'content_type',
-                array_map(fn(ContentType $c) => $c->value, ContentType::cases())
-            )->default(ContentType::Slot->value);
+            $table->string('content_type', 64)
+                  ->default('slot')
+                  ->comment('UI 表示軸');
 
             // 意味構造軸
-            $table->enum(
-                'content_kind',
-                array_map(fn(ContentKind $k) => $k->value, ContentKind::cases())
-            )->default(ContentKind::Article->value);
+            $table->string('content_kind', 64)
+                  ->default('article')
+                  ->comment('意味構造軸');
 
             // 本文・メタ情報
             $table->text('body')->nullable();
             $table->json('meta')->nullable();
 
-            // 公開制御
-            $table->enum('status', ['draft', 'published', 'scheduled'])
-                  ->default('draft');
+            // 公開制御ステータス
+            $table->string('status', 32)
+                  ->default('draft')
+                  ->comment('公開ステータス');
+
             $table->timestamp('published_at')->nullable();
 
             // 作成／更新者
@@ -45,11 +43,16 @@ class CreateContentsTable extends Migration
 
             $table->timestamps();
 
+            // 複合ユニークインデックスを追加
+            $table->unique(['scope_key', 'slug'], 'contents_scope_slug_unique');
         });
     }
 
     public function down(): void
     {
+        Schema::table('contents', function (Blueprint $table) {
+            $table->dropUnique('contents_scope_slug_unique');
+        });
         Schema::dropIfExists('contents');
     }
 }

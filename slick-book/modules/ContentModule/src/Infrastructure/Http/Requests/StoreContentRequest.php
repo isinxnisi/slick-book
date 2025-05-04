@@ -20,8 +20,8 @@ class StoreContentRequest extends FormRequest
 
         // 事前準備
         $types    = array_keys(config('content.types'));
-        $setsAll  = array_keys(config('meta_schema.sets'));
         $mapping  = config('meta_schema.mapping');
+        $schemas  = config('meta_schema.schemas');
 
         $type     = $this->input('content_type', '');
         $kind     = $this->input('content_kind', '');
@@ -47,17 +47,6 @@ class StoreContentRequest extends FormRequest
                 },
             ],
             'body'          => 'nullable|string',
-            'schema_set'    => [
-                'nullable','string', Rule::in($setsAll),
-                // スキーマセットがその TYPE×KIND に許可されているか
-                function($attr, $value, $fail) use ($mapping, $type, $kind) {
-                    $key     = "{$type}.{$kind}";
-                    $allowed = $mapping[$key] ?? $mapping['default'];
-                    if ($value !== null && ! in_array($value, $allowed, true)) {
-                        $fail('このスキーマセットは利用できません。');
-                    }
-                },
-            ],
             'meta'          => 'array',
             'status'        => ['nullable', Rule::in(['draft','published','scheduled'])],
             'published_at'  => 'nullable|date_format:Y-m-d H:i:s',

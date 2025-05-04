@@ -6,7 +6,6 @@
     $isEdit       = isset($entity) && $entity->getId();
     $initialType  = old('content_type', $entity?->getContentType() ?? array_key_first(config('content.types')));
     $initialKind  = old('content_kind', $entity?->getContentKind() ?? null);
-    $initialSet   = old('schema_set', 'basic');
     $mapping      = config('meta_schema.mapping');
     $kindsAll     = config('content.kinds');
     $sets         = config('meta_schema.sets');
@@ -48,22 +47,11 @@
                 </select>
             </div>
 
-            {{-- スキーマセット --}}
-            <div>
-                <label class="block text-sm font-medium text-gray-700">スキーマセット</label>
-                <select id="schema-set" name="schema_set" class="mt-1 block w-full rounded-md border-gray-300">
-                    @foreach($sets as $setKey => $setLabel)
-                        <option value="{{ $setKey }}" {{ $initialSet === $setKey ? 'selected' : '' }}>
-                            {{ $setLabel }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
         </div>
 
         {{-- フォームフィールド描画エリア --}}
         <div id="form-fields">
-            {!! $strategy->renderFormFields($entity ?? null, $initialSet) !!}
+            {!! $strategy->renderFormFields($entity ?? null) !!}
         </div>
 
         <button type="submit" class="mt-4 bg-green-500 text-white px-4 py-2 rounded">

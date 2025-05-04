@@ -94,7 +94,7 @@ class ContentController extends Controller
 
         // フォーム生成
         $strategy = $this->service->resolveStrategy($data['type'], $data['kind']);
-        $html     = $strategy->renderFormFields($entity, $data['set'] ?? null);
+        $html     = $strategy->renderFormFields($entity);
 
         return response($html, 200);
     }

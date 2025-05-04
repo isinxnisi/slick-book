@@ -75,27 +75,17 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
      *
      * @return array フィールド定義の配列（order 昇順ソート済み）
      */
-    protected function getMetaFields(string $type, string $kind, ?string $overrideSet = null): array
+    protected function getMetaFields(string $type, string $kind): array
     {
         // mapping と schemas を取得
         $mapping = config('meta_schema.mapping');
         $schemas = config('meta_schema.schemas');
+        $key     = "{$type}.{$kind}";
+        $sets    = $mapping[$key] ?? $mapping['default'];
 
-        // 各セット
-        if ($overrideSet && isset($schemas[$overrideSet])) {
-            $sets = [$overrideSet];
-        } else {
-            // 対象キー
-            $key  = "{$type}.{$kind}";
-            $sets = $mapping[$key] ?? $mapping['default'];
-        }
-
-        // 各セットの fields をマージ
         $fields = [];
         foreach ($sets as $set) {
-            if (! empty($schemas[$set]['fields'])) {
-                $fields = array_merge($fields, $schemas[$set]['fields']);
-            }
+            $fields = array_merge($fields, $schemas[$set]['fields'] ?? []);
         }
 
         // order キーでソート
@@ -106,11 +96,11 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
     /**
      * フォーム部品をレンダリング
      */
-    public function renderFormFields(?ContentEntity $entity = null, ?string $schemaSet = null): string
+    public function renderFormFields(?ContentEntity $entity = null): string
     {
         $type   = $entity?->getContentType() ?? '';
         $kind   = $entity?->getContentKind() ?? '';
-        $fields = $this->getMetaFields($type, $kind, $schemaSet);
+        $fields = $this->getMetaFields($type, $kind);
 
         // ベースパスとビュー名の組み立て
         $viewBase   = 'content-module::admin.contents.forms.';

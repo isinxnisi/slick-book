@@ -17,11 +17,6 @@
         <textarea name="body" class="mt-1 block w-full rounded-md border-gray-300" rows="3">{{ old('body', $entity?->getBody() ?? '') }}</textarea>
         <x-content-module::input-error class="mt-2" :messages="$errors->get('body')" />
     </div>
-    <div>
-        <label class="block text-sm font-medium text-gray-700">並び順 (meta.order)</label>
-        <input type="number" name="meta[order]" value="{{ old('meta.order', $entity?->getMeta()['order'] ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300" />
-        <x-content-module::input-error class="mt-2" :messages="$errors->get('meta[order]')" />
-    </div>
 </div>
 
 @foreach ($fields as $field)
@@ -84,7 +79,7 @@
                 <input
                     type="text"
                     name="meta[{{ $field['name'] }}]"
-                    value="{{ old("meta.{$field['name']}", implode(',', $entity->getMetaValue($field['name']) ?: [])) }}"
+                    value="{{ old("meta.{$field['name']}", $entity->getMetaValue($field['name']) ?: '') }}"
                     class="form-control"
                     placeholder="カンマ区切りで入力"
                 />
