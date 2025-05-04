@@ -2,8 +2,9 @@
 
 namespace Modules\ContentModule\Infrastructure\Providers;
 
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use Modules\ContentModule\Application\Services\ContentService;
 use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
 use Modules\ContentModule\Infrastructure\Repositories\EloquentContentRepository;
@@ -108,5 +109,28 @@ class ContentModuleServiceProvider extends ServiceProvider
         $this->app->resolving(ContentService::class, function (ContentService $service, $app) {
             $service->setStrategies($app->tagged('content.strategies'));
         });
+
+        // マイグレーションスタブを動的タイムスタンプ付きで公開
+        $stubPath = __DIR__ . '/../../../database/migrations/stubs';
+        $stubs = [
+            'create_collections_table.stub',
+            'create_collection_items_table.stub',
+            'create_galleries_table.stub',
+            'create_gallery_items_table.stub',
+        ];
+        $publish = [];
+        foreach ($stubs as $i => $stubFilename) {
+            $source = "{$stubPath}/{$stubFilename}";
+            if (! File::exists($source)) {
+                continue;
+            }
+            // now()+$i seconds でオフセット
+            $timestamp = now()->addSeconds($i)->format('Y_m_d_His');
+            $base      = Str::before($stubFilename, '.stub');
+            $target    = database_path("migrations/{$timestamp}_{$base}.php");
+            $publish[$source] = $target;
+        }
+
+        $this->publishes($publish, 'content-module-migrations');
     }
 }
