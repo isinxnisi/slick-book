@@ -58,6 +58,47 @@
             {{ $isEdit ? '更新' : '保存' }}
         </button>
     </form>
+
+    @if($isEdit)
+    <div class="mt-6 space-x-2">
+        {{-- ステータスごとの操作 --}}
+        @if($entity->getStatus() === 'draft')
+            <form method="POST"
+                  action="{{ route('admin.contents.to-review', $entity->getId()) }}"
+                  class="inline">
+                @csrf
+                <button type="submit"
+                        class="bg-indigo-600 text-white px-3 py-1 rounded">
+                    レビュー申請
+                </button>
+            </form>
+        @endif
+
+        @if($entity->getStatus() === 'review')
+            <form method="POST"
+                  action="{{ route('admin.contents.publish', $entity->getId()) }}"
+                  class="inline">
+                @csrf
+                <button type="submit"
+                        class="bg-green-600 text-white px-3 py-1 rounded">
+                    公開
+                </button>
+            </form>
+        @endif
+
+        @if($entity->getStatus() === 'published')
+            <form method="POST"
+                  action="{{ route('admin.contents.archive', $entity->getId()) }}"
+                  class="inline">
+                @csrf
+                <button type="submit"
+                        class="bg-gray-600 text-white px-3 py-1 rounded">
+                    アーカイブ
+                </button>
+            </form>
+        @endif
+    </div>
+    @endif
 </div>
 
 <script>

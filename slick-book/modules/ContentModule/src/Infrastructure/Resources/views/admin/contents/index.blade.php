@@ -57,6 +57,42 @@
                                 削除
                             </button>
                         </form>
+                        {{-- レビュー申請（下書き状態のみ） --}}
+                        @if($item->getStatus() === 'draft')
+                            <form method="POST"
+                                  action="{{ route('admin.contents.to-review', ['id' => $item->getId()]) }}"
+                                  style="display:inline">
+                                @csrf
+                                <button type="submit"
+                                        class="text-indigo-600 ml-2">
+                                    レビュー申請
+                                </button>
+                            </form>
+                        @endif
+                        {{-- 公開（レビュー済み状態のみ） --}}
+                        @if($item->getStatus() === 'review')
+                            <form method="POST"
+                                  action="{{ route('admin.contents.publish', ['id' => $item->getId()]) }}"
+                                  style="display:inline">
+                                @csrf
+                                <button type="submit"
+                                        class="text-green-600 ml-2">
+                                    公開
+                                </button>
+                            </form>
+                        @endif
+                        {{-- アーカイブ（公開済み状態のみ） --}}
+                        @if($item->getStatus() === 'published')
+                            <form method="POST"
+                                  action="{{ route('admin.contents.archive', ['id' => $item->getId()]) }}"
+                                  style="display:inline">
+                                @csrf
+                                <button type="submit"
+                                        class="text-gray-600 ml-2">
+                                    アーカイブ
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

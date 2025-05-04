@@ -33,12 +33,13 @@ Route::prefix('admin/contents')->group(function() {
     Route::get('form-fields', [AdminContentController::class, 'formFields'])
          ->name('admin.contents.form-fields');
 
+    // レビュー申請
     Route::post('{id}/to-review', [AdminContentController::class, 'toReview'])
-        ->name('admin.contents.to_review');
-
+            ->name('admin.contents.to-review');
+    // 公開
     Route::post('{id}/publish', [AdminContentController::class, 'publish'])
-        ->name('admin.contents.publish');
-
+            ->name('admin.contents.publish');
+    // アーカイブ
     Route::post('{id}/archive', [AdminContentController::class, 'archive'])
-        ->name('admin.contents.archive');
+            ->name('admin.contents.archive');
 });

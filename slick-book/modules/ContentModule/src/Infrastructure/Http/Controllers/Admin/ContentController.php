@@ -210,4 +210,37 @@ class ContentController extends Controller
         return redirect()->route('admin.contents.index')
                          ->with('status', '削除しました');
     }
+
+    /**
+     * レビュー申請
+     */
+    public function toReview(int $id): RedirectResponse
+    {
+        $entity = $this->service->get($id);
+        $this->service->toReview($id);
+        return redirect()->back()
+                         ->with('status', 'レビューを申請しました');
+    }
+
+    /**
+     * 公開
+     */
+    public function publish(int $id): RedirectResponse
+    {
+        $entity = $this->service->get($id);
+        $this->service->publish($id);
+        return redirect()->back()
+                         ->with('status', '公開しました');
+    }
+
+    /**
+     * アーカイブ
+     */
+    public function archive(int $id): RedirectResponse
+    {
+        $entity = $this->service->get($id);
+        $this->service->archive($id);
+        return redirect()->back()
+                         ->with('status', 'アーカイブしました');
+    }
 }
