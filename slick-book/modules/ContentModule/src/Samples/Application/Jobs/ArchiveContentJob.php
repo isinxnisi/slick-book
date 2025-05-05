@@ -1,14 +1,13 @@
 <?php
 
-namespace Modules\ContentModule\Application\Jobs;
+namespace Modules\ContentModule\Samples\Application\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
-use Modules\ContentModule\Events\ContentArchived;
 use Illuminate\Support\Facades\Cache;
+use Modules\ContentModule\Core\Domain\Repositories\ContentRepositoryInterface;
 
 class ArchiveContentJob implements ShouldQueue
 {

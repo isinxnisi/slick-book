@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\ContentModule\Application\DTOs;
+namespace Modules\ContentModule\Core\Application\DTOs;
 
 use DateTimeImmutable;
 

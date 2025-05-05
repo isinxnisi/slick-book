@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\ContentModule\Infrastructure\Repositories;
+namespace Modules\ContentModule\Core\Infrastructure\Eloquent\Repositories;
 
 use Illuminate\Support\Facades\Schema;
-use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
-use Modules\ContentModule\Domain\Entities\ContentEntity;
-use Modules\ContentModule\Application\DTOs\ContentData;
-use Modules\ContentModule\Infrastructure\Eloquent\Models\ContentModel;
+use Modules\ContentModule\Core\Domain\Repositories\ContentRepositoryInterface;
+use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Core\Application\DTOs\ContentData;
+use Modules\ContentModule\Core\Infrastructure\Eloquent\Models\ContentModel;
 
 class EloquentContentRepository implements ContentRepositoryInterface
 {

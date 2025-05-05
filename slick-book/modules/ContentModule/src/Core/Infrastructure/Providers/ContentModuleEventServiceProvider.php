@@ -1,16 +1,14 @@
 <?php
 
-namespace Modules\ContentModule\Infrastructure\Providers;
+namespace Modules\ContentModule\Core\Infrastructure\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\ContentModule\Events\ContentStateChanged;
-use Modules\ContentModule\Listeners\DispatchStateJobs;
+use Modules\ContentModule\Core\Events\ContentStateChanged;
+use Modules\ContentModule\Samples\Listeners\DispatchStateJobs;
 
 class ContentModuleEventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        ContentStateChanged::class => [
-            DispatchStateJobs::class,
-        ],
+        // ContentStateChanged::class => [/* no core listener here */],
     ];
 }

@@ -1,7 +1,6 @@
 <?php
-// modules/ContentModule/src/Infrastructure/Http/Requests/StoreContentRequest.php
 
-namespace Modules\ContentModule\Infrastructure\Http\Requests;
+namespace Modules\ContentModule\Samples\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

@@ -1,9 +1,8 @@
 <?php
-// modules/ContentModule/src/Infrastructure/Config/routes/content_admin.php
 
 use Illuminate\Support\Facades\Route;
-use Modules\ContentModule\Infrastructure\Http\Controllers\Admin\ContentController as AdminContentController;
-use Modules\ContentModule\Infrastructure\Http\Controllers\Front\ContentFrontController;
+use Modules\ContentModule\Samples\Http\Controllers\Admin\ContentController as AdminContentController;
+use Modules\ContentModule\Samples\Http\Controllers\Front\ContentFrontController;
 
 Route::prefix('admin/contents')->group(function() {
     // /admin/contents/

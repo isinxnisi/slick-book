@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\ContentModule\Listeners;
+namespace Modules\ContentModule\Samples\Listeners;
 
-use Modules\ContentModule\Events\ContentStateChanged;
-use Modules\ContentModule\Application\Jobs\ReviewContentJob;
-use Modules\ContentModule\Application\Jobs\PublishContentJob;
-use Modules\ContentModule\Application\Jobs\ArchiveContentJob;
+use Modules\ContentModule\Core\Events\ContentStateChanged;
+use Modules\ContentModule\Samples\Application\Jobs\ReviewContentJob;
+use Modules\ContentModule\Samples\Application\Jobs\PublishContentJob;
+use Modules\ContentModule\Samples\Application\Jobs\ArchiveContentJob;
 
 class DispatchStateJobs
 {

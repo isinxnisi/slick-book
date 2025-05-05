@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\ContentModule\Infrastructure\Http\Controllers\Admin;
+namespace Modules\ContentModule\Samples\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -8,11 +8,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
-use Modules\ContentModule\Application\Services\ContentService;
-use Modules\ContentModule\Application\DTOs\ContentData;
-use Modules\ContentModule\Domain\Entities\ContentEntity;
-use Modules\ContentModule\Infrastructure\Http\Requests\StoreContentRequest;
-use Modules\ContentModule\Infrastructure\Http\Requests\UpdateContentRequest;
+use Modules\ContentModule\Core\Application\Services\ContentService;
+use Modules\ContentModule\Core\Application\DTOs\ContentData;
+use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Samples\Http\Requests\StoreContentRequest;
+use Modules\ContentModule\Samples\Http\Requests\UpdateContentRequest;
 
 class ContentController extends Controller
 {

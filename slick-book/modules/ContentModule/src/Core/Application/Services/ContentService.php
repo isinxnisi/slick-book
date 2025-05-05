@@ -1,13 +1,12 @@
 <?php
-// modules/ContentModule/src/Application/Services/ContentService.php
 
-namespace Modules\ContentModule\Application\Services;
+namespace Modules\ContentModule\Core\Application\Services;
 
-use Modules\ContentModule\Application\DTOs\ContentData;
-use Modules\ContentModule\Domain\Contracts\ContentStrategyInterface;
-use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
-use Modules\ContentModule\Domain\Entities\ContentEntity;
-use Modules\ContentModule\Events\ContentStateChanged;
+use Modules\ContentModule\Core\Application\DTOs\ContentData;
+use Modules\ContentModule\Core\Domain\Contracts\ContentStrategyInterface;
+use Modules\ContentModule\Core\Domain\Repositories\ContentRepositoryInterface;
+use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Core\Events\ContentStateChanged;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 class ContentService

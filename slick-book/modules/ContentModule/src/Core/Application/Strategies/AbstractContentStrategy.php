@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\ContentModule\Application\Strategies;
+namespace Modules\ContentModule\Core\Application\Strategies;
 
-use Modules\ContentModule\Domain\Contracts\ContentStrategyInterface;
-use Modules\ContentModule\Domain\Entities\ContentEntity;
-use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
+use Modules\ContentModule\Core\Domain\Contracts\ContentStrategyInterface;
+use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Core\Domain\Repositories\ContentRepositoryInterface;
 
 abstract class AbstractContentStrategy implements ContentStrategyInterface
 {

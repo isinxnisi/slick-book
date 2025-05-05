@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\ContentModule\Domain\Entities;
+namespace Modules\ContentModule\Core\Domain\Entities;
 
-use Modules\ContentModule\Application\DTOs\ContentData;
-use Modules\ContentModule\Infrastructure\Eloquent\Models\ContentModel;
+use Modules\ContentModule\Core\Application\DTOs\ContentData;
+use Modules\ContentModule\Core\Infrastructure\Eloquent\Models\ContentModel;
 use DateTimeImmutable;
 
 class ContentEntity

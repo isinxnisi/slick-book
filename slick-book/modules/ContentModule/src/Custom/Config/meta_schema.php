@@ -1,5 +1,4 @@
 <?php
-// modules/ContentModule/config/meta_schema.php
 
 return [
 

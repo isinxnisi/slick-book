@@ -1,5 +1,4 @@
 <?php
-// modules/ContentModule/config/workflow.php
 
 return [
 
@@ -12,7 +11,7 @@ return [
 
         // 対象エンティティクラス
         'supports' => [
-            Modules\ContentModule\Domain\Entities\ContentEntity::class,
+            Modules\ContentModule\Core\Domain\Entities\ContentEntity::class,
         ],
 
         // 定義可能な状態

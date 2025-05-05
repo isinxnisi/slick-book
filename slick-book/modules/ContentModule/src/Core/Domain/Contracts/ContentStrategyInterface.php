@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\ContentModule\Domain\Contracts;
+namespace Modules\ContentModule\Core\Domain\Contracts;
 
-use Modules\ContentModule\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
 
 interface ContentStrategyInterface
 {

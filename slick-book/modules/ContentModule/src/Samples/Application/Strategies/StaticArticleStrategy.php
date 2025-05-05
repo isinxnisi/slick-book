@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\ContentModule\Application\Strategies;
+namespace Modules\ContentModule\Samples\Application\Strategies;
 
-use Modules\ContentModule\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Core\Application\Strategies\AbstractContentStrategy;
 
 class StaticArticleStrategy extends AbstractContentStrategy
 {

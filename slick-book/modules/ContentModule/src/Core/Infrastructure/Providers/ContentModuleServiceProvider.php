@@ -1,29 +1,29 @@
 <?php
 
-namespace Modules\ContentModule\Infrastructure\Providers;
+namespace Modules\ContentModule\Core\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use Modules\ContentModule\Application\Services\ContentService;
-use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
-use Modules\ContentModule\Infrastructure\Repositories\EloquentContentRepository;
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Modules\ContentModule\Infrastructure\Providers\ContentModuleEventServiceProvider;
+use Modules\ContentModule\Core\Application\Services\ContentService;
+use Modules\ContentModule\Core\Domain\Repositories\ContentRepositoryInterface;
+use Modules\ContentModule\Core\Infrastructure\Eloquent\Repositories\EloquentContentRepository;
+use Modules\ContentModule\Core\Infrastructure\Providers\ContentModuleEventServiceProvider;
 
 class ContentModuleServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         // 1) デフォルト設定のマージ
-        $this->mergeConfigFrom(__DIR__.'/../Config/content.php', 'content');
-        $this->mergeConfigFrom(__DIR__.'/../Config/meta_schema.php', 'meta_schema');
-        $this->mergeConfigFrom(__DIR__.'/../Config/workflow.php', 'workflow');
+        $this->mergeConfigFrom(__DIR__.'/../../../Custom/Config/content.php', 'content');
+        $this->mergeConfigFrom(__DIR__.'/../../../Custom/Config/meta_schema.php', 'meta_schema');
+        $this->mergeConfigFrom(__DIR__.'/../../../Custom/Config/workflow.php', 'workflow');
 
         // 2) リポジトリバインド
         $this->app->bind(
@@ -78,29 +78,29 @@ class ContentModuleServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../../../../database/migrations');
 
         // 設定ファイルの公開タグ
         $this->publishes([
-            __DIR__.'/../Config/content.php' => config_path('content.php'),
+            __DIR__.'/../../../Custom/Config/content.php' => config_path('content.php'),
         ], 'content-config');
 
         // メタスキーマ設定ファイルの公開タグ
         $this->publishes([
-            __DIR__.'/../Config/meta_schema.php' => config_path('meta_schema.php'),
+            __DIR__.'/../../../Custom/Config/meta_schema.php' => config_path('meta_schema.php'),
         ], 'meta_schema-config');
 
         // ワークフロー
         $this->publishes([
-            __DIR__.'/../Config/workflow.php' => config_path('workflow.php'),
+            __DIR__.'/../../../Custom/Config/workflow.php' => config_path('workflow.php'),
         ], 'workflow-config');
 
         $this->publishes([
-            __DIR__.'/../Config/routes/content_admin.php' => base_path('modules/ContentModule/src/Infrastructure/Config/routes/content_admin.php'),
+            __DIR__.'/../../../Samples/Routes/content_admin.php' => base_path('modules/ContentModule/src/Samples/Routes/content_admin.php'),
         ], 'content-routes');
 
         // Blade ビューの読み込み
-        $this->loadViewsFrom(__DIR__.'/../Resources/views', 'content-module');
+        $this->loadViewsFrom(__DIR__.'/../../../Samples/Resources/views', 'content-module');
 
         $this->loadViewComponentsAs('content-module', [
             \Illuminate\View\AnonymousComponent::class => 'components', // Laravel 10 以降
@@ -135,6 +135,10 @@ class ContentModuleServiceProvider extends ServiceProvider
 
         $this->publishes($publish, 'content-module-migrations');
 
+        // Core のイベントプロバイダ
         $this->app->register(ContentModuleEventServiceProvider::class);
+
+        // // Sample のリスナーを使いたい場合は、こちらも登録
+        // $this->app->register(\Modules\ContentModule\Samples\Providers\ContentModuleSampleEventServiceProvider::class);
     }
 }

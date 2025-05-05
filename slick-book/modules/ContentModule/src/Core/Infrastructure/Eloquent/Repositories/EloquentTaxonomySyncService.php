@@ -1,9 +1,10 @@
 <?php
-namespace Modules\ContentModule\Infrastructure\Repositories;
+
+namespace Modules\ContentModule\Core\Infrastructure\Eloquent\Repositories;
 
 use Illuminate\Support\Facades\DB;
-use Modules\ContentModule\Domain\Entities\ContentEntity;
-use Modules\ContentModule\Domain\Repositories\TaxonomySyncServiceInterface;
+use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Core\Domain\Repositories\TaxonomySyncServiceInterface;
 
 class EloquentTaxonomySyncService implements TaxonomySyncServiceInterface
 {

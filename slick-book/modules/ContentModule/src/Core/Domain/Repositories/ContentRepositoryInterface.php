@@ -1,7 +1,8 @@
 <?php
-namespace Modules\ContentModule\Domain\Repositories;
 
-use Modules\ContentModule\Domain\Entities\ContentEntity;
+namespace Modules\ContentModule\Core\Domain\Repositories;
+
+use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
 
 interface ContentRepositoryInterface
 {

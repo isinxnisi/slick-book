@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\ContentModule\Infrastructure\Http\Controllers\Front;
+namespace Modules\ContentModule\Samples\Http\Controllers\Front;
 
 use Illuminate\Routing\Controller;
-use Modules\ContentModule\Application\Services\ContentService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Modules\ContentModule\Core\Application\Services\ContentService;
 
 class ContentFrontController extends Controller
 {
