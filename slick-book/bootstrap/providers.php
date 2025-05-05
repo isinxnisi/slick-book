@@ -2,5 +2,5 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    Modules\ContentModule\Infrastructure\Providers\ContentModuleServiceProvider::class,
+    Modules\ContentModule\Core\Infrastructure\Providers\ContentModuleServiceProvider::class,
 ];

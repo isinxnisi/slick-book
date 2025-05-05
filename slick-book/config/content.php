@@ -1,7 +1,6 @@
 <?php
-// config/content.php
 
-use Modules\ContentModule\Application\Strategies\{
+use Modules\ContentModule\Samples\Application\Strategies\{
     SlotArticleStrategy,
     LayoutArticleStrategy,
     LayoutSeriesStrategy,
