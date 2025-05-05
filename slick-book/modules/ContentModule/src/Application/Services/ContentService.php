@@ -4,13 +4,10 @@
 namespace Modules\ContentModule\Application\Services;
 
 use Modules\ContentModule\Application\DTOs\ContentData;
-use Modules\ContentModule\Application\Jobs\ReviewContentJob;
-use Modules\ContentModule\Application\Jobs\PublishContentJob;
-use Modules\ContentModule\Application\Jobs\ArchiveContentJob;
 use Modules\ContentModule\Domain\Contracts\ContentStrategyInterface;
 use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
 use Modules\ContentModule\Domain\Entities\ContentEntity;
-use Modules\ContentModule\Infrastructure\Eloquent\Models\ContentModel;
+use Modules\ContentModule\Events\ContentStateChanged;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 class ContentService
@@ -135,58 +132,15 @@ class ContentService
         $this->repository->delete($id);
     }
 
-    /**
-     * レビュー待ちに遷移
-     */
-    public function toReview(int $id): ContentEntity
+    public function applyTransition(int $id, string $transition): ContentEntity
     {
         $entity = $this->repository->find($id);
-        if ($this->content->can($entity, 'to_review')) {
-            // 状態遷移
-            $this->content->apply($entity, 'to_review');
-            // 保存
+        if ($this->content->can($entity, $transition)) {
+            $this->content->apply($entity, $transition);
             $this->repository->save($entity);
-
-            // 非同期ジョブを dispatch
-            ReviewContentJob::dispatch($id);
-        }
-        return $entity;
-    }
-
-    /**
-     * 公開に遷移
-     */
-    public function publish(int $id): ContentEntity
-    {
-        $entity = $this->repository->find($id);
-
-        if ($this->content->can($entity, 'publish')) {
-            // 状態遷移
-            $this->content->apply($entity, 'publish');
-            // 保存
-            $this->repository->save($entity);
-
-            // 非同期ジョブを dispatch
-            PublishContentJob::dispatch($id);
-        }
-
-        return $entity;
-    }
-
-    /**
-     * アーカイブに遷移
-     */
-    public function archive(int $id): ContentEntity
-    {
-        $entity = $this->repository->find($id);
-        if ($this->content->can($entity, 'archive')) {
-            // 状態遷移
-            $this->content->apply($entity, 'archive');
-            // 保存
-            $this->repository->save($entity);
-
-            // 非同期ジョブを dispatch
-            ArchiveContentJob::dispatch($id);
+            // メソッド内ではジョブは dispatch せず、
+            // イベントだけ fire
+            event(new ContentStateChanged($id, $transition));
         }
         return $entity;
     }

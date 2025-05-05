@@ -14,6 +14,7 @@ use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Modules\ContentModule\Infrastructure\Providers\ContentModuleEventServiceProvider;
 
 class ContentModuleServiceProvider extends ServiceProvider
 {
@@ -132,5 +133,7 @@ class ContentModuleServiceProvider extends ServiceProvider
         }
 
         $this->publishes($publish, 'content-module-migrations');
+
+        $this->app->register(ContentModuleEventServiceProvider::class);
     }
 }

@@ -217,7 +217,7 @@ class ContentController extends Controller
     public function toReview(int $id): RedirectResponse
     {
         $entity = $this->service->get($id);
-        $this->service->toReview($id);
+        $this->service->applyTransition($id, 'to_review');
         return redirect()->back()
                          ->with('status', 'レビューを申請しました');
     }
@@ -228,7 +228,7 @@ class ContentController extends Controller
     public function publish(int $id): RedirectResponse
     {
         $entity = $this->service->get($id);
-        $this->service->publish($id);
+        $this->service->applyTransition($id, 'publish');
         return redirect()->back()
                          ->with('status', '公開しました');
     }
@@ -239,7 +239,7 @@ class ContentController extends Controller
     public function archive(int $id): RedirectResponse
     {
         $entity = $this->service->get($id);
-        $this->service->archive($id);
+        $this->service->applyTransition($id, 'archive');
         return redirect()->back()
                          ->with('status', 'アーカイブしました');
     }

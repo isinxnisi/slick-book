@@ -18,13 +18,7 @@ class ArchiveContentJob implements ShouldQueue
 
     public function handle(ContentRepositoryInterface $repository): void
     {
-        // 1) コンテンツ取得
-        $entity = $repository->find($this->contentId);
-
-        // 2) パッケージ内イベントを発行
-        event(new ContentArchived($entity));
-
-        // 3) キャッシュクリア（パッケージ標準で用意）
+        // キャッシュクリア
         Cache::forget("content:{$this->contentId}");
     }
 }
