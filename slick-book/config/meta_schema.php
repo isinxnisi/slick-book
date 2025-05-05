@@ -92,6 +92,7 @@ return [
     'mapping' => [
         'slot.article'      => ['basic', 'seo'],
         'layout.series'     => ['basic', 'social'],
+        'layout.article'    => ['basic', 'seo', 'social'],
         'static.article'    => ['basic', 'seo', 'social'],
         'static.collection' => ['basic', 'seo', 'social'],
         'system.article'    => ['basic'],

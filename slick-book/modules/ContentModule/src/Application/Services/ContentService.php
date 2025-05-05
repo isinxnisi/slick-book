@@ -10,6 +10,7 @@ use Modules\ContentModule\Application\Jobs\ArchiveContentJob;
 use Modules\ContentModule\Domain\Contracts\ContentStrategyInterface;
 use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
 use Modules\ContentModule\Domain\Entities\ContentEntity;
+use Modules\ContentModule\Infrastructure\Eloquent\Models\ContentModel;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 class ContentService
@@ -25,6 +26,11 @@ class ContentService
     public function setStrategies(iterable $strategies): void
     {
         $this->strategies = $strategies;
+    }
+
+    public function findBySlug(string $slug): ?ContentEntity
+    {
+        return $this->repository->findBySlug($slug);
     }
 
     /**

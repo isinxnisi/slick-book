@@ -1,6 +1,7 @@
 <?php
 namespace Modules\ContentModule\Infrastructure\Repositories;
 
+use Modules\ContentModule\Application\DTOs\ContentData;
 use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
 use Modules\ContentModule\Domain\Entities\ContentEntity;
 use Modules\ContentModule\Infrastructure\Eloquent\Models\ContentModel;
@@ -39,5 +40,18 @@ class EloquentContentRepository implements ContentRepositoryInterface
     public function delete(int $id): void
     {
         ContentModel::destroy($id);
+    }
+
+    public function findBySlug(string $slug): ?ContentEntity
+    {
+        $model = ContentModel::where('slug', $slug)->first();
+        return $model ? $this->toEntity($model) : null;
+    }
+
+    private function toEntity(ContentModel $model): ContentEntity
+    {
+        // モデル → DTO → Entity の流れ
+        $data = ContentData::fromArray($model->toArray());
+        return ContentEntity::fromData($data);
     }
 }

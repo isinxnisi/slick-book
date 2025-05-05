@@ -14,4 +14,10 @@ class LayoutArticleStrategy extends AbstractContentStrategy
         $rules = $this->baseRules($data);
         return validator($data, $rules)->validate();
     }
+
+    public function render()
+    {
+        // 仮
+        return 'LayoutArticle';
+    }
 }

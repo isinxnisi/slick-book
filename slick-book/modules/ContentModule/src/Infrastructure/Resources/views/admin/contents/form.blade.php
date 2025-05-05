@@ -107,7 +107,6 @@
     const kindsAll = @json($kindsAll);
     const typeEl = document.getElementById('form-type');
     const kindEl = document.getElementById('form-kind');
-    const setEl = document.getElementById('schema-set');
 
     // Type選択に応じてKindを絞り込む
     function populateKinds(selectedType, selectedKind = null) {
@@ -129,9 +128,8 @@
     function loadFormFields() {
         const type = typeEl.value;
         const kind = kindEl.value;
-        const schemaSet = setEl.value;
 
-        fetch(`{{ route('admin.contents.form-fields') }}?type=${type}&kind=${kind}&set=${schemaSet}`, {
+        fetch(`{{ route('admin.contents.form-fields') }}?type=${type}&kind=${kind}`, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(res => {
@@ -164,7 +162,6 @@
         loadFormFields();
     });
     kindEl.addEventListener('change', loadFormFields);
-    setEl.addEventListener('change', loadFormFields);
 })();
 </script>
 @endsection

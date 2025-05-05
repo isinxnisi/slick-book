@@ -14,4 +14,6 @@ interface ContentRepositoryInterface
     public function find(int $id): ContentEntity;
 
     public function delete(int $id): void;
+
+    public function findBySlug(string $slug): ?ContentEntity;
 }

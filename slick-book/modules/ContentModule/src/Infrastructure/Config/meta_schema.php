@@ -91,6 +91,7 @@ return [
     */
     'mapping' => [
         'slot.article'      => ['basic', 'seo'],
+        'layout.article'    => ['basic', 'seo', 'social'],
         'layout.series'     => ['basic', 'social'],
         'static.article'    => ['basic', 'seo', 'social'],
         'static.collection' => ['basic', 'seo', 'social'],

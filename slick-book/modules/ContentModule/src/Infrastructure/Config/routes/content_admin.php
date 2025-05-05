@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\ContentModule\Infrastructure\Http\Controllers\Admin\ContentController as AdminContentController;
+use Modules\ContentModule\Infrastructure\Http\Controllers\Front\ContentFrontController;
 
 Route::prefix('admin/contents')->group(function() {
     // /admin/contents/
@@ -43,3 +44,6 @@ Route::prefix('admin/contents')->group(function() {
     Route::post('{id}/archive', [AdminContentController::class, 'archive'])
             ->name('admin.contents.archive');
 });
+
+Route::get('/content/{slug}', [ContentFrontController::class, 'show'])
+     ->name('content.show');
