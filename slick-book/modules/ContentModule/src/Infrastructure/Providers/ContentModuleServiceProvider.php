@@ -114,6 +114,7 @@ class ContentModuleServiceProvider extends ServiceProvider
         // マイグレーションスタブを動的タイムスタンプ付きで公開
         $stubPath = __DIR__ . '/../../../database/migrations/stubs';
         $stubs = [
+            'create_content_taxonomy_term_table.stub',
             'create_collections_table.stub',
             'create_collection_items_table.stub',
             'create_galleries_table.stub',

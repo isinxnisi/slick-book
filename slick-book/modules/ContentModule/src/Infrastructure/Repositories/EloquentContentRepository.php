@@ -2,6 +2,7 @@
 
 namespace Modules\ContentModule\Infrastructure\Repositories;
 
+use Illuminate\Support\Facades\Schema;
 use Modules\ContentModule\Domain\Repositories\ContentRepositoryInterface;
 use Modules\ContentModule\Domain\Entities\ContentEntity;
 use Modules\ContentModule\Application\DTOs\ContentData;
@@ -107,10 +108,15 @@ class EloquentContentRepository implements ContentRepositoryInterface
         $dto    = ContentData::fromArray($model->toArray());
         $entity = ContentEntity::fromData($dto);
 
-        // タクソノミータームIDを同期
-        $entity->setTaxonomyTermIds(
-            $model->taxonomyTerms()->pluck('taxonomy_terms.id')->toArray()
-        );
+        if (Schema::hasTable('content_taxonomy_term') && Schema::hasTable('taxonomy_terms')) {
+            try {
+                // タクソノミータームIDを同期
+                $ids = $model->taxonomyTerms()->pluck('taxonomy_terms.id')->toArray();
+                $entity->setTaxonomyTermIds($ids);
+            } catch (\Throwable $e) {
+                // ログを出す or 無視
+            }
+        }
 
         return $entity;
     }
