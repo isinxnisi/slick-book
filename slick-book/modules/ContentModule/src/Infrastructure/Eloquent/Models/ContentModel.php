@@ -3,7 +3,7 @@
 namespace Modules\ContentModule\Infrastructure\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ContentModel extends Model
 {
@@ -24,7 +24,20 @@ class ContentModel extends Model
     ];
 
     protected $casts = [
-        'meta'         => AsArrayObject::class,
+        'meta'         => 'array',
         'published_at' => 'datetime',
     ];
+
+    /**
+     * taxonomy_terms テーブルとの多対多リレーション
+     */
+    public function taxonomyTerms(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            TaxonomyTermModel::class,
+            'content_taxonomy_term',    // pivot table
+            'content_id',               // this model's foreign key
+            'taxonomy_term_id'          // related model's foreign key
+        );
+    }
 }

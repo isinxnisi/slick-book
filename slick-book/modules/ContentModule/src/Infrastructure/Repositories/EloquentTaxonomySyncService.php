@@ -22,7 +22,7 @@ class EloquentTaxonomySyncService implements TaxonomySyncServiceInterface
         $insertData = [];
         foreach ($termIds as $index => $termId) {
             $insertData[] = [
-                'content_id'        => $content->id,
+                'content_id'        => $content->getId(),
                 'taxonomy_term_id'  => $termId,
                 'sort_order'        => $index,
                 'created_at'        => now(),

@@ -10,6 +10,9 @@ class ContentEntity
 {
     private ContentData $data;
 
+    /** @var int[] */
+    private array $taxonomyTermIds = [];
+
     public function __construct(ContentData $data)
     {
         $this->data = $data;
@@ -45,6 +48,18 @@ class ContentEntity
     public function toArray(): array
     {
         return $this->data->toArray();
+    }
+
+    /** @return int[] */
+    public function getTaxonomyTermIds(): array
+    {
+        return $this->taxonomyTermIds;
+    }
+
+    /** @param int[] $ids */
+    public function setTaxonomyTermIds(array $ids): void
+    {
+        $this->taxonomyTermIds = $ids;
     }
 
     public function getId(): ?int
