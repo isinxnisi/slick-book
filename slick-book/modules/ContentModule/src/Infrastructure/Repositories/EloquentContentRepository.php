@@ -17,6 +17,7 @@ class EloquentContentRepository implements ContentRepositoryInterface
     public function all(array $filters = []): array
     {
         $query = ContentModel::query();
+
         if (!empty($filters['type'])) {
             $query->where('content_type', $filters['type']);
         }
@@ -25,14 +26,13 @@ class EloquentContentRepository implements ContentRepositoryInterface
         }
 
         return $query->get()
-                     ->map(fn(ContentModel $m) => $this->toEntity($m))
+                     ->map(fn(ContentModel $model) => $this->toEntity($model))
                      ->all();
     }
 
     /**
      * 単一取得
      */
-
     public function find(int $id): ContentEntity
     {
         $model = ContentModel::findOrFail($id);
@@ -51,10 +51,10 @@ class EloquentContentRepository implements ContentRepositoryInterface
     /**
      * 保存（新規/更新）
      * @param ContentEntity $entity
-     * @param int[] $taxonomyIds
+     * @param int[] $taxonomyTermIds
      * @return ContentEntity
      */
-    public function save(ContentEntity $entity, array $taxonomyIds = []): ContentEntity
+    public function save(ContentEntity $entity, array $taxonomyTermIds = []): ContentEntity
     {
         // モデル取得 or 新規
         $model = $entity->getId()
@@ -80,9 +80,9 @@ class EloquentContentRepository implements ContentRepositoryInterface
         // 保存
         $model->save();
 
-        // タクソノミー同期
-        if (!empty($taxonomyIds)) {
-            $model->taxonomies()->sync($taxonomyIds);
+        // タクソノミータームIDを同期
+        if (! empty($taxonomyTermIds)) {
+            $model->taxonomyTerms()->sync($taxonomyTermIds);
         }
 
         return $this->toEntity($model);
@@ -98,6 +98,8 @@ class EloquentContentRepository implements ContentRepositoryInterface
 
     /**
      * モデル → ドメインエンティティ
+     * @param ContentModel $model
+     * @return ContentEntity
      */
     private function toEntity(ContentModel $model): ContentEntity
     {
@@ -105,7 +107,7 @@ class EloquentContentRepository implements ContentRepositoryInterface
         $dto    = ContentData::fromArray($model->toArray());
         $entity = ContentEntity::fromData($dto);
 
-        // タクソノミーIDを同期
+        // タクソノミータームIDを同期
         $entity->setTaxonomyTermIds(
             $model->taxonomyTerms()->pluck('taxonomy_terms.id')->toArray()
         );
