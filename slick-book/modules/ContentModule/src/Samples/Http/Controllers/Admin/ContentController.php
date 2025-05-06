@@ -33,11 +33,12 @@ class ContentController extends Controller
 
         $items = $this->service->list($type, $kind);
         $types = config('content.types');
-        $kinds = config('content.kinds');
+        // TYPEに紐づくKINDだけ取得
+        $kinds = config("content.kinds.{$type}", []);
 
         return response()->view(
             'content-module::admin.contents.index',
-            compact('items','types','kinds','type','kind')
+            compact('items', 'types', 'kinds', 'type', 'kind')
         );
     }
 
@@ -104,12 +105,11 @@ class ContentController extends Controller
      */
     public function create(Request $request): Response
     {
-        $types = config('content.types');
-        $kinds = config('content.kinds');
+        $type  = $request->query('type', array_key_first(config('content.types')));
 
-        // デフォルト TYPE/KIND
-        $type = $request->query('type', array_key_first($types));
-        $kind = $request->query('kind', array_key_first($kinds));
+        $types = config('content.types');
+        $kinds = config("content.kinds.{$type}", []);
+        $kind  = array_key_first($kinds);
 
         // old() とデフォルト値をマージして DTO → Entity 化
         $defaults = [
@@ -126,7 +126,7 @@ class ContentController extends Controller
         $entity = ContentEntity::fromData($dto);
 
         // Strategy の取得
-        $strategy = $this->service->resolveStrategy($type, $kind);
+        $strategy = $this->service->resolveStrategy($type, $entity->getContentKind());
 
         return response()->view(
             'content-module::admin.contents.form',
@@ -140,9 +140,6 @@ class ContentController extends Controller
      */
     public function edit(int $id, Request $request): Response
     {
-        $types = config('content.types');
-        $kinds = config('content.kinds');
-
         // 永続化済みデータを取得
         $originalEntity = $this->service->get($id);
         $original      = $originalEntity->toArray();
@@ -155,6 +152,9 @@ class ContentController extends Controller
         $type     = $entity->getContentType();
         $kind     = $entity->getContentKind();
         $strategy = $this->service->resolveStrategy($type, $kind);
+
+        $types = config('content.types');
+        $kinds = config("content.kinds.{$type}", []);
 
         return response()->view(
             'content-module::admin.contents.form',

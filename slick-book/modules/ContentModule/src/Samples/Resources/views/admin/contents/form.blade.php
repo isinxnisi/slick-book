@@ -7,8 +7,15 @@
     $initialType  = old('content_type', $entity?->getContentType() ?? array_key_first(config('content.types')));
     $initialKind  = old('content_kind', $entity?->getContentKind() ?? null);
     $mapping      = config('meta_schema.mapping');
-    $kindsAll     = config('content.kinds');
-    $sets         = config('meta_schema.sets');
+    // ネストされた kinds をフラット化
+    $kindsNested = config('content.kinds');
+    $kindsAll = [];
+    foreach ($kindsNested as $typeKey => $list) {
+        foreach ($list as $kindKey => $label) {
+            $kindsAll[$kindKey] = $label;
+        }
+    }
+
 @endphp
 
 <div class="p-4">
