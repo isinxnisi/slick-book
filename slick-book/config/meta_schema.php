@@ -90,14 +90,11 @@ return [
     |--------------------------------------------------------------------------
     */
     'mapping' => [
-        'slot.article'      => ['basic', 'seo'],
-        'layout.series'     => ['basic', 'social'],
-        'layout.article'    => ['basic', 'seo', 'social'],
-        'static.article'    => ['basic', 'seo', 'social'],
-        'static.collection' => ['basic', 'seo', 'social'],
-        'system.article'    => ['basic'],
-        'system.guidebook'  => ['basic'],
-        'default'           => ['basic'],
+        'collection.static'     => ['basic', 'seo'],
+        'collection.dynamic'    => ['basic', 'seo', 'social'],
+        'series.manual'         => ['basic', 'social'],
+        'series.auto'           => ['basic', 'seo', 'social'],
+        'widget.quiz'           => ['basic', 'seo', 'social'],
     ],
 
 ];

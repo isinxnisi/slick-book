@@ -1,17 +1,8 @@
 <?php
 
-use Modules\ContentModule\Samples\Application\Strategies\{
-    SlotArticleStrategy,
-    LayoutArticleStrategy,
-    LayoutSeriesStrategy,
-    LayoutCollectionStrategy,
-    LayoutGuidebookStrategy,
-    StaticArticleStrategy,
-    StaticCollectionStrategy,
-    StaticGuidebookStrategy,
-    SystemArticleStrategy,
-    SystemGuidebookStrategy,
-};
+use Modules\ContentModule\Samples\Domain\Strategies\Collection;
+use Modules\ContentModule\Samples\Domain\Strategies\Series;
+use Modules\ContentModule\Samples\Domain\Strategies\Widget;
 
 return [
 
@@ -20,10 +11,9 @@ return [
      * 第一階層メニューに対応
      */
     'types' => [
-        'slot'   => 'UIコンポーネント（slot）',
-        'layout' => 'UIコンポーネント（layout）',
-        'static' => '固定ページ',
-        'system' => 'システム文言',
+        'collection' => 'コレクション',
+        'series'     => 'シリーズ',
+        'widget'     => 'ウィジェット',
     ],
 
     /**
@@ -31,26 +21,31 @@ return [
      * 第二階層フィルタに対応
      */
     'kinds' => [
-        'article'    => '記事 (Article)',
-        'series'     => 'シリーズ (Series)',
-        'collection' => 'コレクション (Collection)',
-        'guidebook'  => 'ガイドブック (Guidebook)',
+        'collection' => [
+            'static'  => '静的コレクション',
+            'dynamic' => '動的コレクション',
+        ],
+        'series' => [
+            'manual' => '手動シリーズ',
+            'auto'   => '自動シリーズ',
+        ],
+        'widget' => [
+            'quiz' => 'クイズ',
+        ],
     ],
 
     /**
      * 利用可能な Strategy クラス群
      */
     'strategies' => [
-        SlotArticleStrategy::class,
-        LayoutArticleStrategy::class,
-        LayoutSeriesStrategy::class,
-        LayoutCollectionStrategy::class,
-        LayoutGuidebookStrategy::class,
-        StaticArticleStrategy::class,
-        StaticCollectionStrategy::class,
-        StaticGuidebookStrategy::class,
-        SystemArticleStrategy::class,
-        SystemGuidebookStrategy::class,
+        // Collection
+        Collection\StaticCollectionStrategy::class,
+        Collection\DynamicCollectionStrategy::class,
+        // Series
+        Series\ManualSeriesStrategy::class,
+        Series\AutoSeriesStrategy::class,
+        // Widget
+        Widget\QuizWidgetStrategy::class,
     ],
 
 ];

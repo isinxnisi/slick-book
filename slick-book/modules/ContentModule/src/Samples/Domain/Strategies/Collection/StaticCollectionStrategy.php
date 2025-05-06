@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\ContentModule\Samples\Application\Strategies;
+namespace Modules\ContentModule\Samples\Domain\Strategies\Collection;
 
 use Modules\ContentModule\Core\Application\Strategies\AbstractContentStrategy;
 
-class LayoutGuidebookStrategy extends AbstractContentStrategy
+class StaticCollectionStrategy extends AbstractContentStrategy
 {
-    public const TYPE = 'layout';
-    public const KIND = 'guidebook';
+    public const TYPE = 'collection';
+    public const KIND = 'static';
 
     public function validate(array $data): array
     {

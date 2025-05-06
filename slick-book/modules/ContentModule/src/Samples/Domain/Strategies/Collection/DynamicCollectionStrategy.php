@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\ContentModule\Samples\Application\Strategies;
+namespace Modules\ContentModule\Samples\Domain\Strategies\Collection;
 
 use Modules\ContentModule\Core\Application\Strategies\AbstractContentStrategy;
 
-class SystemArticleStrategy extends AbstractContentStrategy
+class DynamicCollectionStrategy extends AbstractContentStrategy
 {
-    public const TYPE = 'system';
-    public const KIND = 'article';
+    public const TYPE = 'collection';
+    public const KIND = 'dynamic';
 
     public function validate(array $data): array
     {

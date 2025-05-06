@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\ContentModule\Samples\Application\Strategies;
+namespace Modules\ContentModule\Samples\Domain\Strategies\Widget;
 
 use Modules\ContentModule\Core\Application\Strategies\AbstractContentStrategy;
 
-class StaticGuidebookStrategy extends AbstractContentStrategy
+class QuizWidgetStrategy extends AbstractContentStrategy
 {
-    public const TYPE = 'static';
-    public const KIND = 'guidebook';
+    public const TYPE = 'widget';
+    public const KIND = 'quiz';
 
     public function validate(array $data): array
     {

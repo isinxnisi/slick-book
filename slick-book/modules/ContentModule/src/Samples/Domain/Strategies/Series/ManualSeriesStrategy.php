@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\ContentModule\Samples\Application\Strategies;
+namespace Modules\ContentModule\Samples\Domain\Strategies\Series;
 
 use Modules\ContentModule\Core\Application\Strategies\AbstractContentStrategy;
 
-class LayoutSeriesStrategy extends AbstractContentStrategy
+class ManualSeriesStrategy extends AbstractContentStrategy
 {
-    public const TYPE = 'layout';
-    public const KIND = 'series';
+    public const TYPE = 'series';
+    public const KIND = 'manual';
 
     public function validate(array $data): array
     {
