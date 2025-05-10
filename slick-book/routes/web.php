@@ -22,7 +22,6 @@ use App\Http\Controllers\Blog\PostController as BlogPostController;
 use App\Http\Controllers\Blog\CategoryController as BlogCategoryController;
 use App\Http\Controllers\Blog\TagController as BlogTagController;
 use App\Http\Controllers\Blog\TagGroupController as BlogTagGroupController;
-use App\Http\Controllers\Develop\ContentController as DevelopContentController;
 use App\Http\Controllers\SitemapController;
 
 // 環境設定からドメインを取得
@@ -160,15 +159,6 @@ Route::middleware(['load.site'])->group(function () {
         ->name('blog.tag');
     Route::get('/tagGroup/{slug}', [BlogTagGroupController::class, 'view'])
         ->name('blog.tagGroup');
-});
-
-// 開発用サイト
-Route::domain($domains['develop'])->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
-    Route::get('content', [DevelopContentController::class, 'index'])->name('content.index');
-    // Route::get('content/create', [PostController::class, 'create'])->name('content.create');
 });
 
 require __DIR__.'/auth.php';
