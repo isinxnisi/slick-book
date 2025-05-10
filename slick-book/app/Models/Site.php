@@ -83,6 +83,11 @@ class Site extends Model
         $scheme = config('app.scheme', 'https');
         $port = config('app.port', '80');
 
+        if (empty($port) || $scheme == 'https' && $port == '443' || $scheme == 'http' && $port == '80') {
+
+            return "{$scheme}://{$this->domain}";
+        }
+
         return "{$scheme}://{$this->domain}:{$port}";
     }
 }
