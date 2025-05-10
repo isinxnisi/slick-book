@@ -1,0 +1,34 @@
+type: collection
+kind: static
+strategy: Modules\ContentModule\Samples\Domain\Strategies\Collection\StaticCollectionStrategy
+
+sections:
+  - key: collection
+    label: コレクション情報
+    fields:
+      # コレクション対象
+      - name: target_type
+        label: コレクション対象
+        type: select
+        options:
+          article: '投稿'
+          product: '製品'
+          event: 'イベント'
+        validation: required|string|in:article,product,event
+        editable: false
+
+      # 項目IDリスト
+      - name: item_ids
+        label: 項目IDリスト
+        type: select
+        options: {}          # 最初は空にしておき、JSで後から埋める
+        validation: required|array|min:1
+
+  - key: basic
+    label: 基本情報
+
+  - key: seo
+    label: SEO設定
+
+  - key: social
+    label: SNS共有設定

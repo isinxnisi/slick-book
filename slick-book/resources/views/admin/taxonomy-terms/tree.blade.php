@@ -37,6 +37,7 @@
                     </div>
                 </div>
                 <div class="hierarchy-tree p-4 text-gray-900 dark:text-gray-100">
+                    @isset($taxonomy)
                     <ul class="tree sortable" id="taxonomy-term-list">
                         @foreach ($terms as $term)
                             <x-admin.taxonomy-terms.term-item :term="$term" />
@@ -53,6 +54,7 @@
                             @endif
                         </button>
                     </div>
+                    @endisset
                 </div>
             </div>
         </div>
