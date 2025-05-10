@@ -19,4 +19,8 @@ return [
      */
     'strategies' => [],
 
+    /**
+     * DSL定義ファイルの検索パス一覧
+     */
+    'dsl_paths' => [],
 ];

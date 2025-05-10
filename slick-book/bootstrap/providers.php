@@ -2,5 +2,6 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    Modules\ContentModule\Custom\Providers\ContentModuleServiceProvider::class,
+    // NOTE: サンプル読みこみ中 アプリ側未実装
+    Modules\ContentModule\Samples\Providers\ContentModuleSampleServiceProvider::class,
 ];

@@ -1,9 +1,5 @@
 <?php
 
-use Modules\ContentModule\Samples\Domain\Strategies\Collection;
-use Modules\ContentModule\Samples\Domain\Strategies\Series;
-use Modules\ContentModule\Samples\Domain\Strategies\Widget;
-
 return [
 
     /**
@@ -37,15 +33,15 @@ return [
     /**
      * 利用可能な Strategy クラス群
      */
-    'strategies' => [
-        // Collection
-        Collection\StaticCollectionStrategy::class,
-        Collection\DynamicCollectionStrategy::class,
-        // Series
-        Series\ManualSeriesStrategy::class,
-        Series\AutoSeriesStrategy::class,
-        // Widget
-        Widget\QuizWidgetStrategy::class,
-    ],
+    'strategies' => [],
 
+    /**
+     * DSL定義ファイルの検索パス一覧
+     */
+    'dsl_paths' => [
+        // アプリケーション側で定義したDSL
+        base_path('resources/dsl/definitions'),
+        // パッケージ側のデフォルトDSL
+        dirname(__DIR__, 4) . '/dsl/definitions',
+    ],
 ];

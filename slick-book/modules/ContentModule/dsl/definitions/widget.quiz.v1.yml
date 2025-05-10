@@ -1,0 +1,25 @@
+type: widget
+kind: quiz
+strategy: Modules\ContentModule\Samples\Domain\Strategies\Widget\QuizWidgetStrategy
+
+sections:
+  - key: widget
+    label: クイズ設定
+    fields:
+      - name: question
+        label: 問題文
+        type: string
+        validation: required|string|max:500
+      - name: options
+        label: 選択肢リスト
+        type: json
+        validation: required|array|min:2
+      - name: answer
+        label: 正解
+        type: string
+        validation: required|string
+
+  - key: basic
+    label: 基本情報
+  - key: social
+    label: SNS設定

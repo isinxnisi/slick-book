@@ -2,11 +2,12 @@
 
 namespace Modules\ContentModule\Core\Application\Strategies;
 
+use Modules\ContentModule\Core\Application\Services\ContentService;
 use Modules\ContentModule\Core\Domain\Contracts\ContentStrategyInterface;
 use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
 use Modules\ContentModule\Core\Domain\Repositories\ContentRepositoryInterface;
 
-abstract class AbstractContentStrategy implements ContentStrategyInterface
+abstract class AbstractContentStrategy implements ContentStrategyInterface, ItemProviderInterface
 {
     // クラス定数で TYPE／KIND を定義
     public const TYPE = '';
@@ -16,7 +17,8 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
     protected iterable $strategies;
 
     public function __construct(
-        protected ContentRepositoryInterface $repository
+        protected ContentRepositoryInterface $repository,
+        protected ContentService $service
     ){}
 
     public function supportsType(): string
@@ -100,7 +102,8 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
     {
         $type   = $entity?->getContentType() ?? '';
         $kind   = $entity?->getContentKind() ?? '';
-        $fields = $this->getMetaFields($type, $kind);
+        // フォーム定義を取得
+        $sections = $this->service->renderFormFields($type, $kind);
 
         // ベースパスとビュー名の組み立て
         $viewBase   = 'content-module::admin.contents.forms.';
@@ -113,6 +116,18 @@ abstract class AbstractContentStrategy implements ContentStrategyInterface
             ? $customView
             : "{$viewBase}_base";
 
-        return view($viewName, compact('entity', 'fields'))->render();
+        return view($viewName, compact('entity', 'sections'))->render();
+    }
+
+    /**
+     * 任意のアイテムリストの取得
+     *
+     * @param string $key
+     * @param array $context
+     * @return array
+     */
+    public function getItems(string $key, array $context = []): array
+    {
+        return [];
     }
 }

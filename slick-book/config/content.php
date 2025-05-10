@@ -48,4 +48,13 @@ return [
         Widget\QuizWidgetStrategy::class,
     ],
 
+    /**
+     * DSL定義ファイルの検索パス一覧
+     */
+    'dsl_paths' => [
+        // アプリケーション側で定義したDSL
+        // base_path('config/dsl/definitions'),
+        // パッケージ側のデフォルトDSL
+        base_path('modules/ContentModule/dsl/definitions'),
+    ],
 ];

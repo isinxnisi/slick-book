@@ -37,6 +37,12 @@ return [
                 'to'   => 'archived',
             ],
         ],
+
+        'auto_transitions' => [
+            'review'  => 'review',
+            'published' => 'publish',
+            'archived'  => 'archive',
+        ],
     ],
 
 ];
