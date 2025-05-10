@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\ContentModule\Samples\Http\Controllers\Admin\ContentController as AdminContentController;
+use Modules\ContentModule\Samples\Http\Controllers\Admin\ItemController;
 use Modules\ContentModule\Samples\Http\Controllers\Front\ContentFrontController;
 
 Route::prefix('admin/contents')->group(function() {
@@ -42,6 +43,9 @@ Route::prefix('admin/contents')->group(function() {
     // アーカイブ
     Route::post('{id}/archive', [AdminContentController::class, 'archive'])
             ->name('admin.contents.archive');
+
+    Route::get('items', [ItemController::class, 'items'])
+            ->name('admin.contents.items');
 });
 
 Route::get('/content/{slug}', [ContentFrontController::class, 'show'])

@@ -2,8 +2,9 @@
 
 namespace Modules\ContentModule\Samples\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
+use Modules\ContentModule\Core\DSL\DslRuleProvider;
 
 class StoreContentRequest extends FormRequest
 {
@@ -15,20 +16,16 @@ class StoreContentRequest extends FormRequest
 
     public function rules(): array
     {
-        $scopeKey = $this->input('scope_key');
+        $scopeKey = $this->input('scope_key');     // input() でOK
 
-        // 事前準備
-        $types    = array_keys(config('content.types'));
-        $mapping  = config('meta_schema.mapping');
-        $schemas  = config('meta_schema.schemas');
+        // TYPE/KIND の組み合わせチェック用
+        $mapping = config('meta_schema.mapping');
+        $types   = array_keys(config('content.types'));
 
-        $type     = $this->input('content_type', '');
-        $kind     = $this->input('content_kind', '');
-
-        // ベースルール
-        $rules = [
+        // サンプル固有ルールを定義
+        $custom = [
             'title'         => 'required|string|max:255',
-            'slug' => [
+            'slug'          => [
                 'required','string','max:255',
                 Rule::unique('contents')
                     ->where(fn($q) => $q->where('scope_key', $scopeKey)),
@@ -38,8 +35,7 @@ class StoreContentRequest extends FormRequest
                 'required','string',
                 // TYPE×KIND の組み合わせチェック
                 function($attr, $value, $fail) use ($mapping) {
-                    $type = request('content_type','');
-                    $key  = "{$type}.{$value}";
+                    $key = "{$this->input('content_type')}.{$value}";
                     if (! isset($mapping[$key]) && $key !== 'default') {
                         $fail('この種別は選択できません。');
                     }
@@ -51,17 +47,24 @@ class StoreContentRequest extends FormRequest
             'published_at'  => 'nullable|date_format:Y-m-d H:i:s',
         ];
 
-        // メタスキーマからフィールドごとのルールをマージ
-        $key  = "{$type}.{$kind}";
-        $sets = $mapping[$key] ?? $mapping['default'];
+        // meta_schema の fields ルールを追加
+        $type   = $this->input('content_type', '');
+        $kind   = $this->input('content_kind', '');
+        $key    = "{$type}.{$kind}";
+        $sets   = $mapping[$key] ?? $mapping['default'];
         $schemas = config('meta_schema.schemas');
 
         foreach ($sets as $set) {
             foreach ($schemas[$set]['fields'] as $field) {
-                $rules["meta.{$field['name']}"] = $field['validation'];
+                // nested array で meta.フィールド名
+                $custom["meta.{$field['name']}"] = $field['validation'];
             }
         }
 
-        return $rules;
+        // Core側(DslRegistry由来)のルールを取得
+        $rules = app(DslRuleProvider::class)->getRules($type, $kind);
+
+        // マージして返却
+        return array_merge($rules, $custom);
     }
 }

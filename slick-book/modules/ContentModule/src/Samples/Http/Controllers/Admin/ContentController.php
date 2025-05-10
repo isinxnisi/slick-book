@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Modules\ContentModule\Core\Application\Services\ContentService;
 use Modules\ContentModule\Core\Application\DTOs\ContentData;
 use Modules\ContentModule\Core\Domain\Entities\ContentEntity;
@@ -47,44 +45,12 @@ class ContentController extends Controller
      */
     public function formFields(Request $request): Response
     {
-        // 基本バリデーション
-        $data = $request->validate([
-            'type' => ['required','string', Rule::in(array_keys(config('content.types')))],
-            'kind' => ['required','string', function($attr,$value,$fail){
-                $mapping = config('meta_schema.mapping');
-                $type = request('type','');
-                if (! isset($mapping["{$type}.{$value}"])) {
-                    $fail('無効な種別です。');
-                }
-            }],
-            'set'  => ['nullable','string', Rule::in(array_keys(config('meta_schema.sets'))), function($attr,$value,$fail){
-                $mapping = config('meta_schema.mapping');
-                $type = request('type','');
-                $kind = request('kind','');
-                $allowed = $mapping["{$type}.{$kind}"] ?? $mapping['default'];
-                if ($value !== null && ! in_array($value, $allowed, true)) {
-                    $fail('このスキーマセットは利用できません。');
-                }
-            }],
-        ]);
-
-        // TYPE×KIND の組み合わせチェック
-        $mapping = config('meta_schema.mapping');
-        $key     = "{$data['type']}.{$data['kind']}";
-        if (! isset($mapping[$key])) {
-            abort(404, '該当するフォーム定義が見つかりません。');
-        }
-
-        // スキーマセットチェック
-        $allowed = $mapping[$key] ?? $mapping['default'];
-        if (isset($data['set']) && ! in_array($data['set'], $allowed, true)) {
-            abort(404, '該当するスキーマセットが見つかりません。');
-        }
-
-        // DTO／Entity 化
+        // Ajax エンドポイントも Strategy で切り替えて返す
+        $type     = $request->validate([ 'type'=>'required|string', 'kind'=>'required|string' ])['type'];
+        $kind     = $request->input('kind');
         $dto      = ContentData::fromArray([
-            'content_type' => $data['type'],
-            'content_kind' => $data['kind'],
+            'content_type' => $type,
+            'content_kind' => $kind,
             'title'        => '',
             'slug'         => '',
             'body'         => null,
@@ -93,11 +59,8 @@ class ContentController extends Controller
         ]);
         $entity   = ContentEntity::fromData($dto);
 
-        // フォーム生成
-        $strategy = $this->service->resolveStrategy($data['type'], $data['kind']);
-        $html     = $strategy->renderFormFields($entity);
-
-        return response($html, 200);
+        $strategy = $this->service->resolveStrategy($type, $kind);
+        return response($strategy->renderFormFields($entity));
     }
 
     /**
@@ -119,18 +82,21 @@ class ContentController extends Controller
             'slug'         => '',
             'body'         => '',
             'meta'         => [],
-            // 必要なら status, published_at なども…
+            'status'       => 'draft',
         ];
         $input  = array_merge($defaults, $request->old() ?: []);
         $dto    = ContentData::fromArray($input);
         $entity = ContentEntity::fromData($dto);
 
         // Strategy の取得
-        $strategy = $this->service->resolveStrategy($type, $entity->getContentKind());
+        $strategy = $this->service->resolveStrategy($type, $kind);
+
+        // Strategy 毎に切り替わるフォーム HTML を取得
+        $formHtml = $strategy->renderFormFields($entity);
 
         return response()->view(
             'content-module::admin.contents.form',
-            compact('types','kinds','entity','strategy')
+            compact('types', 'kinds', 'type', 'kind', 'entity', 'formHtml')
         );
     }
 
@@ -156,9 +122,12 @@ class ContentController extends Controller
         $types = config('content.types');
         $kinds = config("content.kinds.{$type}", []);
 
+        // Strategy 毎に切り替わるフォーム HTML を取得
+        $formHtml = $strategy->renderFormFields($entity);
+
         return response()->view(
             'content-module::admin.contents.form',
-            compact('types','kinds','entity','strategy')
+            compact('types', 'kinds', 'type', 'kind', 'entity', 'formHtml')
         );
     }
 
@@ -167,18 +136,20 @@ class ContentController extends Controller
      */
     public function store(StoreContentRequest $request): RedirectResponse
     {
-        $data = $request->validated();
-        $dto  = ContentData::fromArray($data);
+        // TYPE と KIND はフォームの hidden input から取得
+        $type = $request->input('content_type');
+        $kind = $request->input('content_kind');
 
-        try {
-            $this->service->create($dto, []);
-            return redirect()->route('admin.contents.index');
-        } catch (ValidationException $e) {
-            return redirect()
-                ->back()
-                ->withErrors($e->validator)
-                ->withInput();
-        }
+        // バリデート済みデータを取得
+        $data = $request->validated();
+        $data['status'] = 'draft';
+
+        // 作成または更新を一括で処理
+        $this->service->handleSave($type, $kind, $data);
+
+        return redirect()
+            ->route('admin.contents.index', ['type' => $type, 'kind' => $kind])
+            ->with('status', 'コンテンツを保存しました');
     }
 
     /**
@@ -186,19 +157,22 @@ class ContentController extends Controller
      */
     public function update(UpdateContentRequest $request, int $id): RedirectResponse
     {
+        // TYPE と KIND はフォームの hidden input から取得
+        $type = $request->input('content_type');
+        $kind = $request->input('content_kind');
+        $originalEntity = $this->service->get($id);
+
+        // バリデート済みデータを取得
         $data = $request->validated();
         $data['id'] = $id;
-        $dto = ContentData::fromArray($data);
+        $data['status'] = $originalEntity->getStatus();
 
-        try {
-            $this->service->update($id, $dto, []);
-            return redirect()->route('admin.contents.index');
-        } catch (ValidationException $e) {
-            return redirect()
-                ->back()
-                ->withErrors($e->validator)
-                ->withInput();
-        }
+        // 作成または更新を一括で処理
+        $this->service->handleSave($type, $kind, $data);
+
+        return redirect()
+            ->route('admin.contents.index', ['type' => $type, 'kind' => $kind])
+            ->with('status', 'コンテンツを更新しました');
     }
 
     /**
@@ -208,7 +182,7 @@ class ContentController extends Controller
     {
         $this->service->delete($id);
         return redirect()->route('admin.contents.index')
-                         ->with('status', '削除しました');
+            ->with('status', '削除しました');
     }
 
     /**
@@ -219,7 +193,7 @@ class ContentController extends Controller
         $entity = $this->service->get($id);
         $this->service->applyTransition($id, 'to_review');
         return redirect()->back()
-                         ->with('status', 'レビューを申請しました');
+            ->with('status', 'レビューを申請しました');
     }
 
     /**
@@ -230,7 +204,7 @@ class ContentController extends Controller
         $entity = $this->service->get($id);
         $this->service->applyTransition($id, 'publish');
         return redirect()->back()
-                         ->with('status', '公開しました');
+            ->with('status', '公開しました');
     }
 
     /**
@@ -241,6 +215,6 @@ class ContentController extends Controller
         $entity = $this->service->get($id);
         $this->service->applyTransition($id, 'archive');
         return redirect()->back()
-                         ->with('status', 'アーカイブしました');
+            ->with('status', 'アーカイブしました');
     }
 }
